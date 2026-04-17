@@ -1,0 +1,45 @@
+{
+  "app": { "title": "Kanban Designer" },
+  "home": {
+    "headline": "Design Your Kanban System",
+    "intro": "Build a Kanban board from scratch or start from one of 10 pre-built templates based on real-world archetypes. Configure WIP limits, swim lanes, and understand the rationale behind each design choice.",
+    "newBoard": "New Board",
+    "templates": "Templates",
+    "myBoards": "My Boards",
+    "noBoards": "No saved boards",
+    "continue": "Open",
+    "delete": "Delete",
+    "useTemplate": "Use Template",
+    "learnMore": "Why this design?",
+    "useCase": "When to use",
+    "strengths": "Strengths",
+    "risks": "Risks",
+    "wipExplainer": "WIP Limits & Little's Law",
+    "wipText": "WIP (Work In Progress) limits are the key mechanism in Kanban that creates pull-based flow. Little's Law states: Cycle Time = WIP ÷ Throughput. By limiting WIP you reduce cycle time and surface bottlenecks. Start with WIP = (team size × 1.5) per stage and adjust based on observation."
+  },
+  "board": {
+    "title": "Board Designer",
+    "addColumn": "Add Column",
+    "addLane": "Add Swim Lane",
+    "columnName": "Column name",
+    "laneName": "Lane name",
+    "wipLimit": "WIP Limit",
+    "noLimit": "No limit",
+    "addCard": "Add card",
+    "cardTitle": "Card title",
+    "save": "Save",
+    "exportJSON": "Export JSON",
+    "exportPNG": "Screenshot",
+    "wipViolation": "WIP exceeded!",
+    "principles": "Kanban Principles",
+    "principlesList": [
+      "Visualize the workflow",
+      "Limit work in progress",
+      "Manage flow",
+      "Make process policies explicit",
+      "Implement feedback loops",
+      "Improve collaboratively"
+    ]
+  },
+  "common": { "language": "RU", "cancel": "Cancel", "delete": "Delete", "save": "Save" }
+}
