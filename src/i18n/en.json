@@ -1,6 +1,36 @@
 {
   "app": { "title": "Kanban Designer" },
-  "nav": { "designer": "Board", "templates": "Templates", "learn": "Learn" },
+  "nav": {
+    "home": "Home",
+    "designer": "Board",
+    "templates": "Templates",
+    "learn": "Learn"
+  },
+  "home": {
+    "headline": "Design your Kanban system",
+    "intro": "Start from a template or a blank board, then refine columns, WIP limits, and swim lanes.",
+    "newBoard": "Blank board",
+    "default_board_name": "New board",
+    "templates": "Templates",
+    "myBoards": "My boards",
+    "learnMore": "Details",
+    "useTemplate": "Use",
+    "wipExplainer": "Why limit WIP?",
+    "wipText": "Constraining work in progress exposes bottlenecks, shortens cycle time, and improves predictability — start finishing, stop starting.",
+    "noBoards": "No saved boards yet. Create one from the Templates tab.",
+    "continue": "Open",
+    "delete": "Delete",
+    "delete_confirm": "Delete this board from this device?",
+    "pick_or_create": "Choose a board from Home, create a blank board, or pick a template.",
+    "principlesList": [
+      "Visualize the workflow — make invisible work visible.",
+      "Limit WIP — start finishing, stop starting.",
+      "Manage flow — optimize cycle time.",
+      "Make policies explicit — reduce conflict.",
+      "Implement feedback loops — improve the system.",
+      "Improve collaboratively — evolve with evidence."
+    ]
+  },
   "designer": {
     "new_board": "New Board",
     "add_column": "Add Column",

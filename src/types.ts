@@ -18,6 +18,8 @@ export interface KanbanBoard {
   columns: KanbanColumn[]
   swimLanes: string[]
   showWipWarnings: boolean
+  /** Last save time for “My boards” list */
+  updatedAt?: number
 }
 
-export type Screen = 'designer' | 'templates' | 'learn'
+export type Screen = 'home' | 'designer' | 'templates' | 'learn'
