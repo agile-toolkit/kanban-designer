@@ -1,0 +1,58 @@
+{
+  "app": { "title": "Kanban Designer" },
+  "nav": { "designer": "Board", "templates": "Templates", "learn": "Learn" },
+  "designer": {
+    "new_board": "New Board",
+    "add_column": "Add Column",
+    "add_card": "Add Card",
+    "add_lane": "Add Swim Lane",
+    "wip_limit": "WIP Limit",
+    "no_limit": "None",
+    "wip_warning": "WIP exceeded!",
+    "export_json": "Export JSON",
+    "import_json": "Import JSON",
+    "clear": "Clear Board",
+    "clear_confirm": "Delete all columns and cards?",
+    "rename": "Rename",
+    "delete_column": "Delete column",
+    "delete_card": "Delete card",
+    "delete_lane": "Delete lane",
+    "column_name_placeholder": "Column name",
+    "card_title_placeholder": "Card title",
+    "show_wip_warnings": "Show WIP warnings",
+    "no_columns": "Add a column to get started, or pick a template.",
+    "total_columns": "columns",
+    "total_cards": "cards",
+    "cards_count": "cards"
+  },
+  "templates": {
+    "title": "Board Templates",
+    "load": "Use Template",
+    "subtitle": "Choose a pre-built board archetype as a starting point",
+    "context": {
+      "basic": "Best for teams just starting with Kanban. Simple, low-overhead. Grow from here.",
+      "development": "For software teams with code review and QA stages. Good starting point for engineering squads.",
+      "support": "Service desk with priority swim lanes (Critical / Normal). Fast triage orientation.",
+      "personal": "David Allen-inspired personal productivity system. WIP limit on 'Today' is key.",
+      "marketing": "Content production pipeline with topic swim lanes. Keeps different content types visible.",
+      "ops": "IT and operations change management with emergency lane. Helps separate planned vs reactive work.",
+      "research": "Discovery and research teams. Focus on flow of insights, not just tasks.",
+      "hiring": "Talent acquisition pipeline. Swim lanes per role/department to track parallel pipelines.",
+      "product": "Product discovery flow from opportunity to shipped. Double-diamond inspired.",
+      "crisis": "Incident management with priority lanes. Clear escalation path from detected to post-mortem."
+    }
+  },
+  "learn": {
+    "title": "Kanban Principles",
+    "wip_title": "WIP Limits & Little's Law",
+    "wip_body": "WIP (Work In Progress) limits constrain how many items can be in a column at once. Little's Law: Throughput = WIP / Cycle Time. Reducing WIP reduces cycle time and exposes bottlenecks faster.",
+    "flow_title": "Flow Efficiency",
+    "flow_body": "Flow efficiency = active time / total time. Most work items spend >70% of their life waiting, not being worked on. Visualizing flow (via Kanban) is the first step to improving it.",
+    "principles_title": "Core Kanban Principles",
+    "p1": "Visualize the workflow — make invisible work visible.",
+    "p2": "Limit WIP — start finishing, stop starting.",
+    "p3": "Manage flow — measure and optimize cycle time.",
+    "p4": "Make process policies explicit — clear rules reduce conflict.",
+    "p5": "Improve collaboratively — use models to guide change."
+  }
+}

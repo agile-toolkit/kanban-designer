@@ -1,0 +1,151 @@
+import type { KanbanBoard } from '../types'
+
+export const TEMPLATES: Array<KanbanBoard & { contextKey: string }> = [
+  {
+    id: 'basic',
+    name: 'Basic 3-Column',
+    contextKey: 'basic',
+    showWipWarnings: true,
+    swimLanes: [],
+    columns: [
+      { id: 'todo', name: 'To Do', wipLimit: null, cards: [] },
+      { id: 'wip', name: 'In Progress', wipLimit: 3, cards: [] },
+      { id: 'done', name: 'Done', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'development',
+    name: 'Software Development',
+    contextKey: 'development',
+    showWipWarnings: true,
+    swimLanes: [],
+    columns: [
+      { id: 'backlog', name: 'Backlog', wipLimit: null, cards: [] },
+      { id: 'analysis', name: 'Analysis', wipLimit: 2, cards: [] },
+      { id: 'dev', name: 'Development', wipLimit: 4, cards: [] },
+      { id: 'review', name: 'Code Review', wipLimit: 2, cards: [] },
+      { id: 'testing', name: 'Testing', wipLimit: 3, cards: [] },
+      { id: 'done', name: 'Done', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'support',
+    name: 'Support / Service Desk',
+    contextKey: 'support',
+    showWipWarnings: true,
+    swimLanes: ['Critical', 'Normal'],
+    columns: [
+      { id: 'inbox', name: 'Inbox', wipLimit: null, cards: [] },
+      { id: 'triage', name: 'Triage', wipLimit: 5, cards: [] },
+      { id: 'resolving', name: 'Resolving', wipLimit: 4, cards: [] },
+      { id: 'closed', name: 'Closed', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'personal',
+    name: 'Personal Kanban',
+    contextKey: 'personal',
+    showWipWarnings: true,
+    swimLanes: [],
+    columns: [
+      { id: 'ideas', name: 'Ideas', wipLimit: null, cards: [] },
+      { id: 'next', name: 'Up Next', wipLimit: 5, cards: [] },
+      { id: 'today', name: 'Today', wipLimit: 3, cards: [] },
+      { id: 'done', name: 'Done', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'marketing',
+    name: 'Marketing / Content',
+    contextKey: 'marketing',
+    showWipWarnings: true,
+    swimLanes: ['Blog', 'Social', 'Email'],
+    columns: [
+      { id: 'ideas', name: 'Ideas', wipLimit: null, cards: [] },
+      { id: 'draft', name: 'Draft', wipLimit: 3, cards: [] },
+      { id: 'review', name: 'Review', wipLimit: 2, cards: [] },
+      { id: 'scheduled', name: 'Scheduled', wipLimit: null, cards: [] },
+      { id: 'published', name: 'Published', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'ops',
+    name: 'Operations / IT',
+    contextKey: 'ops',
+    showWipWarnings: true,
+    swimLanes: ['Planned', 'Emergency'],
+    columns: [
+      { id: 'requested', name: 'Requested', wipLimit: null, cards: [] },
+      { id: 'approved', name: 'Approved', wipLimit: 3, cards: [] },
+      { id: 'inprogress', name: 'In Progress', wipLimit: 4, cards: [] },
+      { id: 'verification', name: 'Verification', wipLimit: 2, cards: [] },
+      { id: 'closed', name: 'Closed', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'research',
+    name: 'Research & Discovery',
+    contextKey: 'research',
+    showWipWarnings: false,
+    swimLanes: [],
+    columns: [
+      { id: 'questions', name: 'Questions', wipLimit: null, cards: [] },
+      { id: 'collecting', name: 'Collecting', wipLimit: 3, cards: [] },
+      { id: 'analyzing', name: 'Analyzing', wipLimit: 2, cards: [] },
+      { id: 'insights', name: 'Insights', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'hiring',
+    name: 'Hiring Pipeline',
+    contextKey: 'hiring',
+    showWipWarnings: true,
+    swimLanes: ['Engineering', 'Design', 'Product'],
+    columns: [
+      { id: 'sourcing', name: 'Sourcing', wipLimit: null, cards: [] },
+      { id: 'screening', name: 'Screening', wipLimit: 5, cards: [] },
+      { id: 'interview', name: 'Interview', wipLimit: 4, cards: [] },
+      { id: 'offer', name: 'Offer', wipLimit: 2, cards: [] },
+      { id: 'hired', name: 'Hired', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'product',
+    name: 'Product Discovery',
+    contextKey: 'product',
+    showWipWarnings: true,
+    swimLanes: [],
+    columns: [
+      { id: 'opportunity', name: 'Opportunity', wipLimit: null, cards: [] },
+      { id: 'discovery', name: 'Discovery', wipLimit: 2, cards: [] },
+      { id: 'design', name: 'Design', wipLimit: 2, cards: [] },
+      { id: 'validate', name: 'Validate', wipLimit: 2, cards: [] },
+      { id: 'build', name: 'Build', wipLimit: 4, cards: [] },
+      { id: 'shipped', name: 'Shipped', wipLimit: null, cards: [] },
+    ],
+  },
+  {
+    id: 'crisis',
+    name: 'Crisis / Incident Response',
+    contextKey: 'crisis',
+    showWipWarnings: true,
+    swimLanes: ['P1', 'P2', 'P3'],
+    columns: [
+      { id: 'detected', name: 'Detected', wipLimit: null, cards: [] },
+      { id: 'acknowledged', name: 'Acknowledged', wipLimit: 3, cards: [] },
+      { id: 'mitigating', name: 'Mitigating', wipLimit: 4, cards: [] },
+      { id: 'resolved', name: 'Resolved', wipLimit: null, cards: [] },
+      { id: 'postmortem', name: 'Post-Mortem', wipLimit: null, cards: [] },
+    ],
+  },
+]
+
+export function cloneTemplate(t: typeof TEMPLATES[0]): KanbanBoard {
+  return {
+    id: crypto.randomUUID(),
+    name: t.name,
+    columns: t.columns.map(c => ({ ...c, id: crypto.randomUUID(), cards: [] })),
+    swimLanes: [...t.swimLanes],
+    showWipWarnings: t.showWipWarnings,
+  }
+}
