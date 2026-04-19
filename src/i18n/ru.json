@@ -52,8 +52,7 @@
     "show_wip_warnings": "Показывать WIP-предупреждения",
     "no_columns": "Добавьте колонку или выберите шаблон.",
     "total_columns": "колонок",
-    "total_cards": "карточек",
-    "cards_count": "карт."
+    "total_cards": "карточек"
   },
   "templates": {
     "title": "Шаблоны досок",
