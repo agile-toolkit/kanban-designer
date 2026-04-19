@@ -52,8 +52,7 @@
     "show_wip_warnings": "Show WIP warnings",
     "no_columns": "Add a column to get started, or pick a template.",
     "total_columns": "columns",
-    "total_cards": "cards",
-    "cards_count": "cards"
+    "total_cards": "cards"
   },
   "templates": {
     "title": "Board Templates",

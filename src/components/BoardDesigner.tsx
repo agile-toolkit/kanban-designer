@@ -126,7 +126,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           {board.swimLanes.map(lane => (
             <div key={lane} className="flex items-center gap-1">
               <span className="text-xs bg-white border border-gray-200 rounded px-2 py-0.5 text-gray-600">{lane}</span>
-              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} className="text-gray-300 hover:text-red-400 text-xs">✕</button>
+              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} title={t('designer.delete_lane')} className="text-gray-300 hover:text-red-400 text-xs">✕</button>
             </div>
           ))}
         </div>

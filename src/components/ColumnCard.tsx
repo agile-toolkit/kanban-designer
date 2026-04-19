@@ -47,6 +47,7 @@ export default function ColumnCard({
           <input
             autoFocus
             className="flex-1 text-sm font-semibold bg-white border border-brand-300 rounded px-2 py-0.5 outline-none"
+            placeholder={t('designer.column_name_placeholder')}
             value={nameVal}
             onChange={e => setNameVal(e.target.value)}
             onBlur={() => { onRename(nameVal || column.name); setEditName(false) }}
@@ -56,7 +57,7 @@ export default function ColumnCard({
           <span
             className="flex-1 text-sm font-semibold text-gray-800 cursor-pointer hover:text-brand-600 truncate"
             onDoubleClick={() => { setNameVal(column.name); setEditName(true) }}
-            title="Double-click to rename"
+            title={t('designer.rename')}
           >
             {column.name}
           </span>
@@ -64,7 +65,7 @@ export default function ColumnCard({
         <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-500'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} className="text-gray-200 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 hover:text-red-400 text-xs ml-1">✕</button>
       </div>
 
       {isOverWip && (
@@ -78,7 +79,7 @@ export default function ColumnCard({
           type="number"
           min={1}
           max={99}
-          placeholder="—"
+          placeholder={t('designer.no_limit')}
           className="w-12 text-xs text-center border border-gray-200 rounded px-1 py-0.5 bg-white outline-none focus:border-brand-400"
           value={column.wipLimit ?? ''}
           onChange={e => onWipChange(e.target.value ? Number(e.target.value) : null)}
@@ -92,6 +93,7 @@ export default function ColumnCard({
             <span className="flex-1 text-gray-700 leading-snug">{card.title}</span>
             <button
               onClick={() => onDeleteCard(card.id)}
+              title={t('designer.delete_card')}
               className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
             >
               ✕
