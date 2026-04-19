@@ -1,30 +1,27 @@
-# BRIEF
+# Kanban Designer — Brief
 
-Derived per [`agent-state.NO-BRIEF.md`](https://github.com/agile-toolkit/.github/blob/main/agent-state.NO-BRIEF.md). There was **no prior** `BRIEF.md`. Sources: `README.md`, `src/i18n/en.json` / `ru.json`, `src/`. Generated **2026-04-19**.
+## Overview
 
-## Product scope (from `README.md`)
+Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery with context labels. React 18, Vite, Tailwind, `@dnd-kit`, react-i18next. Deploy: GitHub Pages.
 
-- **Kanban board designer:** columns, WIP limits, swim lanes, **10 archetypes** with educational context.
-- Stack: React 18, TypeScript, Vite, Tailwind, `@dnd-kit`, react-i18next (EN/RU).
-- Deploy: GitHub Pages via Actions on `main`.
+## Features
 
-## Build
+- [x] Board editor — columns, cards, WIP warnings, import/export JSON (`BoardDesigner.tsx`, `App.tsx`)
+- [x] Template gallery — `templates.context.*` via `` t(`templates.context.${contextKey}`) ``
+- [x] EN + RU
+- [ ] Designer strings — `designer.no_limit`, `rename`, `delete_column`, `delete_card`, `delete_lane`, `column_name_placeholder`, `cards_count` appear unused (no literal `t('…')` in `src/`); wire UI or delete from locales
 
-- `npm run build` — **passes** (verified **2026-04-19**).
+## Backlog
 
-## TODO / FIXME in `src/`
+<!-- Research / UX issues -->
 
-- None.
+## Tech notes
 
-## i18n — dynamic keys
+- Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
-- `templates.context.*` used via `` t(`templates.context.${tpl.contextKey}`) `` in `HomeScreen.tsx`, `TemplatesView.tsx`.
+## Agent Log
 
-## i18n — likely orphaned keys (verify)
+### 2026-04-19 — docs: BRIEF template (AGENT_AUTONOMOUS)
 
-No literal `t('designer.no_limit')` / `rename` / `delete_column` / `delete_card` / `delete_lane` / `column_name_placeholder` / `cards_count` found under `src/` — keys may be **unused** or reserved for a future toolbar. Confirm in `src/i18n/en.json` and either wire in `BoardDesigner.tsx` / `ColumnCard.tsx` or remove.
-
-## Classification (NO-BRIEF)
-
-- **Status:** `in-progress` until designer.* orphan keys are resolved or documented as intentional.
-- **First next task:** For each unused `designer.*` string in `en.json`, either add UI (column rename/delete, card delete, “no limit” label) in `src/components/BoardDesigner.tsx` / `ColumnCard.tsx` or delete the key from `en.json` and `ru.json`.
+- Done: Template migration; flagged orphan `designer.*` keys.
+- Next task: For each orphan `designer.*` in `en.json`, add UI in `BoardDesigner.tsx` / `ColumnCard.tsx` or remove from `en.json` and `ru.json`.
