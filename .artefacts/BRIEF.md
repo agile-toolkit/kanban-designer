@@ -1,40 +1,30 @@
-# BRIEF — Kanban Designer
+# BRIEF
 
-## What this app does
-An interactive Kanban board designer and configurator. Users can design a Kanban system from scratch — define columns (workflow stages), set WIP limits, add swim lanes, and visualize flow. The app shows different board archetypes (from the source material's 10 board examples) as starting templates and explains the rationale behind each design choice.
+Derived per [`agent-state.NO-BRIEF.md`](https://github.com/agile-toolkit/.github/blob/main/agent-state.NO-BRIEF.md). There was **no prior** `BRIEF.md`. Sources: `README.md`, `src/i18n/en.json` / `ru.json`, `src/`. Generated **2026-04-19**.
 
-## Target users
-Team leads, Agile coaches, and project managers setting up or improving a Kanban system for software or knowledge-work teams.
+## Product scope (from `README.md`)
 
-## Core features (MVP)
-- Visual board builder: drag-and-drop columns, rename, reorder, delete
-- WIP limit configuration per column with visual violation warnings
-- Swim lane support (by team, by urgency, by work type)
-- 10 pre-built board templates from the source material
-- "Why this design?" educational callouts for each template
-- Export board config as JSON or PNG snapshot
+- **Kanban board designer:** columns, WIP limits, swim lanes, **10 archetypes** with educational context.
+- Stack: React 18, TypeScript, Vite, Tailwind, `@dnd-kit`, react-i18next (EN/RU).
+- Deploy: GitHub Pages via Actions on `main`.
 
-## Educational layer
-- Each board template has a context card: when to use it, its strengths and risks
-- WIP limit explainer: Little's Law, flow efficiency, queue theory basics
-- Kanban principles panel referencing Scrum & Kanban book
+## Build
 
-## Tech stack
-React 18 + TypeScript + Vite + Tailwind CSS + @dnd-kit for drag-and-drop. No backend for MVP. GitHub Pages deployment.
+- `npm run build` — **passes** (verified **2026-04-19**).
 
-## Source materials in `.artefacts/`
-- `10 different kanban boards and their context - RU.pdf` — 10 board archetypes with context
-- `ScrumAndKanbanRuFinal.pdf` — Scrum & Kanban theory
-- `BacklogManager-v8.xls` — backlog/flow data reference
+## TODO / FIXME in `src/`
 
-## i18n
-English + Russian (react-i18next).
+- None.
 
-## Agentic pipeline roles
-- `/vadavik` — spec & requirements validation
-- `/lojma` — UX/UI design (board canvas, column cards, WIP badges)
-- `/laznik` — architecture (state model for board config, drag-and-drop)
-- `@cmok` — implementation
-- `@bahnik` — QA (drag-and-drop edge cases, WIP overflow states)
-- `@piarun` — documentation
-- `@zlydni` — git commits & GitHub Pages deploy
+## i18n — dynamic keys
+
+- `templates.context.*` used via `` t(`templates.context.${tpl.contextKey}`) `` in `HomeScreen.tsx`, `TemplatesView.tsx`.
+
+## i18n — likely orphaned keys (verify)
+
+No literal `t('designer.no_limit')` / `rename` / `delete_column` / `delete_card` / `delete_lane` / `column_name_placeholder` / `cards_count` found under `src/` — keys may be **unused** or reserved for a future toolbar. Confirm in `src/i18n/en.json` and either wire in `BoardDesigner.tsx` / `ColumnCard.tsx` or remove.
+
+## Classification (NO-BRIEF)
+
+- **Status:** `in-progress` until designer.* orphan keys are resolved or documented as intentional.
+- **First next task:** For each unused `designer.*` string in `en.json`, either add UI (column rename/delete, card delete, “no limit” label) in `src/components/BoardDesigner.tsx` / `ColumnCard.tsx` or delete the key from `en.json` and `ru.json`.
