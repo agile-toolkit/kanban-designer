@@ -14,12 +14,21 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 ## Backlog
 
 <!-- Research / UX issues -->
+- [ ] [#2] Feature: add ES and BE locales (parity with suite)
+- [ ] [#3] Feature: card drag-and-drop between columns
+- [ ] [#4] Integration: export board snapshot as shareable image
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-04-25 — research: market + UX + integration opportunities
+
+- Done: created issues #2 (ES+BE locales), #3 (card drag-and-drop between columns), #4 (export board snapshot as image)
+- Waiting for human review on all three
+- Next task: check needs-review issues for human feedback (#2 ES+BE locales, #3 card drag-and-drop, #4 board image export)
 
 ### 2026-04-19 — feat: wire orphan designer.* i18n keys
 
