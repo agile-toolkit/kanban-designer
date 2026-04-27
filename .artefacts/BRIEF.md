@@ -17,12 +17,20 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [ ] [#2] Feature: add ES and BE locales (parity with suite)
 - [ ] [#3] Feature: card drag-and-drop between columns
 - [ ] [#4] Integration: export board snapshot as shareable image
+- [ ] [#5] Feature: card colour labels for priority and type tagging
+- [ ] [#6] Integration: Sprint Metrics — export per-column flow data
+- [ ] [#7] Feature: shareable board URL (encode state in URL fragment)
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-04-27 — research: market + integration + UX opportunities (round 2)
+- Done: created issues #5 (card colour labels), #6 (Sprint Metrics flow data integration), #7 (shareable board URL)
+- Existing issues #2 #3 #4 still awaiting human review — no feedback yet
+- Next task: check needs-review issues for human feedback (#2 ES+BE locales, #3 card drag-and-drop, #4 board image export, #5 card colour labels, #6 Sprint Metrics integration, #7 shareable URL)
 
 ### 2026-04-25 — research: market + UX + integration opportunities
 
