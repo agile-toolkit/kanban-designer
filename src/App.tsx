@@ -181,13 +181,17 @@ export default function App() {
                 </button>
               </>
             )}
-            <button
-              type="button"
-              onClick={() => i18n.changeLanguage(i18n.language.startsWith('ru') ? 'en' : 'ru')}
-              className="ml-2 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100"
+            <select
+              value={i18n.language.slice(0, 2)}
+              onChange={e => i18n.changeLanguage(e.target.value)}
+              className="ml-2 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 bg-transparent border-0 cursor-pointer"
+              aria-label="Language"
             >
-              {i18n.language.startsWith('ru') ? 'EN' : 'RU'}
-            </button>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+              <option value="be">BE</option>
+              <option value="ru">RU</option>
+            </select>
           </div>
         </div>
       </header>

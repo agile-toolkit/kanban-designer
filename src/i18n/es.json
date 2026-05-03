@@ -1,0 +1,87 @@
+{
+  "app": { "title": "Diseñador Kanban" },
+  "nav": {
+    "home": "Inicio",
+    "designer": "Tablero",
+    "templates": "Plantillas",
+    "learn": "Aprender"
+  },
+  "home": {
+    "headline": "Diseña tu sistema Kanban",
+    "intro": "Comienza desde una plantilla o un tablero en blanco, luego ajusta columnas, límites WIP y carriles.",
+    "newBoard": "Tablero en blanco",
+    "default_board_name": "Nuevo tablero",
+    "templates": "Plantillas",
+    "myBoards": "Mis tableros",
+    "learnMore": "Detalles",
+    "useTemplate": "Usar",
+    "wipExplainer": "¿Por qué limitar el WIP?",
+    "wipText": "Limitar el trabajo en curso expone cuellos de botella, acorta el tiempo de ciclo y mejora la previsibilidad — empieza a terminar, deja de empezar.",
+    "noBoards": "Aún no hay tableros guardados. Crea uno desde la pestaña Plantillas.",
+    "continue": "Abrir",
+    "delete": "Eliminar",
+    "delete_confirm": "¿Eliminar este tablero de este dispositivo?",
+    "pick_or_create": "Elige un tablero en Inicio, crea uno en blanco o selecciona una plantilla.",
+    "principlesList": [
+      "Visualiza el flujo de trabajo — haz visible el trabajo invisible.",
+      "Limita el WIP — empieza a terminar, deja de empezar.",
+      "Gestiona el flujo — optimiza el tiempo de ciclo.",
+      "Haz explícitas las políticas — reduce los conflictos.",
+      "Implementa bucles de retroalimentación — mejora el sistema.",
+      "Mejora colaborativamente — evoluciona con evidencia."
+    ]
+  },
+  "designer": {
+    "new_board": "Nuevo tablero",
+    "add_column": "Añadir columna",
+    "add_card": "Añadir tarjeta",
+    "add_lane": "Añadir carril",
+    "wip_limit": "Límite WIP",
+    "no_limit": "Sin límite",
+    "wip_warning": "¡WIP superado!",
+    "export_json": "Exportar JSON",
+    "import_json": "Importar JSON",
+    "clear": "Limpiar tablero",
+    "clear_confirm": "¿Eliminar todas las columnas y tarjetas?",
+    "rename": "Renombrar",
+    "delete_column": "Eliminar columna",
+    "delete_card": "Eliminar tarjeta",
+    "delete_lane": "Eliminar carril",
+    "column_name_placeholder": "Nombre de columna",
+    "card_title_placeholder": "Título de tarjeta",
+    "show_wip_warnings": "Mostrar advertencias WIP",
+    "no_columns": "Añade una columna para empezar o elige una plantilla.",
+    "total_columns": "columnas",
+    "total_cards": "tarjetas"
+  },
+  "templates": {
+    "title": "Plantillas de tablero",
+    "load": "Usar plantilla",
+    "subtitle": "Elige un arquetipo de tablero preconfigurado como punto de partida",
+    "context": {
+      "basic": "Ideal para equipos que empiezan con Kanban. Simple y de bajo coste. Crece desde aquí.",
+      "development": "Para equipos de software con etapas de revisión de código y QA.",
+      "support": "Mesa de servicio con carriles de prioridad (Crítico / Normal). Orientación rápida al triage.",
+      "personal": "Sistema de productividad personal inspirado en David Allen. El límite WIP en 'Hoy' es clave.",
+      "marketing": "Canal de producción de contenido con carriles por tema. Mantiene visible cada tipo de contenido.",
+      "ops": "Gestión de cambios de IT y operaciones con carril de emergencia. Separa trabajo planificado del reactivo.",
+      "research": "Equipos de descubrimiento e investigación. Foco en el flujo de hallazgos, no solo tareas.",
+      "hiring": "Canal de adquisición de talento. Carriles por rol/departamento para pipelines paralelos.",
+      "product": "Flujo de descubrimiento de producto, desde oportunidad hasta lanzamiento. Inspirado en el doble diamante.",
+      "crisis": "Gestión de incidentes con carriles de prioridad. Ruta de escalación clara desde detección hasta post-mortem."
+    }
+  },
+  "learn": {
+    "title": "Principios Kanban",
+    "wip_title": "Límites WIP y la Ley de Little",
+    "wip_body": "Los límites WIP restringen cuántos elementos pueden estar en una columna a la vez. Ley de Little: Rendimiento = WIP / Tiempo de ciclo. Reducir el WIP reduce el tiempo de ciclo y expone cuellos de botella más rápido.",
+    "flow_title": "Eficiencia de flujo",
+    "flow_body": "Eficiencia de flujo = tiempo activo / tiempo total. La mayoría de los elementos de trabajo pasan >70% de su vida esperando, no siendo trabajados. Visualizar el flujo (con Kanban) es el primer paso para mejorarlo.",
+    "principles_title": "Principios fundamentales de Kanban",
+    "p1": "Visualizar el flujo de trabajo — hacer visible el trabajo invisible.",
+    "p2": "Limitar el WIP — empieza a terminar, deja de empezar.",
+    "p3": "Gestionar el flujo — medir y optimizar el tiempo de ciclo.",
+    "p4": "Hacer explícitas las políticas del proceso — reglas claras reducen conflictos.",
+    "p5": "Mejorar colaborativamente — usar modelos para guiar el cambio."
+  }
+}
