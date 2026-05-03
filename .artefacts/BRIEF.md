@@ -8,13 +8,13 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 
 - [x] Board editor — columns, cards, WIP warnings, import/export JSON (`BoardDesigner.tsx`, `App.tsx`)
 - [x] Template gallery — `templates.context.*` via `` t(`templates.context.${contextKey}`) ``
-- [x] EN + RU
+- [x] EN + ES + BE + RU — all four locales with full key coverage; `<select>` language switcher in nav
 - [x] Designer strings wired — `designer.rename` (tooltip on column name), `delete_column`/`delete_card`/`delete_lane` (button titles), `no_limit` (WIP input placeholder), `column_name_placeholder` (rename input); duplicate `cards_count` removed
 
 ## Backlog
 
 <!-- Research / UX issues -->
-- [ ] [#2] Feature: add ES and BE locales (parity with suite)
+- [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
 - [ ] [#3] Feature: card drag-and-drop between columns
 - [ ] [#4] Integration: export board snapshot as shareable image
 - [ ] [#5] Feature: card colour labels for priority and type tagging
@@ -26,6 +26,12 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-03 — feat: ES + BE locales (#2)
+- Done: created `src/i18n/es.json` and `src/i18n/be.json` with full key coverage; registered both in `src/i18n/index.ts`; replaced EN↔RU toggle button with `<select>` cycling all four languages (EN/ES/BE/RU) in App.tsx nav
+- Issue #2 fully implemented; project status → In Review
+- Remaining approved: #3 (card drag-and-drop), #6 (Sprint Metrics integration)
+- Next task: implement #3 (card drag-and-drop between columns using @dnd-kit multi-container sortable)
 
 ### 2026-04-27 — research: market + integration + UX opportunities (round 2)
 - Done: created issues #5 (card colour labels), #6 (Sprint Metrics flow data integration), #7 (shareable board URL)
