@@ -137,41 +137,27 @@ export default function App() {
         <div className="px-4 h-14 flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <a
-                          href="https://agile-toolkit.github.io/"
-                          title="Agile Toolkit"
-                          className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
-                        >
-                          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="currentColor">
-                            <rect x="1" y="1" width="6" height="6" rx="1"/>
-                            <rect x="9" y="1" width="6" height="6" rx="1"/>
-                            <rect x="1" y="9" width="6" height="6" rx="1"/>
-                            <rect x="9" y="9" width="6" height="6" rx="1"/>
-                          </svg>
-                        </a>
-          <div className="flex items-center gap-2">
-            <a
-                          href="https://agile-toolkit.github.io/"
-                          title="Agile Toolkit"
-                          className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
-                        >
-                          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="currentColor">
-                            <rect x="1" y="1" width="6" height="6" rx="1"/>
-                            <rect x="9" y="1" width="6" height="6" rx="1"/>
-                            <rect x="1" y="9" width="6" height="6" rx="1"/>
-                            <rect x="9" y="9" width="6" height="6" rx="1"/>
-                          </svg>
-                        </a>
-          <button
-            type="button"
-            onClick={() => setScreen('home')}
-            className="font-semibold text-brand-600 hover:text-brand-700"
-          >
-            {t('app.title')}
-            {board && (
-              <span className="ml-2 text-gray-400 text-sm font-normal">{board.name}</span>
-            )}
-          </button>
-          </div>
+              href="https://agile-toolkit.github.io/"
+              title="Agile Toolkit"
+              className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="currentColor">
+                <rect x="1" y="1" width="6" height="6" rx="1"/>
+                <rect x="9" y="1" width="6" height="6" rx="1"/>
+                <rect x="1" y="9" width="6" height="6" rx="1"/>
+                <rect x="9" y="9" width="6" height="6" rx="1"/>
+              </svg>
+            </a>
+            <button
+              type="button"
+              onClick={() => setScreen('home')}
+              className="font-semibold text-brand-600 hover:text-brand-700"
+            >
+              {t('app.title')}
+              {board && (
+                <span className="ml-2 text-gray-400 text-sm font-normal">{board.name}</span>
+              )}
+            </button>
           </div>
           <div className="flex items-center gap-1 flex-wrap justify-end">
             {navItems.map(item => (
