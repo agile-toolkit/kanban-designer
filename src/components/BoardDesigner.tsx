@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  DndContext, closestCenter, KeyboardSensor, PointerSensor,
-  useSensor, useSensors, type DragEndEvent,
+  DndContext, closestCorners, KeyboardSensor, PointerSensor,
+  useSensor, useSensors, type DragEndEvent, type DragStartEvent,
+  DragOverlay,
 } from '@dnd-kit/core'
 import {
   SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove,
 } from '@dnd-kit/sortable'
-import type { KanbanBoard } from '../types'
+import type { KanbanBoard, KanbanCard } from '../types'
 import ColumnCard from './ColumnCard'
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 export default function BoardDesigner({ board, onUpdate }: Props) {
   const { t } = useTranslation()
   const [newLane, setNewLane] = useState('')
+  const [activeCard, setActiveCard] = useState<KanbanCard | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -35,13 +37,74 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event
+    for (const col of board.columns) {
+      const card = col.cards.find(c => c.id === active.id)
+      if (card) { setActiveCard(card); return }
+    }
+    setActiveCard(null)
+  }
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
+    setActiveCard(null)
     if (!over || active.id === over.id) return
-    const oldIdx = board.columns.findIndex(c => c.id === active.id)
-    const newIdx = board.columns.findIndex(c => c.id === over.id)
-    if (oldIdx !== -1 && newIdx !== -1) {
-      patch({ columns: arrayMove(board.columns, oldIdx, newIdx) })
+
+    // Column drag — active is a column
+    const activeColIdx = board.columns.findIndex(c => c.id === active.id)
+    if (activeColIdx !== -1) {
+      const overColIdx = board.columns.findIndex(c => c.id === over.id)
+      if (overColIdx !== -1) {
+        patch({ columns: arrayMove(board.columns, activeColIdx, overColIdx) })
+      }
+      return
+    }
+
+    // Card drag — find source column and card index
+    let srcColId: string | null = null
+    let srcCardIdx = -1
+    for (const col of board.columns) {
+      const idx = col.cards.findIndex(c => c.id === active.id)
+      if (idx !== -1) { srcColId = col.id; srcCardIdx = idx; break }
+    }
+    if (!srcColId) return
+
+    // Find destination: over can be a column or a card
+    let dstColId: string | null = null
+    let dstCardIdx = -1
+    const overAsCol = board.columns.find(c => c.id === over.id)
+    if (overAsCol) {
+      // Dropped on a column header/area — append to end
+      dstColId = overAsCol.id
+      dstCardIdx = overAsCol.cards.length
+    } else {
+      // Dropped on a card — insert at that card's position
+      for (const col of board.columns) {
+        const idx = col.cards.findIndex(c => c.id === over.id)
+        if (idx !== -1) { dstColId = col.id; dstCardIdx = idx; break }
+      }
+    }
+    if (!dstColId) return
+
+    if (srcColId === dstColId) {
+      // Reorder within same column
+      const col = board.columns.find(c => c.id === srcColId)!
+      patch({ columns: board.columns.map(c => c.id === srcColId ? { ...c, cards: arrayMove(col.cards, srcCardIdx, dstCardIdx) } : c) })
+    } else {
+      // Move card to different column
+      const srcCard = board.columns.find(c => c.id === srcColId)!.cards[srcCardIdx]
+      patch({
+        columns: board.columns.map(col => {
+          if (col.id === srcColId) return { ...col, cards: col.cards.filter(c => c.id !== srcCard.id) }
+          if (col.id === dstColId) {
+            const newCards = [...col.cards]
+            newCards.splice(dstCardIdx < 0 ? newCards.length : dstCardIdx, 0, srcCard)
+            return { ...col, cards: newCards }
+          }
+          return col
+        }),
+      })
     }
   }
 
@@ -115,6 +178,20 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </label>
 
         <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
+          <button
+            onClick={() => {
+              const payload = {
+                boardName: board.name,
+                exportedAt: new Date().toISOString(),
+                columns: board.columns.map(c => ({ name: c.name, cardCount: c.cards.length, wipLimit: c.wipLimit })),
+              }
+              const encoded = btoa(JSON.stringify(payload))
+              window.open(`https://agile-toolkit.github.io/sprint-metrics/?kanban=${encoded}`, '_blank', 'noopener')
+            }}
+            className="text-xs text-brand-600 hover:text-brand-700 font-medium border border-brand-200 rounded px-2 py-1 hover:bg-brand-50 transition-colors"
+          >
+            {t('designer.send_to_sprint_metrics')}
+          </button>
           <span>{board.columns.length} {t('designer.total_columns')}</span>
           <span>{totalCards} {t('designer.total_cards')}</span>
         </div>
@@ -139,7 +216,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             {t('designer.no_columns')}
           </div>
         ) : (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={board.columns.map(c => c.id)} strategy={horizontalListSortingStrategy}>
               <div className="flex gap-3 min-w-max">
                 {board.columns.map(col => (
@@ -156,6 +238,13 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                 ))}
               </div>
             </SortableContext>
+            <DragOverlay>
+              {activeCard ? (
+                <div className="bg-white rounded-lg border border-brand-300 px-2.5 py-2 text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
+                  <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
+                </div>
+              ) : null}
+            </DragOverlay>
           </DndContext>
         )}
       </div>

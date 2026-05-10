@@ -1,8 +1,43 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSortable } from '@dnd-kit/sortable'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { KanbanColumn } from '../types'
+import type { KanbanColumn, KanbanCard } from '../types'
+
+interface CardItemProps {
+  card: KanbanCard
+  onDelete: () => void
+  deleteTitle: string
+}
+
+function CardItem({ card, onDelete, deleteTitle }: CardItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: card.id })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+  }
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="bg-white rounded-lg border border-gray-200 px-2.5 py-2 text-xs flex items-start gap-2 group shadow-sm cursor-grab active:cursor-grabbing touch-none"
+    >
+      <span className="flex-1 text-gray-700 leading-snug select-none">{card.title}</span>
+      <button
+        onPointerDown={e => e.stopPropagation()}
+        onClick={onDelete}
+        title={deleteTitle}
+        className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        ✕
+      </button>
+    </div>
+  )
+}
 
 interface Props {
   column: KanbanColumn
@@ -40,7 +75,7 @@ export default function ColumnCard({
         isOverWip ? 'border-red-300 bg-red-50' : 'border-gray-200'
       }`}
     >
-      {/* Header */}
+      {/* Header — drag handle for column reordering */}
       <div className="p-3 flex items-center gap-2" {...attributes} {...listeners}>
         <div className="cursor-grab text-gray-300 text-sm select-none">⠿</div>
         {editName ? (
@@ -86,20 +121,18 @@ export default function ColumnCard({
         />
       </div>
 
-      {/* Cards */}
+      {/* Cards — vertical sortable per column */}
       <div className="flex-1 px-2 pb-2 space-y-1.5 min-h-[40px]">
-        {column.cards.map(card => (
-          <div key={card.id} className="bg-white rounded-lg border border-gray-200 px-2.5 py-2 text-xs flex items-start gap-2 group shadow-sm">
-            <span className="flex-1 text-gray-700 leading-snug">{card.title}</span>
-            <button
-              onClick={() => onDeleteCard(card.id)}
-              title={t('designer.delete_card')}
-              className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
+        <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
+          {column.cards.map(card => (
+            <CardItem
+              key={card.id}
+              card={card}
+              onDelete={() => onDeleteCard(card.id)}
+              deleteTitle={t('designer.delete_card')}
+            />
+          ))}
+        </SortableContext>
       </div>
 
       {/* Add card */}
