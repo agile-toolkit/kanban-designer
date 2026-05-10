@@ -52,7 +52,8 @@
     "show_wip_warnings": "Паказваць папярэджанні WIP",
     "no_columns": "Дадайце слупок для пачатку або выберыце шаблон.",
     "total_columns": "слупкоў",
-    "total_cards": "картак"
+    "total_cards": "картак",
+    "send_to_sprint_metrics": "Адправіць у Sprint Metrics"
   },
   "templates": {
     "title": "Шаблоны дошак",

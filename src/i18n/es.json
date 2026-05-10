@@ -52,7 +52,8 @@
     "show_wip_warnings": "Mostrar advertencias WIP",
     "no_columns": "Añade una columna para empezar o elige una plantilla.",
     "total_columns": "columnas",
-    "total_cards": "tarjetas"
+    "total_cards": "tarjetas",
+    "send_to_sprint_metrics": "Enviar a Sprint Metrics"
   },
   "templates": {
     "title": "Plantillas de tablero",
