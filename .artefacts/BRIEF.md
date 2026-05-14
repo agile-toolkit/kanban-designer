@@ -13,6 +13,12 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Card drag-and-drop — cards sortable within and between columns via `@dnd-kit` multi-container sortable; `CardItem` component with `useSortable`; vertical `SortableContext` per column; `DragOverlay` ghost; column reorder preserved
 - [x] Sprint Metrics deep-link — "Send to Sprint Metrics" toolbar button encodes board column data as base64 JSON and opens `https://agile-toolkit.github.io/sprint-metrics/?kanban=<base64>` in a new tab; i18n key `designer.send_to_sprint_metrics` in all 4 locales
 
+## localStorage keys
+
+| Key | Written by | Shape |
+|-----|-----------|-------|
+| `kanban-designer:lastSession` | `App.tsx updateBoard()` (pending #10) | `{ boardName, columnCount, cardCount, boardCount, updatedAt }` |
+
 ## Backlog
 
 <!-- Research / UX issues -->
@@ -22,12 +28,23 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [ ] [#5] Feature: card colour labels for priority and type tagging
 - [x] [#6] Integration: Sprint Metrics — export per-column flow data — implemented
 - [ ] [#7] Feature: shareable board URL (encode state in URL fragment)
+- [ ] [#10] Integration: write kanban-designer:lastSession for Dashboard card
+- [ ] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
+- [ ] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-14 — research: Dashboard key + swim lane rows + keyboard accessibility
+- Done: checked all open issues — #2, #3, #6 already In Review; #4, #5, #7 still needs-review (no changes)
+- Done: created issue #10 (write kanban-designer:lastSession for Dashboard card — App.tsx single-file change)
+- Done: created issue #11 (swim lane rows — swimLanes already in types.ts but UI only shows tag bar, not row grid)
+- Done: created issue #12 (keyboard accessibility — Tab/arrow nav, ARIA roles, card keyboard handlers)
+- All three issues added to project with Backlog status
+- Next task: check issues for human feedback; implement first approved item among #4 (html2canvas export), #5 (card colour labels), #7 (shareable URL), #10 (localStorage session key), #11 (swim lane rows), #12 (keyboard a11y)
 
 ### 2026-05-10 — feat: card drag-and-drop + Sprint Metrics deep-link (#3, #6)
 - Done: extracted `CardItem` with `useSortable` in `ColumnCard.tsx`; added vertical `SortableContext` per column; updated `BoardDesigner.tsx` with `onDragStart`/`onDragEnd` for multi-container (column reorder + cross-column card move + intra-column card sort); added `DragOverlay` ghost; switched collision detection to `closestCorners`
