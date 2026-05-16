@@ -31,12 +31,23 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [ ] [#10] Integration: write kanban-designer:lastSession for Dashboard card
 - [ ] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
 - [ ] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
+- [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
+- [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
+- [ ] [#15] Integration: Planning Poker — import board cards as user stories for estimation
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-16 — research: card search/filter + WIP progress bar + Planning Poker integration
+- Done: checked all open issues — #4, #5, #7, #10, #11, #12 still needs-review (no human feedback); #2, #3, #6 approved and already fully implemented (In Review)
+- Done: created issue #13 (card search + filter — text search + colour/swim lane filter pills in BoardDesigner toolbar)
+- Done: created issue #14 (WIP limit progress bar — colour-coded gauge per column: green/amber/orange/red)
+- Done: created issue #15 (Planning Poker import — write kanban-designer:currentBoard to localStorage, 'Send to Planning Poker' deep-link + SetupView reader on Planning Poker side)
+- All three issues added to project with Backlog status
+- Next task: check issues for human feedback; implement first approved item among #4, #5, #7, #10, #11, #12, #13, #14, #15
 
 ### 2026-05-14 — research: Dashboard key + swim lane rows + keyboard accessibility
 - Done: checked all open issues — #2, #3, #6 already In Review; #4, #5, #7 still needs-review (no changes)
