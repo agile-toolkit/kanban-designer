@@ -53,6 +53,7 @@
     "no_columns": "Añade una columna para empezar o elige una plantilla.",
     "total_columns": "columnas",
     "total_cards": "tarjetas",
+    "export_image": "Exportar imagen",
     "send_to_sprint_metrics": "Enviar a Sprint Metrics"
   },
   "templates": {

@@ -12,6 +12,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Designer strings wired — `designer.rename` (tooltip on column name), `delete_column`/`delete_card`/`delete_lane` (button titles), `no_limit` (WIP input placeholder), `column_name_placeholder` (rename input); duplicate `cards_count` removed
 - [x] Card drag-and-drop — cards sortable within and between columns via `@dnd-kit` multi-container sortable; `CardItem` component with `useSortable`; vertical `SortableContext` per column; `DragOverlay` ghost; column reorder preserved
 - [x] Sprint Metrics deep-link — "Send to Sprint Metrics" toolbar button encodes board column data as base64 JSON and opens `https://agile-toolkit.github.io/sprint-metrics/?kanban=<base64>` in a new tab; i18n key `designer.send_to_sprint_metrics` in all 4 locales
+- [x] Board image export (#4) — "Export Image" toolbar button captures board canvas with `html2canvas` (scale 2×) and downloads `<board-name>-kanban.png`; i18n key `designer.export_image` in all 4 locales
 
 ## localStorage keys
 
@@ -24,7 +25,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 <!-- Research / UX issues -->
 - [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
 - [x] [#3] Feature: card drag-and-drop between columns — implemented
-- [ ] [#4] Integration: export board snapshot as shareable image
+- [x] [#4] Integration: export board snapshot as shareable image — implemented
 - [ ] [#5] Feature: card colour labels for priority and type tagging
 - [x] [#6] Integration: Sprint Metrics — export per-column flow data — implemented
 - [ ] [#7] Feature: shareable board URL (encode state in URL fragment)
@@ -40,6 +41,12 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-22 — feat: board image export (#4)
+- Done: installed html2canvas; added `exportImage()` in `BoardDesigner.tsx` with 2× scale PNG download; "Export Image" button in toolbar (disabled during capture); `boardCanvasRef` on board canvas div; `designer.export_image` key in EN/ES/BE/RU
+- Issue #4 fully implemented; project status → In Review
+- Remaining approved: #5, #7, #10, #11, #12, #13, #14, #15, #16, #17
+- Next task: implement #5 (card colour labels: add `color?: string` to Card type, 4px top border stripe on cards, colour swatch picker in card edit modal, i18n keys `designer.card_color` and `designer.no_color`)
 
 ### 2026-05-16 — research: card search/filter + WIP progress bar + Planning Poker integration
 - Done: checked all open issues — #4, #5, #7, #10, #11, #12 still needs-review (no human feedback); #2, #3, #6 approved and already fully implemented (In Review)

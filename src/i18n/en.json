@@ -53,6 +53,7 @@
     "no_columns": "Add a column to get started, or pick a template.",
     "total_columns": "columns",
     "total_cards": "cards",
+    "export_image": "Export Image",
     "send_to_sprint_metrics": "Send to Sprint Metrics"
   },
   "templates": {

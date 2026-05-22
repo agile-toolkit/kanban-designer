@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   DndContext, closestCorners, KeyboardSensor, PointerSensor,
@@ -8,6 +8,7 @@ import {
 import {
   SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove,
 } from '@dnd-kit/sortable'
+import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard } from '../types'
 import ColumnCard from './ColumnCard'
 
@@ -20,6 +21,27 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const { t } = useTranslation()
   const [newLane, setNewLane] = useState('')
   const [activeCard, setActiveCard] = useState<KanbanCard | null>(null)
+  const [exporting, setExporting] = useState(false)
+  const boardCanvasRef = useRef<HTMLDivElement>(null)
+
+  const exportImage = async () => {
+    if (!boardCanvasRef.current || exporting) return
+    setExporting(true)
+    try {
+      const canvas = await html2canvas(boardCanvasRef.current, {
+        backgroundColor: '#f9fafb',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+      const link = document.createElement('a')
+      link.download = `${board.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-kanban.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } finally {
+      setExporting(false)
+    }
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -179,6 +201,13 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
 
         <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
           <button
+            onClick={exportImage}
+            disabled={exporting}
+            className="text-xs text-gray-600 hover:text-gray-800 font-medium border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {exporting ? '…' : t('designer.export_image')}
+          </button>
+          <button
             onClick={() => {
               const payload = {
                 boardName: board.name,
@@ -210,7 +239,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       )}
 
       {/* Board canvas */}
-      <div className="flex-1 overflow-x-auto p-4">
+      <div ref={boardCanvasRef} className="flex-1 overflow-x-auto p-4">
         {board.columns.length === 0 ? (
           <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
             {t('designer.no_columns')}
