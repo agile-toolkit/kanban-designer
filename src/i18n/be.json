@@ -53,6 +53,7 @@
     "no_columns": "Дадайце слупок для пачатку або выберыце шаблон.",
     "total_columns": "слупкоў",
     "total_cards": "картак",
+    "export_image": "Экспартаваць малюнак",
     "send_to_sprint_metrics": "Адправіць у Sprint Metrics"
   },
   "templates": {
