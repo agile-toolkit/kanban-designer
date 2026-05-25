@@ -13,6 +13,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Card drag-and-drop — cards sortable within and between columns via `@dnd-kit` multi-container sortable; `CardItem` component with `useSortable`; vertical `SortableContext` per column; `DragOverlay` ghost; column reorder preserved
 - [x] Sprint Metrics deep-link — "Send to Sprint Metrics" toolbar button encodes board column data as base64 JSON and opens `https://agile-toolkit.github.io/sprint-metrics/?kanban=<base64>` in a new tab; i18n key `designer.send_to_sprint_metrics` in all 4 locales
 - [x] Board image export (#4) — "Export Image" toolbar button captures board canvas with `html2canvas` (scale 2×) and downloads `<board-name>-kanban.png`; i18n key `designer.export_image` in all 4 locales
+- [x] Card colour labels (#5) — `color?: string` on `KanbanCard` (stem: red/orange/yellow/green/blue/purple); 4px top border stripe on cards; inline card-edit mode (double-click title) shows title input + 6-swatch colour picker + clear button; `designer.card_color` / `designer.no_color` i18n keys in all 4 locales; colour visible in `DragOverlay` ghost
 
 ## localStorage keys
 
@@ -26,7 +27,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
 - [x] [#3] Feature: card drag-and-drop between columns — implemented
 - [x] [#4] Integration: export board snapshot as shareable image — implemented
-- [ ] [#5] Feature: card colour labels for priority and type tagging
+- [x] [#5] Feature: card colour labels for priority and type tagging — implemented
 - [x] [#6] Integration: Sprint Metrics — export per-column flow data — implemented
 - [ ] [#7] Feature: shareable board URL (encode state in URL fragment)
 - [ ] [#10] Integration: write kanban-designer:lastSession for Dashboard card
@@ -41,6 +42,12 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-25 — feat: card colour labels (#5)
+- Done: added `color?: string` to `KanbanCard` in `types.ts`; 6-colour palette (red/orange/yellow/green/blue/purple) with hex map; 4px top border stripe on `CardItem`; double-click card title opens inline edit with title input + colour swatches + clear button; `onUpdateCard` prop chain `CardItem → ColumnCard → BoardDesigner`; `DragOverlay` ghost now shows colour stripe; `designer.card_color` / `designer.no_color` i18n keys added to EN/ES/BE/RU
+- Issue #5 fully implemented; project status → In Review
+- Remaining approved: #7, #10, #11, #12, #13, #14, #15, #16, #17
+- Next task: implement #7 (shareable board URL: base64-encode board state to `window.location.hash` on every `onUpdate` call, hydrate from hash on load, "Copy link" toolbar button with `navigator.clipboard.writeText`, `designer.copy_link` / `designer.link_copied` i18n keys)
 
 ### 2026-05-22 — feat: board image export (#4)
 - Done: installed html2canvas; added `exportImage()` in `BoardDesigner.tsx` with 2× scale PNG download; "Export Image" button in toolbar (disabled during capture); `boardCanvasRef` on board canvas div; `designer.export_image` key in EN/ES/BE/RU

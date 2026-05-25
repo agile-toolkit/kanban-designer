@@ -10,6 +10,7 @@ export interface KanbanCard {
   id: string
   title: string
   swimLane?: string
+  color?: string
 }
 
 export interface KanbanBoard {

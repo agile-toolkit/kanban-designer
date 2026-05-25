@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Дизайнер Kanban" },
+  "app": {
+    "title": "Дизайнер Kanban"
+  },
   "nav": {
     "home": "Главная",
     "designer": "Доска",
@@ -54,7 +56,9 @@
     "total_columns": "колонок",
     "total_cards": "карточек",
     "export_image": "Экспортировать изображение",
-    "send_to_sprint_metrics": "Отправить в Sprint Metrics"
+    "send_to_sprint_metrics": "Отправить в Sprint Metrics",
+    "card_color": "Цвет карточки",
+    "no_color": "Без цвета"
   },
   "templates": {
     "title": "Шаблоны досок",

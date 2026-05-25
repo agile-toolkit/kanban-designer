@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Дызайнер Канбан" },
+  "app": {
+    "title": "Дызайнер Канбан"
+  },
   "nav": {
     "home": "Галоўная",
     "designer": "Дошка",
@@ -54,7 +56,9 @@
     "total_columns": "слупкоў",
     "total_cards": "картак",
     "export_image": "Экспартаваць малюнак",
-    "send_to_sprint_metrics": "Адправіць у Sprint Metrics"
+    "send_to_sprint_metrics": "Адправіць у Sprint Metrics",
+    "card_color": "Колер картачкі",
+    "no_color": "Без колеру"
   },
   "templates": {
     "title": "Шаблоны дошак",
