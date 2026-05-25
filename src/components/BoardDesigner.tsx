@@ -10,6 +10,8 @@ import {
 } from '@dnd-kit/sortable'
 import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard } from '../types'
+
+type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color'>>
 import ColumnCard from './ColumnCard'
 
 interface Props {
@@ -156,6 +158,16 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
+  const updateCard = (colId: string, cardId: string, updates: CardUpdates) => {
+    patch({
+      columns: board.columns.map(c =>
+        c.id === colId
+          ? { ...c, cards: c.cards.map(k => k.id === cardId ? { ...k, ...updates } : k) }
+          : c
+      ),
+    })
+  }
+
   const totalCards = board.columns.reduce((s, c) => s + c.cards.length, 0)
 
   return (
@@ -263,14 +275,21 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onDelete={() => deleteColumn(col.id)}
                     onAddCard={title => addCard(col.id, title)}
                     onDeleteCard={cardId => deleteCard(col.id, cardId)}
+                    onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
                   />
                 ))}
               </div>
             </SortableContext>
             <DragOverlay>
               {activeCard ? (
-                <div className="bg-white rounded-lg border border-brand-300 px-2.5 py-2 text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
-                  <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
+                <div className="bg-white rounded-lg border border-brand-300 overflow-hidden text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
+                  {activeCard.color && (() => {
+                    const COLORS: Record<string, string> = { red: '#f87171', orange: '#fb923c', yellow: '#facc15', green: '#4ade80', blue: '#60a5fa', purple: '#a78bfa' }
+                    return <div style={{ height: 4, backgroundColor: COLORS[activeCard.color] }} />
+                  })()}
+                  <div className="px-2.5 py-2">
+                    <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
+                  </div>
                 </div>
               ) : null}
             </DragOverlay>

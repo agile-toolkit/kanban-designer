@@ -5,36 +5,123 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard } from '../types'
 
+const CARD_COLORS = [
+  { stem: 'red',    hex: '#f87171' },
+  { stem: 'orange', hex: '#fb923c' },
+  { stem: 'yellow', hex: '#facc15' },
+  { stem: 'green',  hex: '#4ade80' },
+  { stem: 'blue',   hex: '#60a5fa' },
+  { stem: 'purple', hex: '#a78bfa' },
+]
+
+const colorHex = (stem?: string) => CARD_COLORS.find(c => c.stem === stem)?.hex
+
 interface CardItemProps {
   card: KanbanCard
   onDelete: () => void
+  onUpdate: (updates: Partial<Pick<KanbanCard, 'title' | 'color'>>) => void
   deleteTitle: string
+  cardColorLabel: string
+  noColorLabel: string
 }
 
-function CardItem({ card, onDelete, deleteTitle }: CardItemProps) {
+function CardItem({ card, onDelete, onUpdate, deleteTitle, cardColorLabel, noColorLabel }: CardItemProps) {
+  const [editing, setEditing] = useState(false)
+  const [editTitle, setEditTitle] = useState(card.title)
+  const [editColor, setEditColor] = useState<string | undefined>(card.color)
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: card.id })
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : 1,
   }
+
+  const openEdit = () => {
+    setEditTitle(card.title)
+    setEditColor(card.color)
+    setEditing(true)
+  }
+
+  const saveEdit = () => {
+    onUpdate({ title: editTitle.trim() || card.title, color: editColor })
+    setEditing(false)
+  }
+
+  const stripe = colorHex(editing ? editColor : card.color)
+
+  if (editing) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="bg-white rounded-lg border border-brand-300 overflow-hidden shadow-sm"
+        onPointerDown={e => e.stopPropagation()}
+      >
+        {stripe && <div style={{ height: 4, backgroundColor: stripe }} />}
+        <div className="px-2.5 py-2">
+          <input
+            autoFocus
+            className="w-full text-xs border border-gray-200 rounded px-2 py-1 outline-none focus:border-brand-400 mb-2"
+            value={editTitle}
+            onChange={e => setEditTitle(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') setEditing(false) }}
+          />
+          <div className="flex items-center gap-1 mb-2 flex-wrap">
+            <span className="text-xs text-gray-400">{cardColorLabel}:</span>
+            {CARD_COLORS.map(c => (
+              <button
+                key={c.stem}
+                style={{ backgroundColor: c.hex }}
+                className={`w-4 h-4 rounded-full border-2 transition-transform hover:scale-110 ${
+                  editColor === c.stem ? 'border-gray-700 scale-110' : 'border-white'
+                }`}
+                onClick={() => setEditColor(editColor === c.stem ? undefined : c.stem)}
+                title={c.stem}
+              />
+            ))}
+            {editColor && (
+              <button
+                onClick={() => setEditColor(undefined)}
+                className="text-xs text-gray-400 hover:text-gray-600"
+                title={noColorLabel}
+              >✕</button>
+            )}
+          </div>
+          <div className="flex gap-1">
+            <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
+            <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white rounded-lg border border-gray-200 px-2.5 py-2 text-xs flex items-start gap-2 group shadow-sm cursor-grab active:cursor-grabbing touch-none"
+      className="bg-white rounded-lg border border-gray-200 overflow-hidden text-xs flex flex-col group shadow-sm cursor-grab active:cursor-grabbing touch-none"
     >
-      <span className="flex-1 text-gray-700 leading-snug select-none">{card.title}</span>
-      <button
-        onPointerDown={e => e.stopPropagation()}
-        onClick={onDelete}
-        title={deleteTitle}
-        className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-      >
-        ✕
-      </button>
+      {stripe && <div style={{ height: 4, backgroundColor: stripe }} />}
+      <div className="px-2.5 py-2 flex items-start gap-2">
+        <span
+          className="flex-1 text-gray-700 leading-snug select-none"
+          onDoubleClick={e => { e.stopPropagation(); openEdit() }}
+        >
+          {card.title}
+        </span>
+        <button
+          onPointerDown={e => e.stopPropagation()}
+          onClick={onDelete}
+          title={deleteTitle}
+          className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          ✕
+        </button>
+      </div>
     </div>
   )
 }
@@ -47,10 +134,11 @@ interface Props {
   onDelete: () => void
   onAddCard: (title: string) => void
   onDeleteCard: (cardId: string) => void
+  onUpdateCard: (cardId: string, updates: Partial<Pick<KanbanCard, 'title' | 'color'>>) => void
 }
 
 export default function ColumnCard({
-  column, showWipWarnings, onRename, onWipChange, onDelete, onAddCard, onDeleteCard,
+  column, showWipWarnings, onRename, onWipChange, onDelete, onAddCard, onDeleteCard, onUpdateCard,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -129,7 +217,10 @@ export default function ColumnCard({
               key={card.id}
               card={card}
               onDelete={() => onDeleteCard(card.id)}
+              onUpdate={updates => onUpdateCard(card.id, updates)}
               deleteTitle={t('designer.delete_card')}
+              cardColorLabel={t('designer.card_color')}
+              noColorLabel={t('designer.no_color')}
             />
           ))}
         </SortableContext>
