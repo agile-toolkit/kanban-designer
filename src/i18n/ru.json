@@ -58,7 +58,9 @@
     "export_image": "Экспортировать изображение",
     "send_to_sprint_metrics": "Отправить в Sprint Metrics",
     "card_color": "Цвет карточки",
-    "no_color": "Без цвета"
+    "no_color": "Без цвета",
+    "copy_link": "Скопировать ссылку",
+    "link_copied": "Ссылка скопирована!"
   },
   "templates": {
     "title": "Шаблоны досок",

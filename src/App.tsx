@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
@@ -10,6 +10,23 @@ import LearnView from './components/LearnView'
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
 const CURRENT_KEY = 'kanban-designer-current-id'
+const HASH_PREFIX = 'board='
+
+function encodeBoard(board: KanbanBoard): string {
+  return btoa(encodeURIComponent(JSON.stringify(board)))
+}
+
+function parseBoardFromHash(): KanbanBoard | null {
+  try {
+    const hash = window.location.hash.slice(1)
+    if (!hash.startsWith(HASH_PREFIX)) return null
+    return JSON.parse(decodeURIComponent(atob(hash.slice(HASH_PREFIX.length)))) as KanbanBoard
+  } catch {
+    return null
+  }
+}
+
+const _urlBoard = parseBoardFromHash()
 
 function loadBoards(): KanbanBoard[] {
   try {
@@ -45,15 +62,29 @@ function exportJSON(board: KanbanBoard) {
 
 export default function App() {
   const { t, i18n } = useTranslation()
-  const [screen, setScreen] = useState<Screen>('home')
-  const [boards, setBoards] = useState<KanbanBoard[]>(loadBoards)
+  const [screen, setScreen] = useState<Screen>(() => (_urlBoard ? 'designer' : 'home'))
+  const [boards, setBoards] = useState<KanbanBoard[]>(() => {
+    const saved = loadBoards()
+    if (!_urlBoard) return saved
+    const idx = saved.findIndex(b => b.id === _urlBoard!.id)
+    const withTimestamp = { ..._urlBoard!, updatedAt: _urlBoard!.updatedAt ?? Date.now() }
+    if (idx !== -1) {
+      const merged = [...saved]
+      merged[idx] = withTimestamp
+      return merged
+    }
+    return [withTimestamp, ...saved]
+  })
   const [currentId, setCurrentId] = useState<string | null>(() => {
+    if (_urlBoard) return _urlBoard.id
     try {
       return localStorage.getItem(CURRENT_KEY)
     } catch {
       return null
     }
   })
+  const [linkCopied, setLinkCopied] = useState(false)
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const board = useMemo(
     () => boards.find(b => b.id === currentId) ?? null,
@@ -71,6 +102,22 @@ export default function App() {
       persistCurrent(null)
     }
   }, [boards, currentId])
+
+  useEffect(() => {
+    if (board) {
+      history.replaceState(null, '', `#${HASH_PREFIX}${encodeBoard(board)}`)
+    } else {
+      history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+  }, [board])
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setLinkCopied(true)
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
+      copyTimeoutRef.current = setTimeout(() => setLinkCopied(false), 2000)
+    })
+  }
 
   const updateBoard = (b: KanbanBoard) => {
     const next = { ...b, updatedAt: Date.now() }
@@ -184,6 +231,13 @@ export default function App() {
                   {t('designer.import_json')}
                   <input type="file" accept=".json" className="hidden" onChange={handleImport} />
                 </label>
+                <button
+                  type="button"
+                  onClick={copyLink}
+                  className={`btn-ghost transition-colors ${linkCopied ? 'text-green-600' : ''}`}
+                >
+                  {linkCopied ? t('designer.link_copied') : t('designer.copy_link')}
+                </button>
                 <button
                   type="button"
                   onClick={() => {

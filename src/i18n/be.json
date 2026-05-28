@@ -58,7 +58,9 @@
     "export_image": "Экспартаваць малюнак",
     "send_to_sprint_metrics": "Адправіць у Sprint Metrics",
     "card_color": "Колер картачкі",
-    "no_color": "Без колеру"
+    "no_color": "Без колеру",
+    "copy_link": "Капіяваць спасылку",
+    "link_copied": "Спасылка скапіявана!"
   },
   "templates": {
     "title": "Шаблоны дошак",

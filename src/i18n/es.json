@@ -58,7 +58,9 @@
     "export_image": "Exportar imagen",
     "send_to_sprint_metrics": "Enviar a Sprint Metrics",
     "card_color": "Color de tarjeta",
-    "no_color": "Ninguno"
+    "no_color": "Ninguno",
+    "copy_link": "Copiar enlace",
+    "link_copied": "¡Enlace copiado!"
   },
   "templates": {
     "title": "Plantillas de tablero",
