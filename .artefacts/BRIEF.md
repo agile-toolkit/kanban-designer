@@ -15,12 +15,13 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Board image export (#4) — "Export Image" toolbar button captures board canvas with `html2canvas` (scale 2×) and downloads `<board-name>-kanban.png`; i18n key `designer.export_image` in all 4 locales
 - [x] Card colour labels (#5) — `color?: string` on `KanbanCard` (stem: red/orange/yellow/green/blue/purple); 4px top border stripe on cards; inline card-edit mode (double-click title) shows title input + 6-swatch colour picker + clear button; `designer.card_color` / `designer.no_color` i18n keys in all 4 locales; colour visible in `DragOverlay` ghost
 - [x] Shareable board URL (#7) — board state base64-encoded in `window.location.hash` (`#board=<base64>`) on every update via `history.replaceState`; on load, URL board is decoded and added to the boards list (opens in designer); "Copy link" toolbar button with `navigator.clipboard.writeText`, 2-second "Link copied!" toast; `designer.copy_link` / `designer.link_copied` i18n keys in all 4 locales
+- [x] Dashboard localStorage key (#10) — `kanban-designer:lastSession` written by `writeLastSession()` inside `updateBoard()` on every board save; shape: `{ boardName, columnCount, cardCount, boardCount, updatedAt }`
 
 ## localStorage keys
 
 | Key | Written by | Shape |
 |-----|-----------|-------|
-| `kanban-designer:lastSession` | `App.tsx updateBoard()` (pending #10) | `{ boardName, columnCount, cardCount, boardCount, updatedAt }` |
+| `kanban-designer:lastSession` | `App.tsx updateBoard()` via `writeLastSession()` | `{ boardName: string, columnCount: number, cardCount: number, boardCount: number, updatedAt: string }` |
 
 ## Backlog
 
@@ -31,7 +32,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#5] Feature: card colour labels for priority and type tagging — implemented
 - [x] [#6] Integration: Sprint Metrics — export per-column flow data — implemented
 - [x] [#7] Feature: shareable board URL (encode state in URL fragment) — implemented
-- [ ] [#10] Integration: write kanban-designer:lastSession for Dashboard card
+- [x] [#10] Integration: write kanban-designer:lastSession for Dashboard card — implemented
 - [ ] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
 - [ ] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
 - [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
@@ -43,6 +44,12 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-30 — feat: Dashboard localStorage key (#10)
+- Done: added `LAST_SESSION_KEY = 'kanban-designer:lastSession'` constant; added `writeLastSession(activeBoard, allBoards)` helper that serialises `{ boardName, columnCount, cardCount, boardCount, updatedAt }` to localStorage; called from `updateBoard()` on every board save
+- Issue #10 fully implemented; project status → In Review
+- Remaining backlog: #11 (swim lane rows), #12 (keyboard a11y), #13 (card search/filter), #14 (WIP progress bar), #15 (Planning Poker import), #16 (AppHeader unification), #17 (light/dark theme)
+- Next task: implement #11 (swim lane rows — horizontal board striping: CSS grid when swimLanes.length > 0, filter cards by swimLane in ColumnCard, pill badge on cards, designer.swim_lane_none / designer.swim_lane_assign i18n keys)
 
 ### 2026-05-28 — feat: shareable board URL (#7)
 - Done: module-level `parseBoardFromHash()` decodes `#board=<base64>` on page load; if valid board found, added to boards list and opened in designer; `encodeBoard()` uses `btoa(encodeURIComponent(JSON.stringify(board)))`; `useEffect` on `board` writes `history.replaceState` on every board change; "Copy link" toolbar button calls `navigator.clipboard.writeText(window.location.href)` with 2-second green "Link copied!" toast; `designer.copy_link` / `designer.link_copied` keys in EN/ES/BE/RU
