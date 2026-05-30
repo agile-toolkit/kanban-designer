@@ -10,6 +10,7 @@ import LearnView from './components/LearnView'
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
 const CURRENT_KEY = 'kanban-designer-current-id'
+const LAST_SESSION_KEY = 'kanban-designer:lastSession'
 const HASH_PREFIX = 'board='
 
 function encodeBoard(board: KanbanBoard): string {
@@ -48,6 +49,17 @@ function loadBoards(): KanbanBoard[] {
 
 function saveBoards(boards: KanbanBoard[]) {
   localStorage.setItem(BOARDS_KEY, JSON.stringify(boards))
+}
+
+function writeLastSession(activeBoard: KanbanBoard, allBoards: KanbanBoard[]) {
+  const cardCount = activeBoard.columns.reduce((sum, col) => sum + col.cards.length, 0)
+  localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({
+    boardName: activeBoard.name,
+    columnCount: activeBoard.columns.length,
+    cardCount,
+    boardCount: allBoards.length,
+    updatedAt: new Date().toISOString(),
+  }))
 }
 
 function exportJSON(board: KanbanBoard) {
@@ -125,6 +137,7 @@ export default function App() {
       const idx = prev.findIndex(x => x.id === next.id)
       const merged = idx === -1 ? [...prev, next] : prev.map(x => (x.id === next.id ? next : x))
       saveBoards(merged)
+      writeLastSession(next, merged)
       return merged
     })
   }
