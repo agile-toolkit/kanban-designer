@@ -10,9 +10,7 @@ import {
 } from '@dnd-kit/sortable'
 import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard } from '../types'
-
-type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color'>>
-import ColumnCard from './ColumnCard'
+import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
 
 interface Props {
   board: KanbanBoard
@@ -75,7 +73,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     setActiveCard(null)
     if (!over || active.id === over.id) return
 
-    // Column drag — active is a column
+    // Column drag — active is a column (no-op in swim lane mode since no SortableContext for columns)
     const activeColIdx = board.columns.findIndex(c => c.id === active.id)
     if (activeColIdx !== -1) {
       const overColIdx = board.columns.findIndex(c => c.id === over.id)
@@ -99,11 +97,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     let dstCardIdx = -1
     const overAsCol = board.columns.find(c => c.id === over.id)
     if (overAsCol) {
-      // Dropped on a column header/area — append to end
       dstColId = overAsCol.id
       dstCardIdx = overAsCol.cards.length
     } else {
-      // Dropped on a card — insert at that card's position
       for (const col of board.columns) {
         const idx = col.cards.findIndex(c => c.id === over.id)
         if (idx !== -1) { dstColId = col.id; dstCardIdx = idx; break }
@@ -112,11 +108,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     if (!dstColId) return
 
     if (srcColId === dstColId) {
-      // Reorder within same column
       const col = board.columns.find(c => c.id === srcColId)!
       patch({ columns: board.columns.map(c => c.id === srcColId ? { ...c, cards: arrayMove(col.cards, srcCardIdx, dstCardIdx) } : c) })
     } else {
-      // Move card to different column
       const srcCard = board.columns.find(c => c.id === srcColId)!.cards[srcCardIdx]
       patch({
         columns: board.columns.map(col => {
@@ -140,11 +134,11 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     patch({ columns: board.columns.filter(c => c.id !== id) })
   }
 
-  const addCard = (colId: string, title: string) => {
+  const addCard = (colId: string, title: string, swimLane?: string) => {
     patch({
       columns: board.columns.map(c =>
         c.id === colId
-          ? { ...c, cards: [...c.cards, { id: crypto.randomUUID(), title }] }
+          ? { ...c, cards: [...c.cards, { id: crypto.randomUUID(), title, swimLane }] }
           : c
       ),
     })
@@ -169,6 +163,20 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   }
 
   const totalCards = board.columns.reduce((s, c) => s + c.cards.length, 0)
+  const hasSwimlanes = board.swimLanes.length > 0
+  const allLanes: (string | null)[] = [...board.swimLanes, null]
+
+  const dragOverlay = activeCard ? (
+    <div className="bg-white rounded-lg border border-brand-300 overflow-hidden text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
+      {activeCard.color && (() => {
+        const COLORS: Record<string, string> = { red: '#f87171', orange: '#fb923c', yellow: '#facc15', green: '#4ade80', blue: '#60a5fa', purple: '#a78bfa' }
+        return <div style={{ height: 4, backgroundColor: COLORS[activeCard.color] }} />
+      })()}
+      <div className="px-2.5 py-2">
+        <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
+      </div>
+    </div>
+  ) : null
 
   return (
     <div className="flex flex-col h-full">
@@ -238,8 +246,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </div>
       </div>
 
-      {/* Swim lanes header */}
-      {board.swimLanes.length > 0 && (
+      {/* Swim lanes management bar */}
+      {hasSwimlanes && (
         <div className="bg-gray-100 border-b border-gray-200 px-4 py-1.5 flex gap-2 items-center">
           {board.swimLanes.map(lane => (
             <div key={lane} className="flex items-center gap-1">
@@ -251,12 +259,70 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       )}
 
       {/* Board canvas */}
-      <div ref={boardCanvasRef} className="flex-1 overflow-x-auto p-4">
+      <div ref={boardCanvasRef} className="flex-1 overflow-auto p-4">
         {board.columns.length === 0 ? (
           <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
             {t('designer.no_columns')}
           </div>
+        ) : hasSwimlanes ? (
+          /* ── Swim lane grid ── */
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="min-w-max">
+              {/* Column headers row */}
+              <div className="flex gap-3 mb-2 ml-32">
+                {board.columns.map(col => (
+                  <ColumnHeaderStrip
+                    key={col.id}
+                    column={col}
+                    showWipWarnings={board.showWipWarnings}
+                    onRename={name => updateColumn(col.id, { name })}
+                    onWipChange={wipLimit => updateColumn(col.id, { wipLimit })}
+                    onDelete={() => deleteColumn(col.id)}
+                  />
+                ))}
+              </div>
+
+              {/* Lane rows */}
+              {allLanes.map(lane => (
+                <div key={lane ?? '__none__'} className="flex gap-3 items-start mb-2">
+                  {/* Lane label */}
+                  <div className="w-28 flex-shrink-0 self-stretch flex items-center justify-center">
+                    <span className="text-xs font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-center w-full truncate">
+                      {lane ?? t('designer.swim_lane_none')}
+                    </span>
+                  </div>
+
+                  {/* Column cells for this lane */}
+                  {board.columns.map(col => (
+                    <LaneCell
+                      key={col.id}
+                      column={col}
+                      lane={lane}
+                      activeLanes={board.swimLanes}
+                      swimLanePillNone={t('designer.swim_lane_none')}
+                      swimLaneAssign={t('designer.swim_lane_assign')}
+                      onAddCard={title => addCard(col.id, title, lane ?? undefined)}
+                      onDeleteCard={cardId => deleteCard(col.id, cardId)}
+                      onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
+                      addCardLabel={t('designer.add_card')}
+                      cardTitlePlaceholder={t('designer.card_title_placeholder')}
+                      deleteCardTitle={t('designer.delete_card')}
+                      cardColorLabel={t('designer.card_color')}
+                      noColorLabel={t('designer.no_color')}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+            <DragOverlay>{dragOverlay}</DragOverlay>
+          </DndContext>
         ) : (
+          /* ── Normal (no swim lanes) layout ── */
           <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}
@@ -280,19 +346,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                 ))}
               </div>
             </SortableContext>
-            <DragOverlay>
-              {activeCard ? (
-                <div className="bg-white rounded-lg border border-brand-300 overflow-hidden text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
-                  {activeCard.color && (() => {
-                    const COLORS: Record<string, string> = { red: '#f87171', orange: '#fb923c', yellow: '#facc15', green: '#4ade80', blue: '#60a5fa', purple: '#a78bfa' }
-                    return <div style={{ height: 4, backgroundColor: COLORS[activeCard.color] }} />
-                  })()}
-                  <div className="px-2.5 py-2">
-                    <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
-                  </div>
-                </div>
-              ) : null}
-            </DragOverlay>
+            <DragOverlay>{dragOverlay}</DragOverlay>
           </DndContext>
         )}
       </div>

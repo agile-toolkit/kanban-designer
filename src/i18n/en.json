@@ -58,7 +58,9 @@
     "card_color": "Card colour",
     "no_color": "None",
     "copy_link": "Copy link",
-    "link_copied": "Link copied!"
+    "link_copied": "Link copied!",
+    "swim_lane_none": "None",
+    "swim_lane_assign": "Assign lane"
   },
   "templates": {
     "title": "Board Templates",

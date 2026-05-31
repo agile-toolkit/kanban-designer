@@ -60,7 +60,9 @@
     "card_color": "Color de tarjeta",
     "no_color": "Ninguno",
     "copy_link": "Copiar enlace",
-    "link_copied": "¡Enlace copiado!"
+    "link_copied": "¡Enlace copiado!",
+    "swim_lane_none": "Sin carril",
+    "swim_lane_assign": "Asignar carril"
   },
   "templates": {
     "title": "Plantillas de tablero",
