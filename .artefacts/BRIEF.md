@@ -16,6 +16,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Card colour labels (#5) — `color?: string` on `KanbanCard` (stem: red/orange/yellow/green/blue/purple); 4px top border stripe on cards; inline card-edit mode (double-click title) shows title input + 6-swatch colour picker + clear button; `designer.card_color` / `designer.no_color` i18n keys in all 4 locales; colour visible in `DragOverlay` ghost
 - [x] Shareable board URL (#7) — board state base64-encoded in `window.location.hash` (`#board=<base64>`) on every update via `history.replaceState`; on load, URL board is decoded and added to the boards list (opens in designer); "Copy link" toolbar button with `navigator.clipboard.writeText`, 2-second "Link copied!" toast; `designer.copy_link` / `designer.link_copied` i18n keys in all 4 locales
 - [x] Dashboard localStorage key (#10) — `kanban-designer:lastSession` written by `writeLastSession()` inside `updateBoard()` on every board save; shape: `{ boardName, columnCount, cardCount, boardCount, updatedAt }`
+- [x] Swim lane rows (#11) — CSS grid layout when `swimLanes.length > 0`: `ColumnHeaderStrip` renders column headers at top; `LaneCell` renders filtered cards per lane row (null = "None" row for unassigned cards); lane pill badge on each card in `CardItem` (click cycles through available lanes); `addCard` accepts optional `swimLane` arg; `CardUpdates` includes `swimLane`; `designer.swim_lane_none` / `designer.swim_lane_assign` i18n keys in all 4 locales; column DnD disabled in swim lane mode
 
 ## localStorage keys
 
@@ -33,7 +34,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#6] Integration: Sprint Metrics — export per-column flow data — implemented
 - [x] [#7] Feature: shareable board URL (encode state in URL fragment) — implemented
 - [x] [#10] Integration: write kanban-designer:lastSession for Dashboard card — implemented
-- [ ] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
+- [x] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
 - [ ] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
 - [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
 - [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
@@ -44,6 +45,14 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-31 — feat: swim lane rows (#11)
+- Done: `ColumnCard.tsx` — exported `ColumnHeaderStrip` (column header without drag handle, used in grid top row) and `LaneCell` (filtered card area per lane+column cell, with Add card and lane pill); `CardItem` gains `availableLanes`/`swimLanePillNone`/`swimLaneAssign` props and shows a clickable lane pill below the title; `CardUpdates` type exported and extended with `swimLane`; `ColumnCard` default export unchanged for no-lane mode
+- Done: `BoardDesigner.tsx` — `hasSwimlanes` branch renders `DndContext` with column headers row + lane rows (`[...board.swimLanes, null]`); `addCard` accepts optional `swimLane` arg; `updateCard` passes through `swimLane`; normal layout unchanged
+- Done: `designer.swim_lane_none` / `designer.swim_lane_assign` keys added to EN/ES/BE/RU
+- Issue #11 fully implemented; project status → In Review
+- Remaining backlog: #12 (keyboard a11y), #13 (card search/filter), #14 (WIP progress bar), #15 (Planning Poker import)
+- Next task: check issues for human feedback
 
 ### 2026-05-30 — feat: Dashboard localStorage key (#10)
 - Done: added `LAST_SESSION_KEY = 'kanban-designer:lastSession'` constant; added `writeLastSession(activeBoard, allBoards)` helper that serialises `{ boardName, columnCount, cardCount, boardCount, updatedAt }` to localStorage; called from `updateBoard()` on every board save

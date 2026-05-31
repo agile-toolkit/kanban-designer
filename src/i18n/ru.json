@@ -60,7 +60,9 @@
     "card_color": "Цвет карточки",
     "no_color": "Без цвета",
     "copy_link": "Скопировать ссылку",
-    "link_copied": "Ссылка скопирована!"
+    "link_copied": "Ссылка скопирована!",
+    "swim_lane_none": "Без дорожки",
+    "swim_lane_assign": "Назначить дорожку"
   },
   "templates": {
     "title": "Шаблоны досок",
