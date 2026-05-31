@@ -39,12 +39,20 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
 - [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
 - [ ] [#15] Integration: Planning Poker — import board cards as user stories for estimation
+- [ ] [#16] Unify header: AppHeader component + LanguagePicker
+- [ ] [#17] Feature: light/dark theme support (ThemeToggle + dark: Tailwind variants)
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-05-31 — research: check issues → transition to keyboard a11y (#12)
+- Done: reviewed all open issues; #12–#17 all approved; #16 and #17 added to backlog
+- Done: issue #12 (keyboard accessibility) set to In Progress in project board
+- Remaining backlog: #12 (keyboard a11y), #13 (card search/filter), #14 (WIP progress bar), #15 (Planning Poker import), #16 (AppHeader), #17 (dark theme)
+- Next task: implement #12 (keyboard accessibility: tabIndex=0 on CardItem + role=listitem+aria-label; role=region/aria-label on board container; role=list+aria-label on column card lists; Enter/F2 → open inline edit; Delete/Backspace → delete card with toast; ArrowUp/ArrowDown → focus prev/next card; skip-to-board link; designer.delete_card_confirm i18n key in all 4 locales)
 
 ### 2026-05-31 — feat: swim lane rows (#11)
 - Done: `ColumnCard.tsx` — exported `ColumnHeaderStrip` (column header without drag handle, used in grid top row) and `LaneCell` (filtered card area per lane+column cell, with Add card and lane pill); `CardItem` gains `availableLanes`/`swimLanePillNone`/`swimLaneAssign` props and shows a clickable lane pill below the title; `CardUpdates` type exported and extended with `swimLane`; `ColumnCard` default export unchanged for no-lane mode
