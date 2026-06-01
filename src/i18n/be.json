@@ -64,7 +64,11 @@
     "copy_link": "Капіяваць спасылку",
     "link_copied": "Спасылка скапіявана!",
     "swim_lane_none": "Без даріжкі",
-    "swim_lane_assign": "Прызначыць даріжку"
+    "swim_lane_assign": "Прызначыць даріжку",
+    "search_placeholder": "Шукаць карткі…",
+    "filter_color": "Колер",
+    "filter_lane": "Даріжка",
+    "clear_filters": "Ачысціць фільтры"
   },
   "templates": {
     "title": "Шаблоны дошак",

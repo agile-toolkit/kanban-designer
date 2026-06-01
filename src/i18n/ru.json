@@ -64,7 +64,11 @@
     "copy_link": "Скопировать ссылку",
     "link_copied": "Ссылка скопирована!",
     "swim_lane_none": "Без дорожки",
-    "swim_lane_assign": "Назначить дорожку"
+    "swim_lane_assign": "Назначить дорожку",
+    "search_placeholder": "Поиск карточек…",
+    "filter_color": "Цвет",
+    "filter_lane": "Дорожка",
+    "clear_filters": "Сбросить фильтры"
   },
   "templates": {
     "title": "Шаблоны досок",

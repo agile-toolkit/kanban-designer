@@ -36,7 +36,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#10] Integration: write kanban-designer:lastSession for Dashboard card — implemented
 - [x] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
 - [x] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
-- [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
+- [x] Card search and filter (#13) — text search input + colour dot-filters + swim lane select in a filter row below the toolbar; `displayColumns` computed from `matchesFilter`; filters apply across both normal and swim-lane layouts; clear-all button when any filter active; `designer.search_placeholder` / `designer.filter_color` / `designer.filter_lane` / `designer.clear_filters` i18n keys in all 4 locales
 - [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
 - [ ] [#15] Integration: Planning Poker — import board cards as user stories for estimation
 - [ ] [#16] Unify header: AppHeader component + LanguagePicker
@@ -47,6 +47,15 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-01 — feat: card search and filter (#13)
+- Done: `filterText` / `filterColor` / `filterLane` state in `BoardDesigner`; `matchesFilter(card)` function; `displayColumns` = board.columns with filtered cards when any filter active
+- Done: filter row (row 2 of toolbar) — text search input, 6 colour dot-buttons (toggle), swim lane `<select>` (only when swim lanes exist), clear-all button
+- Done: `displayColumns` passed to all renderers (`ColumnCard`, `ColumnHeaderStrip`, `LaneCell`) in both normal and swim-lane layouts; mutations still reference original `board.columns` via handlers
+- Done: `designer.search_placeholder` / `designer.filter_color` / `designer.filter_lane` / `designer.clear_filters` keys added to EN/ES/BE/RU
+- Issue #13 fully implemented; project status → In Review
+- Remaining backlog: #14 (WIP progress bar), #15 (Planning Poker import), #16 (AppHeader), #17 (dark theme)
+- Next task: check issues for human feedback; implement #14 (WIP limit progress bar — colour-coded gauge per column: green/amber/orange/red based on utilisation ratio; shown below WIP limit input in ColumnCard and ColumnHeaderStrip)
 
 ### 2026-06-01 — feat: keyboard accessibility (#12)
 - Done: `tabIndex={0}` + `role="listitem"` + `aria-label={card.title}` on `CardItem` (both editing and non-editing states); focus ring via `focus:ring-2 focus:ring-brand-400`

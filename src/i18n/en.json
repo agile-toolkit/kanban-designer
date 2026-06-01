@@ -62,7 +62,11 @@
     "copy_link": "Copy link",
     "link_copied": "Link copied!",
     "swim_lane_none": "None",
-    "swim_lane_assign": "Assign lane"
+    "swim_lane_assign": "Assign lane",
+    "search_placeholder": "Search cards…",
+    "filter_color": "Color",
+    "filter_lane": "Lane",
+    "clear_filters": "Clear filters"
   },
   "templates": {
     "title": "Board Templates",
