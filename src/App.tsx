@@ -192,7 +192,7 @@ export default function App() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" data-accent="cobalt">
       <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
         <div className="px-4 h-14 flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
