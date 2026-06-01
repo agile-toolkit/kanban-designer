@@ -48,6 +48,8 @@
     "rename": "Переименовать",
     "delete_column": "Удалить колонку",
     "delete_card": "Удалить карточку",
+    "delete_card_confirm": "Удалить карточку?",
+    "skip_to_board": "Перейти к доске",
     "delete_lane": "Удалить дорожку",
     "column_name_placeholder": "Название колонки",
     "card_title_placeholder": "Заголовок карточки",

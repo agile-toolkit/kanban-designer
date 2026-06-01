@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSortable } from '@dnd-kit/sortable'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
@@ -23,6 +23,7 @@ interface CardItemProps {
   onDelete: () => void
   onUpdate: (updates: CardUpdates) => void
   deleteTitle: string
+  deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
   availableLanes?: string[]
@@ -31,12 +32,14 @@ interface CardItemProps {
 }
 
 function CardItem({
-  card, onDelete, onUpdate, deleteTitle, cardColorLabel, noColorLabel,
-  availableLanes, swimLanePillNone, swimLaneAssign,
+  card, onDelete, onUpdate, deleteTitle, deleteCardConfirmLabel,
+  cardColorLabel, noColorLabel, availableLanes, swimLanePillNone, swimLaneAssign,
 }: CardItemProps) {
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: card.id })
   const style = {
@@ -63,6 +66,39 @@ function CardItem({
     onUpdate({ swimLane: options[(idx + 1) % options.length] })
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === 'F2') {
+      e.preventDefault()
+      e.stopPropagation()
+      openEdit()
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault()
+      e.stopPropagation()
+      if (confirmDelete) {
+        if (confirmTimerRef.current) clearTimeout(confirmTimerRef.current)
+        setConfirmDelete(false)
+        onDelete()
+      } else {
+        setConfirmDelete(true)
+        confirmTimerRef.current = setTimeout(() => setConfirmDelete(false), 2000)
+      }
+    } else if (e.key === 'Escape' && confirmDelete) {
+      e.preventDefault()
+      if (confirmTimerRef.current) clearTimeout(confirmTimerRef.current)
+      setConfirmDelete(false)
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      e.stopPropagation()
+      const list = e.currentTarget.closest('[role="list"]')
+      if (!list) return
+      const items = Array.from(list.querySelectorAll<HTMLElement>('[role="listitem"]'))
+      const idx = items.indexOf(e.currentTarget)
+      if (idx === -1) return
+      const next = e.key === 'ArrowDown' ? items[idx + 1] : items[idx - 1]
+      next?.focus()
+    }
+  }
+
   const stripe = colorHex(editing ? editColor : card.color)
 
   if (editing) {
@@ -70,6 +106,8 @@ function CardItem({
       <div
         ref={setNodeRef}
         style={style}
+        role="listitem"
+        aria-label={card.title}
         className="bg-white rounded-lg border border-brand-300 overflow-hidden shadow-sm"
         onPointerDown={e => e.stopPropagation()}
       >
@@ -118,9 +156,18 @@ function CardItem({
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white rounded-lg border border-gray-200 overflow-hidden text-xs flex flex-col group shadow-sm cursor-grab active:cursor-grabbing touch-none"
+      role="listitem"
+      aria-label={card.title}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      className={`bg-white rounded-lg border overflow-hidden text-xs flex flex-col group shadow-sm cursor-grab active:cursor-grabbing touch-none focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-1 ${
+        confirmDelete ? 'border-red-400' : 'border-gray-200'
+      }`}
     >
       {stripe && <div style={{ height: 4, backgroundColor: stripe }} />}
+      {confirmDelete && (
+        <div className="px-2.5 pt-1.5 text-xs text-red-500 font-medium">{deleteCardConfirmLabel}</div>
+      )}
       <div className="px-2.5 py-2 flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <span
@@ -236,6 +283,7 @@ export interface LaneCellProps {
   addCardLabel: string
   cardTitlePlaceholder: string
   deleteCardTitle: string
+  deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
 }
@@ -243,7 +291,7 @@ export interface LaneCellProps {
 export function LaneCell({
   column, lane, activeLanes, swimLanePillNone, swimLaneAssign,
   onAddCard, onDeleteCard, onUpdateCard,
-  addCardLabel, cardTitlePlaceholder, deleteCardTitle, cardColorLabel, noColorLabel,
+  addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel, cardColorLabel, noColorLabel,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -254,7 +302,7 @@ export function LaneCell({
 
   return (
     <div className="flex-shrink-0 w-56 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex flex-col min-h-[64px]">
-      <div className="flex-1 px-2 pt-2 pb-1 space-y-1.5 min-h-[40px]">
+      <div className="flex-1 px-2 pt-2 pb-1 space-y-1.5 min-h-[40px]" role="list" aria-label={column.name}>
         <SortableContext items={filteredCards.map(c => c.id)} strategy={verticalListSortingStrategy}>
           {filteredCards.map(card => (
             <CardItem
@@ -263,6 +311,7 @@ export function LaneCell({
               onDelete={() => onDeleteCard(card.id)}
               onUpdate={updates => onUpdateCard(card.id, updates)}
               deleteTitle={deleteCardTitle}
+              deleteCardConfirmLabel={deleteCardConfirmLabel}
               cardColorLabel={cardColorLabel}
               noColorLabel={noColorLabel}
               availableLanes={activeLanes}
@@ -399,7 +448,7 @@ export default function ColumnCard({
       </div>
 
       {/* Cards — vertical sortable per column */}
-      <div className="flex-1 px-2 pb-2 space-y-1.5 min-h-[40px]">
+      <div className="flex-1 px-2 pb-2 space-y-1.5 min-h-[40px]" role="list" aria-label={column.name}>
         <SortableContext items={column.cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
           {column.cards.map(card => (
             <CardItem
@@ -408,6 +457,7 @@ export default function ColumnCard({
               onDelete={() => onDeleteCard(card.id)}
               onUpdate={updates => onUpdateCard(card.id, updates)}
               deleteTitle={t('designer.delete_card')}
+              deleteCardConfirmLabel={t('designer.delete_card_confirm')}
               cardColorLabel={t('designer.card_color')}
               noColorLabel={t('designer.no_color')}
             />

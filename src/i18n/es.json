@@ -48,6 +48,8 @@
     "rename": "Renombrar",
     "delete_column": "Eliminar columna",
     "delete_card": "Eliminar tarjeta",
+    "delete_card_confirm": "¿Eliminar tarjeta?",
+    "skip_to_board": "Ir al tablero",
     "delete_lane": "Eliminar carril",
     "column_name_placeholder": "Nombre de columna",
     "card_title_placeholder": "Título de tarjeta",

@@ -180,6 +180,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
 
   return (
     <div className="flex flex-col h-full">
+      <a
+        href="#board-canvas"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-white focus:border focus:border-brand-400 focus:rounded focus:px-3 focus:py-1 focus:text-sm focus:text-brand-600 focus:shadow"
+      >
+        {t('designer.skip_to_board')}
+      </a>
       {/* Toolbar */}
       <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2 flex-wrap">
         <button onClick={addColumn} className="btn-primary text-sm py-1.5">
@@ -259,7 +265,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       )}
 
       {/* Board canvas */}
-      <div ref={boardCanvasRef} className="flex-1 overflow-auto p-4">
+      <div ref={boardCanvasRef} id="board-canvas" role="region" aria-label={board.name} className="flex-1 overflow-auto p-4">
         {board.columns.length === 0 ? (
           <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
             {t('designer.no_columns')}
@@ -312,6 +318,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       addCardLabel={t('designer.add_card')}
                       cardTitlePlaceholder={t('designer.card_title_placeholder')}
                       deleteCardTitle={t('designer.delete_card')}
+                      deleteCardConfirmLabel={t('designer.delete_card_confirm')}
                       cardColorLabel={t('designer.card_color')}
                       noColorLabel={t('designer.no_color')}
                     />

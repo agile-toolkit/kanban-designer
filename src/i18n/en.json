@@ -46,6 +46,8 @@
     "rename": "Rename",
     "delete_column": "Delete column",
     "delete_card": "Delete card",
+    "delete_card_confirm": "Delete card?",
+    "skip_to_board": "Skip to board",
     "delete_lane": "Delete lane",
     "column_name_placeholder": "Column name",
     "card_title_placeholder": "Card title",
