@@ -17,6 +17,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Shareable board URL (#7) — board state base64-encoded in `window.location.hash` (`#board=<base64>`) on every update via `history.replaceState`; on load, URL board is decoded and added to the boards list (opens in designer); "Copy link" toolbar button with `navigator.clipboard.writeText`, 2-second "Link copied!" toast; `designer.copy_link` / `designer.link_copied` i18n keys in all 4 locales
 - [x] Dashboard localStorage key (#10) — `kanban-designer:lastSession` written by `writeLastSession()` inside `updateBoard()` on every board save; shape: `{ boardName, columnCount, cardCount, boardCount, updatedAt }`
 - [x] Swim lane rows (#11) — CSS grid layout when `swimLanes.length > 0`: `ColumnHeaderStrip` renders column headers at top; `LaneCell` renders filtered cards per lane row (null = "None" row for unassigned cards); lane pill badge on each card in `CardItem` (click cycles through available lanes); `addCard` accepts optional `swimLane` arg; `CardUpdates` includes `swimLane`; `designer.swim_lane_none` / `designer.swim_lane_assign` i18n keys in all 4 locales; column DnD disabled in swim lane mode
+- [x] WIP limit progress bar (#14) — `WipBar` component in `ColumnCard.tsx`; 4px bar rendered below WIP limit input in both `ColumnCard` and `ColumnHeaderStrip`; colour: green (0–59%), amber (60–89%), orange (90–99%), red+animate-pulse (≥100%); hidden when `wipLimit` is null; tooltip via `designer.wip_utilisation_tooltip` (`{{count}} of {{limit}} cards ({{pct}}%)`) in all 4 locales
 
 ## localStorage keys
 
@@ -37,7 +38,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
 - [x] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
 - [x] Card search and filter (#13) — text search input + colour dot-filters + swim lane select in a filter row below the toolbar; `displayColumns` computed from `matchesFilter`; filters apply across both normal and swim-lane layouts; clear-all button when any filter active; `designer.search_placeholder` / `designer.filter_color` / `designer.filter_lane` / `designer.clear_filters` i18n keys in all 4 locales
-- [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
+- [x] [#14] WIP limit progress bar (#14) — 4px colour-coded bar below WIP limit input in `ColumnCard` and `ColumnHeaderStrip`; green (0–59%), amber (60–89%), orange (90–99%), red+pulse (≥100%); hidden when no WIP limit; hover tooltip via `designer.wip_utilisation_tooltip` i18n key in all 4 locales
 - [ ] [#15] Integration: Planning Poker — import board cards as user stories for estimation
 - [ ] [#16] Unify header: AppHeader component + LanguagePicker
 - [ ] [#17] Feature: light/dark theme support (ThemeToggle + dark: Tailwind variants)
@@ -47,6 +48,14 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-01 — feat: WIP limit progress bar (#14)
+- Done: `WipBar` component added to `ColumnCard.tsx` — 4px colour-coded bar (green/amber/orange/red+pulse) based on `cardCount / wipLimit` ratio; hidden when no WIP limit set
+- Done: bar rendered below WIP limit input in both `ColumnCard` (default export) and `ColumnHeaderStrip` (swim-lane mode)
+- Done: `designer.wip_utilisation_tooltip` key added to EN/ES/BE/RU; displayed as `title` on the bar container
+- Issue #14 fully implemented; project status → In Review
+- Remaining backlog: #15 (Planning Poker import), #16 (AppHeader), #17 (dark theme)
+- Next task: check issues for human feedback; implement #15 (Planning Poker integration — write `kanban-designer:currentBoard` key from `updateBoard()` with shape `{boardName, columns:[{name,cards:[{title,description}]}],updatedAt}`; add "Send to Planning Poker" button in `BoardDesigner` toolbar that deep-links to planning-poker with `?kanban-board=<base64-board-name>`)
 
 ### 2026-06-01 — feat: card search and filter (#13)
 - Done: `filterText` / `filterColor` / `filterLane` state in `BoardDesigner`; `matchesFilter(card)` function; `displayColumns` = board.columns with filtered cards when any filter active

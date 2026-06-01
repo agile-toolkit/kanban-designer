@@ -68,7 +68,8 @@
     "search_placeholder": "Шукаць карткі…",
     "filter_color": "Колер",
     "filter_lane": "Даріжка",
-    "clear_filters": "Ачысціць фільтры"
+    "clear_filters": "Ачысціць фільтры",
+    "wip_utilisation_tooltip": "{{count}} з {{limit}} картак ({{pct}}%)"
   },
   "templates": {
     "title": "Шаблоны дошак",

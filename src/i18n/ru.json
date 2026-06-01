@@ -68,7 +68,8 @@
     "search_placeholder": "Поиск карточек…",
     "filter_color": "Цвет",
     "filter_lane": "Дорожка",
-    "clear_filters": "Сбросить фильтры"
+    "clear_filters": "Сбросить фильтры",
+    "wip_utilisation_tooltip": "{{count}} из {{limit}} карточек ({{pct}}%)"
   },
   "templates": {
     "title": "Шаблоны досок",
