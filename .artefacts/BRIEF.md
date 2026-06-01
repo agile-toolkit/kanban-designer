@@ -35,7 +35,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#7] Feature: shareable board URL (encode state in URL fragment) — implemented
 - [x] [#10] Integration: write kanban-designer:lastSession for Dashboard card — implemented
 - [x] [#11] Feature: swim lane rows — horizontal board striping with row assignment per card
-- [ ] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
+- [x] [#12] Feature: keyboard accessibility — Tab/arrow navigation + ARIA roles
 - [ ] [#13] Feature: card search and filter — find cards by title, colour, or swim lane
 - [ ] [#14] Feature: WIP limit progress bar — visual utilisation gauge per column
 - [ ] [#15] Integration: Planning Poker — import board cards as user stories for estimation
@@ -47,6 +47,17 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-01 — feat: keyboard accessibility (#12)
+- Done: `tabIndex={0}` + `role="listitem"` + `aria-label={card.title}` on `CardItem` (both editing and non-editing states); focus ring via `focus:ring-2 focus:ring-brand-400`
+- Done: `handleKeyDown` on cards — Enter/F2 → open inline edit; Delete/Backspace (first press) → show `delete_card_confirm` toast with red border (2-second auto-reset), second press → delete; ArrowUp/ArrowDown → focus prev/next `[role="listitem"]` in parent list; Escape → cancel confirm
+- Done: `role="list"` + `aria-label={column.name}` on card container divs in `ColumnCard` and `LaneCell`
+- Done: `role="region"` + `aria-label={board.name}` on board canvas div in `BoardDesigner`
+- Done: visually-hidden skip-to-board `<a href="#board-canvas">` link at top of `BoardDesigner`; shown on focus
+- Done: `designer.delete_card_confirm` + `designer.skip_to_board` i18n keys in EN/ES/BE/RU
+- Issue #12 fully implemented; project status → In Review
+- Remaining backlog: #13 (card search/filter), #14 (WIP progress bar), #15 (Planning Poker import), #16 (AppHeader), #17 (dark theme)
+- Next task: check issues for human feedback; implement #13 (card search and filter — text search + colour/swim lane filter pills in BoardDesigner toolbar; filters applied over board state before rendering)
 
 ### 2026-05-31 — research: check issues → transition to keyboard a11y (#12)
 - Done: reviewed all open issues; #12–#17 all approved; #16 and #17 added to backlog

@@ -48,6 +48,8 @@
     "rename": "Перайменаваць",
     "delete_column": "Выдаліць слупок",
     "delete_card": "Выдаліць картку",
+    "delete_card_confirm": "Выдаліць картку?",
+    "skip_to_board": "Перайсці да дошкі",
     "delete_lane": "Выдаліць даріжку",
     "column_name_placeholder": "Назва слупка",
     "card_title_placeholder": "Загаловак карткі",
