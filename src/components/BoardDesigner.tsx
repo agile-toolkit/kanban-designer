@@ -17,11 +17,23 @@ interface Props {
   onUpdate: (board: KanbanBoard) => void
 }
 
+const CARD_COLORS = [
+  { stem: 'red',    hex: '#f87171' },
+  { stem: 'orange', hex: '#fb923c' },
+  { stem: 'yellow', hex: '#facc15' },
+  { stem: 'green',  hex: '#4ade80' },
+  { stem: 'blue',   hex: '#60a5fa' },
+  { stem: 'purple', hex: '#a78bfa' },
+]
+
 export default function BoardDesigner({ board, onUpdate }: Props) {
   const { t } = useTranslation()
   const [newLane, setNewLane] = useState('')
   const [activeCard, setActiveCard] = useState<KanbanCard | null>(null)
   const [exporting, setExporting] = useState(false)
+  const [filterText, setFilterText] = useState('')
+  const [filterColor, setFilterColor] = useState('')
+  const [filterLane, setFilterLane] = useState('')
   const boardCanvasRef = useRef<HTMLDivElement>(null)
 
   const exportImage = async () => {
@@ -162,6 +174,24 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
+  const isFiltered = Boolean(filterText || filterColor || filterLane)
+
+  const matchesFilter = (card: KanbanCard): boolean => {
+    if (filterText && !card.title.toLowerCase().includes(filterText.toLowerCase())) return false
+    if (filterColor && card.color !== filterColor) return false
+    if (filterLane) {
+      if (filterLane === '__none__') { if (card.swimLane) return false }
+      else { if (card.swimLane !== filterLane) return false }
+    }
+    return true
+  }
+
+  const displayColumns = isFiltered
+    ? board.columns.map(col => ({ ...col, cards: col.cards.filter(matchesFilter) }))
+    : board.columns
+
+  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane('') }
+
   const totalCards = board.columns.reduce((s, c) => s + c.cards.length, 0)
   const hasSwimlanes = board.swimLanes.length > 0
   const allLanes: (string | null)[] = [...board.swimLanes, null]
@@ -186,7 +216,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       >
         {t('designer.skip_to_board')}
       </a>
-      {/* Toolbar */}
+      {/* Toolbar — row 1: actions */}
       <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2 flex-wrap">
         <button onClick={addColumn} className="btn-primary text-sm py-1.5">
           + {t('designer.add_column')}
@@ -252,6 +282,53 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </div>
       </div>
 
+      {/* Toolbar — row 2: search & filter */}
+      <div className="bg-gray-50 border-b border-gray-200 px-4 py-1.5 flex items-center gap-2 flex-wrap">
+        <input
+          type="search"
+          className="input text-xs py-1 w-44"
+          placeholder={t('designer.search_placeholder')}
+          value={filterText}
+          onChange={e => setFilterText(e.target.value)}
+        />
+        <span className="text-xs text-gray-400">{t('designer.filter_color')}:</span>
+        {CARD_COLORS.map(c => (
+          <button
+            key={c.stem}
+            style={{ backgroundColor: c.hex }}
+            onClick={() => setFilterColor(filterColor === c.stem ? '' : c.stem)}
+            className={`w-4 h-4 rounded-full border-2 transition-transform hover:scale-110 ${
+              filterColor === c.stem ? 'border-gray-700 scale-110' : 'border-white'
+            }`}
+            title={c.stem}
+          />
+        ))}
+        {hasSwimlanes && (
+          <>
+            <span className="text-xs text-gray-400">{t('designer.filter_lane')}:</span>
+            <select
+              className="text-xs border border-gray-200 rounded px-1.5 py-0.5 bg-white outline-none focus:border-brand-400"
+              value={filterLane}
+              onChange={e => setFilterLane(e.target.value)}
+            >
+              <option value="">—</option>
+              {board.swimLanes.map(lane => (
+                <option key={lane} value={lane}>{lane}</option>
+              ))}
+              <option value="__none__">{t('designer.swim_lane_none')}</option>
+            </select>
+          </>
+        )}
+        {isFiltered && (
+          <button
+            onClick={clearFilters}
+            className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded px-2 py-0.5 hover:bg-white transition-colors"
+          >
+            ✕ {t('designer.clear_filters')}
+          </button>
+        )}
+      </div>
+
       {/* Swim lanes management bar */}
       {hasSwimlanes && (
         <div className="bg-gray-100 border-b border-gray-200 px-4 py-1.5 flex gap-2 items-center">
@@ -281,7 +358,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             <div className="min-w-max">
               {/* Column headers row */}
               <div className="flex gap-3 mb-2 ml-32">
-                {board.columns.map(col => (
+                {displayColumns.map(col => (
                   <ColumnHeaderStrip
                     key={col.id}
                     column={col}
@@ -304,7 +381,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                   </div>
 
                   {/* Column cells for this lane */}
-                  {board.columns.map(col => (
+                  {displayColumns.map(col => (
                     <LaneCell
                       key={col.id}
                       column={col}
@@ -338,7 +415,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           >
             <SortableContext items={board.columns.map(c => c.id)} strategy={horizontalListSortingStrategy}>
               <div className="flex gap-3 min-w-max">
-                {board.columns.map(col => (
+                {displayColumns.map(col => (
                   <ColumnCard
                     key={col.id}
                     column={col}

@@ -64,7 +64,11 @@
     "copy_link": "Copiar enlace",
     "link_copied": "¡Enlace copiado!",
     "swim_lane_none": "Sin carril",
-    "swim_lane_assign": "Asignar carril"
+    "swim_lane_assign": "Asignar carril",
+    "search_placeholder": "Buscar tarjetas…",
+    "filter_color": "Color",
+    "filter_lane": "Carril",
+    "clear_filters": "Limpiar filtros"
   },
   "templates": {
     "title": "Plantillas de tablero",
