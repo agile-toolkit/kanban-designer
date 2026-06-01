@@ -18,6 +18,22 @@ const CARD_COLORS = [
 
 const colorHex = (stem?: string) => CARD_COLORS.find(c => c.stem === stem)?.hex
 
+function WipBar({ cardCount, wipLimit, tooltip }: { cardCount: number; wipLimit: number | null; tooltip: string }) {
+  if (!wipLimit) return null
+  const ratio = cardCount / wipLimit
+  const fillPct = Math.min(ratio * 100, 100)
+  const barClass =
+    ratio >= 1   ? 'bg-red-500 animate-pulse' :
+    ratio >= 0.9 ? 'bg-orange-400' :
+    ratio >= 0.6 ? 'bg-amber-400' :
+                   'bg-green-400'
+  return (
+    <div className="w-full bg-gray-100" style={{ height: 4 }} title={tooltip}>
+      <div className={`h-full transition-all duration-300 ${barClass}`} style={{ width: `${fillPct}%` }} />
+    </div>
+  )
+}
+
 interface CardItemProps {
   card: KanbanCard
   onDelete: () => void
@@ -217,6 +233,13 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
   const [nameVal, setNameVal] = useState(column.name)
 
   const isOverWip = showWipWarnings && column.wipLimit !== null && column.cards.length > column.wipLimit
+  const wipTooltip = column.wipLimit
+    ? t('designer.wip_utilisation_tooltip', {
+        count: column.cards.length,
+        limit: column.wipLimit,
+        pct: Math.round((column.cards.length / column.wipLimit) * 100),
+      })
+    : ''
 
   return (
     <div className={`flex-shrink-0 w-56 bg-white rounded-2xl border-2 flex flex-col transition-colors ${
@@ -264,6 +287,8 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
           onChange={e => onWipChange(e.target.value ? Number(e.target.value) : null)}
         />
       </div>
+
+      <WipBar cardCount={column.cards.length} wipLimit={column.wipLimit} tooltip={wipTooltip} />
     </div>
   )
 }
@@ -392,6 +417,13 @@ export default function ColumnCard({
   }
 
   const isOverWip = showWipWarnings && column.wipLimit !== null && column.cards.length > column.wipLimit
+  const wipTooltip = column.wipLimit
+    ? t('designer.wip_utilisation_tooltip', {
+        count: column.cards.length,
+        limit: column.wipLimit,
+        pct: Math.round((column.cards.length / column.wipLimit) * 100),
+      })
+    : ''
 
   return (
     <div
@@ -446,6 +478,8 @@ export default function ColumnCard({
           onChange={e => onWipChange(e.target.value ? Number(e.target.value) : null)}
         />
       </div>
+
+      <WipBar cardCount={column.cards.length} wipLimit={column.wipLimit} tooltip={wipTooltip} />
 
       {/* Cards — vertical sortable per column */}
       <div className="flex-1 px-2 pb-2 space-y-1.5 min-h-[40px]" role="list" aria-label={column.name}>

@@ -68,7 +68,8 @@
     "search_placeholder": "Buscar tarjetas…",
     "filter_color": "Color",
     "filter_lane": "Carril",
-    "clear_filters": "Limpiar filtros"
+    "clear_filters": "Limpiar filtros",
+    "wip_utilisation_tooltip": "{{count}} de {{limit}} tarjetas ({{pct}}%)"
   },
   "templates": {
     "title": "Plantillas de tablero",
