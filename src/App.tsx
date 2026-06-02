@@ -7,6 +7,7 @@ import BoardDesigner from './components/BoardDesigner'
 import TemplatesView from './components/TemplatesView'
 import HomeScreen from './components/HomeScreen'
 import LearnView from './components/LearnView'
+import ThemeToggle from './components/ThemeToggle'
 
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
@@ -199,7 +200,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" data-accent="cobalt">
+    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-50" data-accent="cobalt">
       <AppHeader
         title={t('app.title')}
         onTitleClick={() => setScreen('home')}
@@ -209,6 +210,7 @@ export default function App() {
           { key: 'learn', label: t('nav.learn'), active: screen === 'learn', onClick: () => setScreen('learn') },
         ]}
       >
+        <ThemeToggle />
         {board && screen === 'designer' && (
           <>
             <button type="button" onClick={() => exportJSON(board)} className="btn-ghost">
@@ -255,8 +257,8 @@ export default function App() {
             <div className="flex-1 flex items-center justify-center p-8">
               <div className="text-center max-w-md">
                 <div className="text-6xl mb-4">🗂</div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-3">{t('app.title')}</h1>
-                <p className="text-gray-500 mb-6 text-sm">{t('home.pick_or_create')}</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-3">{t('app.title')}</h1>
+                <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">{t('home.pick_or_create')}</p>
                 <div className="flex gap-3 justify-center flex-wrap">
                   <button
                     type="button"
