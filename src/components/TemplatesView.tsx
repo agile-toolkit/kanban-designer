@@ -11,14 +11,14 @@ export default function TemplatesView({ onLoad }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('templates.title')}</h1>
-      <p className="text-gray-500 text-sm mb-6">{t('templates.subtitle')}</p>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t('templates.title')}</h1>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{t('templates.subtitle')}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {TEMPLATES.map(template => (
           <div key={template.id} className="card hover:shadow-md transition-shadow">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-semibold text-gray-900">{template.name}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</h3>
               <button
                 onClick={() => onLoad(cloneTemplate(template))}
                 className="btn-primary text-xs py-1 px-3 flex-shrink-0 ml-2"
@@ -27,15 +27,15 @@ export default function TemplatesView({ onLoad }: Props) {
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 mb-3 leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">
               {t(`templates.context.${template.contextKey}`)}
             </p>
 
             {/* Mini board preview */}
             <div className="flex gap-1 flex-wrap">
               {template.columns.map(col => (
-                <div key={col.id} className="flex items-center gap-1 bg-gray-100 rounded px-1.5 py-0.5">
-                  <span className="text-xs text-gray-600">{col.name}</span>
+                <div key={col.id} className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded px-1.5 py-0.5">
+                  <span className="text-xs text-gray-600 dark:text-gray-300">{col.name}</span>
                   {col.wipLimit !== null && (
                     <span className="text-xs text-brand-600 font-medium">({col.wipLimit})</span>
                   )}

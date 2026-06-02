@@ -197,13 +197,13 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const allLanes: (string | null)[] = [...board.swimLanes, null]
 
   const dragOverlay = activeCard ? (
-    <div className="bg-white rounded-lg border border-brand-300 overflow-hidden text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-brand-300 dark:border-brand-700 overflow-hidden text-xs shadow-lg w-52 opacity-95 cursor-grabbing">
       {activeCard.color && (() => {
         const COLORS: Record<string, string> = { red: '#f87171', orange: '#fb923c', yellow: '#facc15', green: '#4ade80', blue: '#60a5fa', purple: '#a78bfa' }
         return <div style={{ height: 4, backgroundColor: COLORS[activeCard.color] }} />
       })()}
       <div className="px-2.5 py-2">
-        <span className="text-gray-700 leading-snug select-none">{activeCard.title}</span>
+        <span className="text-gray-700 dark:text-gray-200 leading-snug select-none">{activeCard.title}</span>
       </div>
     </div>
   ) : null
@@ -212,12 +212,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     <div className="flex flex-col h-full">
       <a
         href="#board-canvas"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-white focus:border focus:border-brand-400 focus:rounded focus:px-3 focus:py-1 focus:text-sm focus:text-brand-600 focus:shadow"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-white dark:focus:bg-gray-800 focus:border focus:border-brand-400 focus:rounded focus:px-3 focus:py-1 focus:text-sm focus:text-brand-600 dark:focus:text-brand-400 focus:shadow"
       >
         {t('designer.skip_to_board')}
       </a>
       {/* Toolbar — row 1: actions */}
-      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2 flex-wrap">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-2 flex-wrap">
         <button onClick={addColumn} className="btn-primary text-sm py-1.5">
           + {t('designer.add_column')}
         </button>
@@ -245,7 +245,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           </div>
         )}
 
-        <label className="flex items-center gap-1.5 text-xs text-gray-500 cursor-pointer">
+        <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 cursor-pointer">
           <input
             type="checkbox"
             checked={board.showWipWarnings}
@@ -255,11 +255,11 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           {t('designer.show_wip_warnings')}
         </label>
 
-        <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
+        <div className="ml-auto flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
           <button
             onClick={exportImage}
             disabled={exporting}
-            className="text-xs text-gray-600 hover:text-gray-800 font-medium border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
             {exporting ? '…' : t('designer.export_image')}
           </button>
@@ -292,7 +292,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       </div>
 
       {/* Toolbar — row 2: search & filter */}
-      <div className="bg-gray-50 border-b border-gray-200 px-4 py-1.5 flex items-center gap-2 flex-wrap">
+      <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-1.5 flex items-center gap-2 flex-wrap">
         <input
           type="search"
           className="input text-xs py-1 w-44"
@@ -300,7 +300,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           value={filterText}
           onChange={e => setFilterText(e.target.value)}
         />
-        <span className="text-xs text-gray-400">{t('designer.filter_color')}:</span>
+        <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_color')}:</span>
         {CARD_COLORS.map(c => (
           <button
             key={c.stem}
@@ -314,9 +314,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         ))}
         {hasSwimlanes && (
           <>
-            <span className="text-xs text-gray-400">{t('designer.filter_lane')}:</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_lane')}:</span>
             <select
-              className="text-xs border border-gray-200 rounded px-1.5 py-0.5 bg-white outline-none focus:border-brand-400"
+              className="text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-0.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
               value={filterLane}
               onChange={e => setFilterLane(e.target.value)}
             >
@@ -331,7 +331,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         {isFiltered && (
           <button
             onClick={clearFilters}
-            className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded px-2 py-0.5 hover:bg-white transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-600 rounded px-2 py-0.5 hover:bg-white dark:hover:bg-gray-700 transition-colors"
           >
             ✕ {t('designer.clear_filters')}
           </button>
@@ -340,20 +340,20 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
 
       {/* Swim lanes management bar */}
       {hasSwimlanes && (
-        <div className="bg-gray-100 border-b border-gray-200 px-4 py-1.5 flex gap-2 items-center">
+        <div className="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-1.5 flex gap-2 items-center">
           {board.swimLanes.map(lane => (
             <div key={lane} className="flex items-center gap-1">
-              <span className="text-xs bg-white border border-gray-200 rounded px-2 py-0.5 text-gray-600">{lane}</span>
-              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} title={t('designer.delete_lane')} className="text-gray-300 hover:text-red-400 text-xs">✕</button>
+              <span className="text-xs bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2 py-0.5 text-gray-600 dark:text-gray-300">{lane}</span>
+              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} title={t('designer.delete_lane')} className="text-gray-300 dark:text-gray-600 hover:text-red-400 text-xs">✕</button>
             </div>
           ))}
         </div>
       )}
 
       {/* Board canvas */}
-      <div ref={boardCanvasRef} id="board-canvas" role="region" aria-label={board.name} className="flex-1 overflow-auto p-4">
+      <div ref={boardCanvasRef} id="board-canvas" role="region" aria-label={board.name} className="flex-1 overflow-auto p-4 bg-gray-100 dark:bg-gray-950">
         {board.columns.length === 0 ? (
-          <div className="flex items-center justify-center h-40 text-gray-400 text-sm">
+          <div className="flex items-center justify-center h-40 text-gray-400 dark:text-gray-600 text-sm">
             {t('designer.no_columns')}
           </div>
         ) : hasSwimlanes ? (
@@ -384,7 +384,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                 <div key={lane ?? '__none__'} className="flex gap-3 items-start mb-2">
                   {/* Lane label */}
                   <div className="w-28 flex-shrink-0 self-stretch flex items-center justify-center">
-                    <span className="text-xs font-semibold text-gray-500 bg-white border border-gray-200 rounded-lg px-2 py-1.5 text-center w-full truncate">
+                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-1.5 text-center w-full truncate">
                       {lane ?? t('designer.swim_lane_none')}
                     </span>
                   </div>

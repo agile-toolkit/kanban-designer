@@ -43,13 +43,22 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] [#14] WIP limit progress bar (#14) — 4px colour-coded bar below WIP limit input in `ColumnCard` and `ColumnHeaderStrip`; green (0–59%), amber (60–89%), orange (90–99%), red+pulse (≥100%); hidden when no WIP limit; hover tooltip via `designer.wip_utilisation_tooltip` i18n key in all 4 locales
 - [x] [#15] Integration: Planning Poker — write `kanban-designer:currentBoard` + "Send to Planning Poker" deep-link button
 - [x] [#16] Unify header: AppHeader component + LanguagePicker
-- [ ] [#17] Feature: light/dark theme support (ThemeToggle + dark: Tailwind variants)
+- [x] Light/dark theme (#17) — `tailwind.config.js` `darkMode: ['selector','[data-theme="dark"]']`; anti-flash `<script>` in `index.html`; `ThemeToggle.tsx` in `src/components/`; `<ThemeToggle />` in `AppHeader` children slot; `dark:` variants on all surfaces, borders, text, and inputs across `App.tsx`, `AppHeader.tsx`, `BoardDesigner.tsx`, `ColumnCard.tsx`, `HomeScreen.tsx`, `TemplatesView.tsx`, `LearnView.tsx`, `index.css`
 
 ## Tech notes
 
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-02 — feat: light/dark theme (#17)
+- Done: `<ThemeToggle />` added to `App.tsx` in AppHeader children slot (import added)
+- Done: `dark:` variants applied to all Tailwind color classes in `App.tsx`, `AppHeader.tsx`, `BoardDesigner.tsx`, `ColumnCard.tsx`, `HomeScreen.tsx`, `TemplatesView.tsx`, `LearnView.tsx`
+- Done: `index.css` component layer updated — `.card`, `.btn-secondary`, `.btn-ghost`, `.label`, `.input` all have dark variants; `body` gets `dark:bg-gray-950 dark:text-gray-50`
+- Done: `tailwind.config.js` already had `darkMode: ['selector','[data-theme="dark"]']`; `index.html` already had anti-flash script; `ThemeToggle.tsx` already in `src/components/` — no changes needed to those files
+- Issue #17 fully implemented; project status → In Review
+- Remaining backlog: none (all known features done)
+- Next task: check issues for human feedback
 
 ### 2026-06-02 — feat: unify header — AppHeader + LanguagePicker (#16)
 - Done: copied `AppHeader.tsx` and `LanguagePicker.tsx` from `design-system/components/` into `src/components/`

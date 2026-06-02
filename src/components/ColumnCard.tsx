@@ -28,7 +28,7 @@ function WipBar({ cardCount, wipLimit, tooltip }: { cardCount: number; wipLimit:
     ratio >= 0.6 ? 'bg-amber-400' :
                    'bg-green-400'
   return (
-    <div className="w-full bg-gray-100" style={{ height: 4 }} title={tooltip}>
+    <div className="w-full bg-gray-200 dark:bg-gray-700" style={{ height: 4 }} title={tooltip}>
       <div className={`h-full transition-all duration-300 ${barClass}`} style={{ width: `${fillPct}%` }} />
     </div>
   )
@@ -124,20 +124,20 @@ function CardItem({
         style={style}
         role="listitem"
         aria-label={card.title}
-        className="bg-white rounded-lg border border-brand-300 overflow-hidden shadow-sm"
+        className="bg-white dark:bg-gray-800 rounded-lg border border-brand-300 dark:border-brand-700 overflow-hidden shadow-sm"
         onPointerDown={e => e.stopPropagation()}
       >
         {stripe && <div style={{ height: 4, backgroundColor: stripe }} />}
         <div className="px-2.5 py-2">
           <input
             autoFocus
-            className="w-full text-xs border border-gray-200 rounded px-2 py-1 outline-none focus:border-brand-400 mb-2"
+            className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded px-2 py-1 outline-none focus:border-brand-400 mb-2"
             value={editTitle}
             onChange={e => setEditTitle(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') setEditing(false) }}
           />
           <div className="flex items-center gap-1 mb-2 flex-wrap">
-            <span className="text-xs text-gray-400">{cardColorLabel}:</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{cardColorLabel}:</span>
             {CARD_COLORS.map(c => (
               <button
                 key={c.stem}
@@ -152,7 +152,7 @@ function CardItem({
             {editColor && (
               <button
                 onClick={() => setEditColor(undefined)}
-                className="text-xs text-gray-400 hover:text-gray-600"
+                className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                 title={noColorLabel}
               >✕</button>
             )}
@@ -176,18 +176,18 @@ function CardItem({
       aria-label={card.title}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      className={`bg-white rounded-lg border overflow-hidden text-xs flex flex-col group shadow-sm cursor-grab active:cursor-grabbing touch-none focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-1 ${
-        confirmDelete ? 'border-red-400' : 'border-gray-200'
+      className={`bg-white dark:bg-gray-800 rounded-lg border overflow-hidden text-xs flex flex-col group shadow-sm cursor-grab active:cursor-grabbing touch-none focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-1 dark:focus:ring-offset-gray-900 ${
+        confirmDelete ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'
       }`}
     >
       {stripe && <div style={{ height: 4, backgroundColor: stripe }} />}
       {confirmDelete && (
-        <div className="px-2.5 pt-1.5 text-xs text-red-500 font-medium">{deleteCardConfirmLabel}</div>
+        <div className="px-2.5 pt-1.5 text-xs text-red-500 dark:text-red-400 font-medium">{deleteCardConfirmLabel}</div>
       )}
       <div className="px-2.5 py-2 flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <span
-            className="block text-gray-700 leading-snug select-none"
+            className="block text-gray-700 dark:text-gray-200 leading-snug select-none"
             onDoubleClick={e => { e.stopPropagation(); openEdit() }}
           >
             {card.title}
@@ -196,7 +196,7 @@ function CardItem({
             <button
               onPointerDown={e => e.stopPropagation()}
               onClick={e => { e.stopPropagation(); cycleLane() }}
-              className="mt-1 text-xs bg-brand-50 text-brand-600 border border-brand-200 rounded px-1.5 py-0.5 hover:bg-brand-100 max-w-full truncate"
+              className="mt-1 text-xs bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-700 rounded px-1.5 py-0.5 hover:bg-brand-100 dark:hover:bg-brand-900/40 max-w-full truncate"
               title={swimLaneAssign}
             >
               {card.swimLane ?? swimLanePillNone ?? '—'}
@@ -207,7 +207,7 @@ function CardItem({
           onPointerDown={e => e.stopPropagation()}
           onClick={onDelete}
           title={deleteTitle}
-          className="flex-shrink-0 text-gray-200 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="flex-shrink-0 text-gray-200 dark:text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
         >
           ✕
         </button>
@@ -242,14 +242,14 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
     : ''
 
   return (
-    <div className={`flex-shrink-0 w-56 bg-white rounded-2xl border-2 flex flex-col transition-colors ${
-      isOverWip ? 'border-red-300 bg-red-50' : 'border-gray-200'
+    <div className={`flex-shrink-0 w-56 bg-white dark:bg-gray-900 rounded-2xl border-2 flex flex-col transition-colors ${
+      isOverWip ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : 'border-gray-200 dark:border-gray-700'
     }`}>
       <div className="p-3 flex items-center gap-2">
         {editName ? (
           <input
             autoFocus
-            className="flex-1 text-sm font-semibold bg-white border border-brand-300 rounded px-2 py-0.5 outline-none"
+            className="flex-1 text-sm font-semibold bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-brand-300 dark:border-brand-700 rounded px-2 py-0.5 outline-none"
             placeholder={t('designer.column_name_placeholder')}
             value={nameVal}
             onChange={e => setNameVal(e.target.value)}
@@ -258,31 +258,31 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
           />
         ) : (
           <span
-            className="flex-1 text-sm font-semibold text-gray-800 cursor-pointer hover:text-brand-600 truncate"
+            className="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-100 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 truncate"
             onDoubleClick={() => { setNameVal(column.name); setEditName(true) }}
             title={t('designer.rename')}
           >
             {column.name}
           </span>
         )}
-        <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-500'}`}>
+        <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 dark:text-gray-600 hover:text-red-400 text-xs ml-1">✕</button>
       </div>
 
       {isOverWip && (
-        <div className="mx-3 mb-1 text-xs text-red-600 font-medium">{t('designer.wip_warning')}</div>
+        <div className="mx-3 mb-1 text-xs text-red-600 dark:text-red-400 font-medium">{t('designer.wip_warning')}</div>
       )}
 
       <div className="px-3 pb-2 flex items-center gap-2">
-        <span className="text-xs text-gray-400">{t('designer.wip_limit')}:</span>
+        <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.wip_limit')}:</span>
         <input
           type="number"
           min={1}
           max={99}
           placeholder={t('designer.no_limit')}
-          className="w-12 text-xs text-center border border-gray-200 rounded px-1 py-0.5 bg-white outline-none focus:border-brand-400"
+          className="w-12 text-xs text-center border border-gray-200 dark:border-gray-600 rounded px-1 py-0.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
           value={column.wipLimit ?? ''}
           onChange={e => onWipChange(e.target.value ? Number(e.target.value) : null)}
         />
@@ -326,7 +326,7 @@ export function LaneCell({
     : column.cards.filter(c => !c.swimLane)
 
   return (
-    <div className="flex-shrink-0 w-56 bg-gray-50 rounded-xl border border-dashed border-gray-200 flex flex-col min-h-[64px]">
+    <div className="flex-shrink-0 w-56 bg-gray-50 dark:bg-gray-900 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 flex flex-col min-h-[64px]">
       <div className="flex-1 px-2 pt-2 pb-1 space-y-1.5 min-h-[40px]" role="list" aria-label={column.name}>
         <SortableContext items={filteredCards.map(c => c.id)} strategy={verticalListSortingStrategy}>
           {filteredCards.map(card => (
@@ -347,12 +347,12 @@ export function LaneCell({
         </SortableContext>
       </div>
 
-      <div className="p-2 border-t border-gray-100">
+      <div className="p-2 border-t border-gray-100 dark:border-gray-800">
         {addingCard ? (
           <div>
             <input
               autoFocus
-              className="w-full text-xs border border-brand-300 rounded px-2 py-1.5 outline-none mb-1.5"
+              className="w-full text-xs border border-brand-300 dark:border-brand-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded px-2 py-1.5 outline-none mb-1.5"
               placeholder={cardTitlePlaceholder}
               value={cardTitle}
               onChange={e => setCardTitle(e.target.value)}
@@ -370,13 +370,13 @@ export function LaneCell({
                 onClick={() => { if (cardTitle.trim()) { onAddCard(cardTitle.trim()); setCardTitle('') }; setAddingCard(false) }}
                 className="text-xs bg-brand-600 text-white px-2 py-1 rounded-lg"
               >Add</button>
-              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 px-2 py-1">✕</button>
+              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1">✕</button>
             </div>
           </div>
         ) : (
           <button
             onClick={() => setAddingCard(true)}
-            className="w-full text-xs text-gray-400 hover:text-brand-600 text-left px-1 py-1 hover:bg-white rounded-lg transition-colors"
+            className="w-full text-xs text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 text-left px-1 py-1 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-colors"
           >
             + {addCardLabel}
           </button>
@@ -429,17 +429,17 @@ export default function ColumnCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex-shrink-0 w-56 bg-gray-50 rounded-2xl border-2 flex flex-col transition-colors ${
-        isOverWip ? 'border-red-300 bg-red-50' : 'border-gray-200'
+      className={`flex-shrink-0 w-56 bg-gray-50 dark:bg-gray-900 rounded-2xl border-2 flex flex-col transition-colors ${
+        isOverWip ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : 'border-gray-200 dark:border-gray-700'
       }`}
     >
       {/* Header — drag handle for column reordering */}
       <div className="p-3 flex items-center gap-2" {...attributes} {...listeners}>
-        <div className="cursor-grab text-gray-300 text-sm select-none">⠿</div>
+        <div className="cursor-grab text-gray-300 dark:text-gray-600 text-sm select-none">⠿</div>
         {editName ? (
           <input
             autoFocus
-            className="flex-1 text-sm font-semibold bg-white border border-brand-300 rounded px-2 py-0.5 outline-none"
+            className="flex-1 text-sm font-semibold bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-brand-300 dark:border-brand-700 rounded px-2 py-0.5 outline-none"
             placeholder={t('designer.column_name_placeholder')}
             value={nameVal}
             onChange={e => setNameVal(e.target.value)}
@@ -448,32 +448,32 @@ export default function ColumnCard({
           />
         ) : (
           <span
-            className="flex-1 text-sm font-semibold text-gray-800 cursor-pointer hover:text-brand-600 truncate"
+            className="flex-1 text-sm font-semibold text-gray-800 dark:text-gray-100 cursor-pointer hover:text-brand-600 dark:hover:text-brand-400 truncate"
             onDoubleClick={() => { setNameVal(column.name); setEditName(true) }}
             title={t('designer.rename')}
           >
             {column.name}
           </span>
         )}
-        <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-500'}`}>
+        <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 dark:text-gray-600 hover:text-red-400 text-xs ml-1">✕</button>
       </div>
 
       {isOverWip && (
-        <div className="mx-3 mb-1 text-xs text-red-600 font-medium">{t('designer.wip_warning')}</div>
+        <div className="mx-3 mb-1 text-xs text-red-600 dark:text-red-400 font-medium">{t('designer.wip_warning')}</div>
       )}
 
       {/* WIP limit */}
       <div className="px-3 pb-2 flex items-center gap-2">
-        <span className="text-xs text-gray-400">{t('designer.wip_limit')}:</span>
+        <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.wip_limit')}:</span>
         <input
           type="number"
           min={1}
           max={99}
           placeholder={t('designer.no_limit')}
-          className="w-12 text-xs text-center border border-gray-200 rounded px-1 py-0.5 bg-white outline-none focus:border-brand-400"
+          className="w-12 text-xs text-center border border-gray-200 dark:border-gray-600 rounded px-1 py-0.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
           value={column.wipLimit ?? ''}
           onChange={e => onWipChange(e.target.value ? Number(e.target.value) : null)}
         />
@@ -500,12 +500,12 @@ export default function ColumnCard({
       </div>
 
       {/* Add card */}
-      <div className="p-2 border-t border-gray-200">
+      <div className="p-2 border-t border-gray-200 dark:border-gray-700">
         {addingCard ? (
           <div>
             <input
               autoFocus
-              className="w-full text-xs border border-brand-300 rounded px-2 py-1.5 outline-none mb-1.5"
+              className="w-full text-xs border border-brand-300 dark:border-brand-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded px-2 py-1.5 outline-none mb-1.5"
               placeholder={t('designer.card_title_placeholder')}
               value={cardTitle}
               onChange={e => setCardTitle(e.target.value)}
@@ -523,13 +523,13 @@ export default function ColumnCard({
                 onClick={() => { if (cardTitle.trim()) { onAddCard(cardTitle.trim()); setCardTitle('') }; setAddingCard(false) }}
                 className="text-xs bg-brand-600 text-white px-2 py-1 rounded-lg"
               >Add</button>
-              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 px-2 py-1">✕</button>
+              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1">✕</button>
             </div>
           </div>
         ) : (
           <button
             onClick={() => setAddingCard(true)}
-            className="w-full text-xs text-gray-400 hover:text-brand-600 text-left px-1 py-1 hover:bg-white rounded-lg transition-colors"
+            className="w-full text-xs text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 text-left px-1 py-1 hover:bg-white dark:hover:bg-gray-800 rounded-lg transition-colors"
           >
             + {t('designer.add_card')}
           </button>
