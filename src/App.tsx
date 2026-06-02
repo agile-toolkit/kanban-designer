@@ -11,6 +11,7 @@ const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
 const CURRENT_KEY = 'kanban-designer-current-id'
 const LAST_SESSION_KEY = 'kanban-designer:lastSession'
+const CURRENT_BOARD_KEY = 'kanban-designer:currentBoard'
 const HASH_PREFIX = 'board='
 
 function encodeBoard(board: KanbanBoard): string {
@@ -58,6 +59,17 @@ function writeLastSession(activeBoard: KanbanBoard, allBoards: KanbanBoard[]) {
     columnCount: activeBoard.columns.length,
     cardCount,
     boardCount: allBoards.length,
+    updatedAt: new Date().toISOString(),
+  }))
+}
+
+function writeCurrentBoard(board: KanbanBoard) {
+  localStorage.setItem(CURRENT_BOARD_KEY, JSON.stringify({
+    boardName: board.name,
+    columns: board.columns.map(col => ({
+      name: col.name,
+      cards: col.cards.map(card => ({ title: card.title, description: card.description ?? '' })),
+    })),
     updatedAt: new Date().toISOString(),
   }))
 }
@@ -138,6 +150,7 @@ export default function App() {
       const merged = idx === -1 ? [...prev, next] : prev.map(x => (x.id === next.id ? next : x))
       saveBoards(merged)
       writeLastSession(next, merged)
+      writeCurrentBoard(next)
       return merged
     })
   }
