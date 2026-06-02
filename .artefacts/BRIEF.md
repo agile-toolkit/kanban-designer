@@ -42,7 +42,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Card search and filter (#13) — text search input + colour dot-filters + swim lane select in a filter row below the toolbar; `displayColumns` computed from `matchesFilter`; filters apply across both normal and swim-lane layouts; clear-all button when any filter active; `designer.search_placeholder` / `designer.filter_color` / `designer.filter_lane` / `designer.clear_filters` i18n keys in all 4 locales
 - [x] [#14] WIP limit progress bar (#14) — 4px colour-coded bar below WIP limit input in `ColumnCard` and `ColumnHeaderStrip`; green (0–59%), amber (60–89%), orange (90–99%), red+pulse (≥100%); hidden when no WIP limit; hover tooltip via `designer.wip_utilisation_tooltip` i18n key in all 4 locales
 - [x] [#15] Integration: Planning Poker — write `kanban-designer:currentBoard` + "Send to Planning Poker" deep-link button
-- [ ] [#16] Unify header: AppHeader component + LanguagePicker
+- [x] [#16] Unify header: AppHeader component + LanguagePicker
 - [ ] [#17] Feature: light/dark theme support (ThemeToggle + dark: Tailwind variants)
 
 ## Tech notes
@@ -50,6 +50,16 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-02 — feat: unify header — AppHeader + LanguagePicker (#16)
+- Done: copied `AppHeader.tsx` and `LanguagePicker.tsx` from `design-system/components/` into `src/components/`
+- Done: replaced inline `<header>` in `App.tsx` with `<AppHeader title onTitleClick navItems>` — 3 nav items: Boards/Templates/Learn
+- Done: board action buttons (Export JSON, Import JSON, Copy link, Clear) moved into AppHeader children slot, shown only when `screen === 'designer' && board`
+- Done: removed native `<select>` language switcher; `i18n` no longer destructured in `App.tsx`
+- Done: added `nav.boards` key to EN/ES/BE/RU locale files
+- Issue #16 fully implemented; project status → In Review
+- Remaining backlog: #17 (light/dark theme)
+- Next task: check issues for human feedback; implement #17 (light/dark theme — tailwind darkMode: "class", ThemeToggle already in src/components/, add dark: variants)
 
 ### 2026-06-02 — feat: Planning Poker integration (#15)
 - Done: `CURRENT_BOARD_KEY = 'kanban-designer:currentBoard'` constant; `writeCurrentBoard(board)` helper writes `{boardName, columns:[{name, cards:[{title, description}]}], updatedAt}` to localStorage; called from `updateBoard()` alongside `writeLastSession()`

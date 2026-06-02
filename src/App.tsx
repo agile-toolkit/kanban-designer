@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
+import AppHeader from './components/AppHeader'
 import BoardDesigner from './components/BoardDesigner'
 import TemplatesView from './components/TemplatesView'
 import HomeScreen from './components/HomeScreen'
@@ -85,7 +86,7 @@ function exportJSON(board: KanbanBoard) {
 }
 
 export default function App() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [screen, setScreen] = useState<Screen>(() => (_urlBoard ? 'designer' : 'home'))
   const [boards, setBoards] = useState<KanbanBoard[]>(() => {
     const saved = loadBoards()
@@ -197,98 +198,45 @@ export default function App() {
     }
   }
 
-  const navItems: { key: Screen; label: string }[] = [
-    { key: 'home', label: t('nav.home') },
-    { key: 'designer', label: t('nav.designer') },
-    { key: 'templates', label: t('nav.templates') },
-    { key: 'learn', label: t('nav.learn') },
-  ]
-
   return (
     <div className="min-h-screen flex flex-col" data-accent="cobalt">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
-        <div className="px-4 h-14 flex items-center justify-between gap-2 flex-wrap">
-          <div className="flex items-center gap-2">
-            <a
-              href="https://agile-toolkit.github.io/"
-              title="Agile Toolkit"
-              className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 16 16" fill="currentColor">
-                <rect x="1" y="1" width="6" height="6" rx="1"/>
-                <rect x="9" y="1" width="6" height="6" rx="1"/>
-                <rect x="1" y="9" width="6" height="6" rx="1"/>
-                <rect x="9" y="9" width="6" height="6" rx="1"/>
-              </svg>
-            </a>
+      <AppHeader
+        title={t('app.title')}
+        onTitleClick={() => setScreen('home')}
+        navItems={[
+          { key: 'home', label: t('nav.boards'), active: screen === 'home', onClick: () => setScreen('home') },
+          { key: 'templates', label: t('nav.templates'), active: screen === 'templates', onClick: () => setScreen('templates') },
+          { key: 'learn', label: t('nav.learn'), active: screen === 'learn', onClick: () => setScreen('learn') },
+        ]}
+      >
+        {board && screen === 'designer' && (
+          <>
+            <button type="button" onClick={() => exportJSON(board)} className="btn-ghost">
+              {t('designer.export_json')}
+            </button>
+            <label className="btn-ghost cursor-pointer">
+              {t('designer.import_json')}
+              <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+            </label>
             <button
               type="button"
-              onClick={() => setScreen('home')}
-              className="font-semibold text-brand-600 hover:text-brand-700"
+              onClick={copyLink}
+              className={`btn-ghost transition-colors ${linkCopied ? 'text-green-600' : ''}`}
             >
-              {t('app.title')}
-              {board && (
-                <span className="ml-2 text-gray-400 text-sm font-normal">{board.name}</span>
-              )}
+              {linkCopied ? t('designer.link_copied') : t('designer.copy_link')}
             </button>
-          </div>
-          <div className="flex items-center gap-1 flex-wrap justify-end">
-            {navItems.map(item => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => {
-                  if (item.key === 'designer' && !board) setScreen('home')
-                  else setScreen(item.key)
-                }}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  screen === item.key ? 'bg-brand-100 text-brand-700' : 'text-gray-500 hover:bg-gray-100'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-            {board && screen === 'designer' && (
-              <>
-                <button type="button" onClick={() => exportJSON(board)} className="btn-ghost">
-                  {t('designer.export_json')}
-                </button>
-                <label className="btn-ghost cursor-pointer">
-                  {t('designer.import_json')}
-                  <input type="file" accept=".json" className="hidden" onChange={handleImport} />
-                </label>
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  className={`btn-ghost transition-colors ${linkCopied ? 'text-green-600' : ''}`}
-                >
-                  {linkCopied ? t('designer.link_copied') : t('designer.copy_link')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm(t('designer.clear_confirm'))) updateBoard({ ...board, columns: [] })
-                  }}
-                  className="btn-ghost text-red-400"
-                >
-                  {t('designer.clear')}
-                </button>
-              </>
-            )}
-            <select
-              value={i18n.language.slice(0, 2)}
-              onChange={e => i18n.changeLanguage(e.target.value)}
-              className="ml-2 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 bg-transparent border-0 cursor-pointer"
-              aria-label="Language"
+            <button
+              type="button"
+              onClick={() => {
+                if (confirm(t('designer.clear_confirm'))) updateBoard({ ...board, columns: [] })
+              }}
+              className="btn-ghost text-red-400"
             >
-              <option value="en">EN</option>
-              <option value="es">ES</option>
-              <option value="be">BE</option>
-              <option value="ru">RU</option>
-            </select>
-          </div>
-        </div>
-      </header>
+              {t('designer.clear')}
+            </button>
+          </>
+        )}
+      </AppHeader>
 
       {screen === 'home' && (
         <div className="flex-1 overflow-y-auto max-w-5xl mx-auto w-full px-4 py-8">

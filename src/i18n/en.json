@@ -2,6 +2,7 @@
   "app": { "title": "Kanban Designer" },
   "nav": {
     "home": "Home",
+    "boards": "Boards",
     "designer": "Board",
     "templates": "Templates",
     "learn": "Learn"
