@@ -57,6 +57,7 @@
     "total_cards": "cards",
     "export_image": "Export Image",
     "send_to_sprint_metrics": "Send to Sprint Metrics",
+    "send_to_planning_poker": "Send to Planning Poker",
     "card_color": "Card colour",
     "no_color": "None",
     "copy_link": "Copy link",

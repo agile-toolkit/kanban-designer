@@ -9,6 +9,7 @@ export interface KanbanColumn {
 export interface KanbanCard {
   id: string
   title: string
+  description?: string
   swimLane?: string
   color?: string
 }

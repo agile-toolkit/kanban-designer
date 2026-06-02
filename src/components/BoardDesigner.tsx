@@ -277,6 +277,15 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           >
             {t('designer.send_to_sprint_metrics')}
           </button>
+          <button
+            onClick={() => {
+              const encoded = btoa(unescape(encodeURIComponent(board.name)))
+              window.open(`https://agile-toolkit.github.io/planning-poker/?kanban-board=${encoded}`, '_blank', 'noopener')
+            }}
+            className="text-xs text-brand-600 hover:text-brand-700 font-medium border border-brand-200 rounded px-2 py-1 hover:bg-brand-50 transition-colors"
+          >
+            {t('designer.send_to_planning_poker')}
+          </button>
           <span>{board.columns.length} {t('designer.total_columns')}</span>
           <span>{totalCards} {t('designer.total_cards')}</span>
         </div>
