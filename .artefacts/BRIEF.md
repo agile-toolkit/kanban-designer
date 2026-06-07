@@ -30,6 +30,9 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 ## Backlog
 
 <!-- Research / UX issues -->
+- [ ] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
+- [ ] [#32] Feature: card due dates — deadline badge + overdue highlighting (`dueDate?: string` on KanbanCard; date input in inline edit; badge with gray/amber/red states)
+- [ ] [#33] Feature: column collapse — fold/unfold columns to reduce visual noise (`collapsed?: boolean` on KanbanColumn; chevron toggle; narrow strip with card count)
 - [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
 - [x] [#3] Feature: card drag-and-drop between columns — implemented
 - [x] [#4] Integration: export board snapshot as shareable image — implemented
@@ -50,6 +53,15 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-07 — research: undo/redo, card due dates, column collapse
+- Done: reviewed all open issues — #2–#17 all approved and implemented (In Review); no pending human feedback
+- Done: created issue #31 (undo/redo — 50-entry history stack, Ctrl+Z/Y, toolbar buttons)
+- Done: created issue #32 (card due dates — dueDate field, date badge, overdue red highlight)
+- Done: created issue #33 (column collapse — collapsed boolean, chevron toggle, narrow strip with count)
+- All three added to project with Backlog status
+- Remaining: none immediately actionable; awaiting human review on #31–#33
+- Next task: check issues for human feedback; if any of #31/#32/#33 approved, implement first one
 
 ### 2026-06-02 — feat: light/dark theme (#17)
 - Done: `<ThemeToggle />` added to `App.tsx` in AppHeader children slot (import added)
