@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
@@ -109,6 +109,8 @@ export default function App() {
       return null
     }
   })
+  const [boardHistory, setBoardHistory] = useState<KanbanBoard[]>([])
+  const [boardFuture, setBoardFuture] = useState<KanbanBoard[]>([])
   const [linkCopied, setLinkCopied] = useState(false)
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -130,6 +132,11 @@ export default function App() {
   }, [boards, currentId])
 
   useEffect(() => {
+    setBoardHistory([])
+    setBoardFuture([])
+  }, [currentId])
+
+  useEffect(() => {
     if (board) {
       history.replaceState(null, '', `#${HASH_PREFIX}${encodeBoard(board)}`)
     } else {
@@ -145,7 +152,7 @@ export default function App() {
     })
   }
 
-  const updateBoard = (b: KanbanBoard) => {
+  const applyBoard = (b: KanbanBoard) => {
     const next = { ...b, updatedAt: Date.now() }
     setBoards(prev => {
       const idx = prev.findIndex(x => x.id === next.id)
@@ -156,6 +163,63 @@ export default function App() {
       return merged
     })
   }
+
+  const updateBoard = (b: KanbanBoard) => {
+    if (board) {
+      setBoardHistory(prev => {
+        const hist = [...prev, board]
+        return hist.length > 50 ? hist.slice(hist.length - 50) : hist
+      })
+      setBoardFuture([])
+    }
+    applyBoard(b)
+  }
+
+  const undo = useCallback(() => {
+    setBoardHistory(hist => {
+      if (hist.length === 0) return hist
+      const prev = hist[hist.length - 1]
+      setBoardFuture(fut => {
+        if (board) return [board, ...fut].slice(0, 50)
+        return fut
+      })
+      applyBoard(prev)
+      return hist.slice(0, -1)
+    })
+  }, [board])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  const redo = useCallback(() => {
+    setBoardFuture(fut => {
+      if (fut.length === 0) return fut
+      const next = fut[0]
+      setBoardHistory(hist => {
+        if (board) return [...hist, board].slice(-50)
+        return hist
+      })
+      applyBoard(next)
+      return fut.slice(1)
+    })
+  }, [board])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  const undoRef = useRef(undo)
+  undoRef.current = undo
+  const redoRef = useRef(redo)
+  redoRef.current = redo
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return
+      if (e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        undoRef.current()
+      } else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) {
+        e.preventDefault()
+        redoRef.current()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -213,6 +277,24 @@ export default function App() {
         <ThemeToggle />
         {board && screen === 'designer' && (
           <>
+            <button
+              type="button"
+              onClick={undo}
+              disabled={boardHistory.length === 0}
+              className="btn-ghost disabled:opacity-40"
+              title={t('designer.undo')}
+            >
+              {t('designer.undo')}
+            </button>
+            <button
+              type="button"
+              onClick={redo}
+              disabled={boardFuture.length === 0}
+              className="btn-ghost disabled:opacity-40"
+              title={t('designer.redo')}
+            >
+              {t('designer.redo')}
+            </button>
             <button type="button" onClick={() => exportJSON(board)} className="btn-ghost">
               {t('designer.export_json')}
             </button>

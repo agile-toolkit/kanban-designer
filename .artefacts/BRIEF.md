@@ -30,7 +30,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 ## Backlog
 
 <!-- Research / UX issues -->
-- [ ] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
+- [x] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
 - [ ] [#32] Feature: card due dates — deadline badge + overdue highlighting (`dueDate?: string` on KanbanCard; date input in inline edit; badge with gray/amber/red states)
 - [ ] [#33] Feature: column collapse — fold/unfold columns to reduce visual noise (`collapsed?: boolean` on KanbanColumn; chevron toggle; narrow strip with card count)
 - [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
@@ -53,6 +53,11 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-09 — feat: undo/redo support (#31)
+- Done: `boardHistory: KanbanBoard[]` + `boardFuture: KanbanBoard[]` state in `App.tsx`; `applyBoard()` helper (bypasses history); `updateBoard()` now pushes current board to history (cap 50), clears future before applying change; `undo()` / `redo()` via functional state updaters; `undoRef`/`redoRef` pattern avoids stale closure in global keyboard handler; Ctrl+Z/Meta+Z = undo, Ctrl+Y/Ctrl+Shift+Z = redo; history cleared when `currentId` changes (board switch); Undo/Redo buttons in AppHeader toolbar (disabled at stack boundaries); `designer.undo`/`designer.redo` i18n keys in EN/ES/BE/RU
+- Remaining: #32 (card due dates), #33 (column collapse)
+- Next task: check issues for human feedback; if #32 (card due dates) or #33 (column collapse) approved, implement #32 first
 
 ### 2026-06-07 — research: undo/redo, card due dates, column collapse
 - Done: reviewed all open issues — #2–#17 all approved and implemented (In Review); no pending human feedback

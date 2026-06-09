@@ -71,7 +71,9 @@
     "filter_color": "Color",
     "filter_lane": "Carril",
     "clear_filters": "Limpiar filtros",
-    "wip_utilisation_tooltip": "{{count}} de {{limit}} tarjetas ({{pct}}%)"
+    "wip_utilisation_tooltip": "{{count}} de {{limit}} tarjetas ({{pct}}%)",
+    "undo": "Deshacer",
+    "redo": "Rehacer"
   },
   "templates": {
     "title": "Plantillas de tablero",
