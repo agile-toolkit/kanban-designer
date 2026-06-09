@@ -69,7 +69,9 @@
     "filter_color": "Color",
     "filter_lane": "Lane",
     "clear_filters": "Clear filters",
-    "wip_utilisation_tooltip": "{{count}} of {{limit}} cards ({{pct}}%)"
+    "wip_utilisation_tooltip": "{{count}} of {{limit}} cards ({{pct}}%)",
+    "undo": "Undo",
+    "redo": "Redo"
   },
   "templates": {
     "title": "Board Templates",

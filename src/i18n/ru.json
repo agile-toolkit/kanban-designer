@@ -71,7 +71,9 @@
     "filter_color": "Цвет",
     "filter_lane": "Дорожка",
     "clear_filters": "Сбросить фильтры",
-    "wip_utilisation_tooltip": "{{count}} из {{limit}} карточек ({{pct}}%)"
+    "wip_utilisation_tooltip": "{{count}} из {{limit}} карточек ({{pct}}%)",
+    "undo": "Отменить",
+    "redo": "Повторить"
   },
   "templates": {
     "title": "Шаблоны досок",
