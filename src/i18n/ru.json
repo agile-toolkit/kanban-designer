@@ -73,7 +73,10 @@
     "clear_filters": "Сбросить фильтры",
     "wip_utilisation_tooltip": "{{count}} из {{limit}} карточек ({{pct}}%)",
     "undo": "Отменить",
-    "redo": "Повторить"
+    "redo": "Повторить",
+    "due_date": "Срок",
+    "due_today": "Срок сегодня",
+    "overdue": "Просрочено"
   },
   "templates": {
     "title": "Шаблоны досок",

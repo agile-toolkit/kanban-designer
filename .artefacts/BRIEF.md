@@ -19,6 +19,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Swim lane rows (#11) — CSS grid layout when `swimLanes.length > 0`: `ColumnHeaderStrip` renders column headers at top; `LaneCell` renders filtered cards per lane row (null = "None" row for unassigned cards); lane pill badge on each card in `CardItem` (click cycles through available lanes); `addCard` accepts optional `swimLane` arg; `CardUpdates` includes `swimLane`; `designer.swim_lane_none` / `designer.swim_lane_assign` i18n keys in all 4 locales; column DnD disabled in swim lane mode
 - [x] WIP limit progress bar (#14) — `WipBar` component in `ColumnCard.tsx`; 4px bar rendered below WIP limit input in both `ColumnCard` and `ColumnHeaderStrip`; colour: green (0–59%), amber (60–89%), orange (90–99%), red+animate-pulse (≥100%); hidden when `wipLimit` is null; tooltip via `designer.wip_utilisation_tooltip` (`{{count}} of {{limit}} cards ({{pct}}%)`) in all 4 locales
 - [x] Planning Poker integration (#15) — `kanban-designer:currentBoard` written by `writeCurrentBoard()` inside `updateBoard()` with shape `{ boardName, columns:[{name, cards:[{title, description}]}], updatedAt }`; `description?: string` added to `KanbanCard` type; "Send to Planning Poker" button in `BoardDesigner` toolbar deep-links to `?kanban-board=<base64-board-name>`; `designer.send_to_planning_poker` i18n key in all 4 locales
+- [x] Card due dates (#32) — `dueDate?: string` (ISO date) on `KanbanCard` in `types.ts`; `dueDateBadge()` helper computes label + Tailwind classes (gray=future, amber=today, red=overdue); badge rendered on card face, click opens inline edit; date `<input type="date">` in edit mode below colour picker with clear ✕ button; `designer.due_date` / `designer.due_today` / `designer.overdue` i18n keys in EN/ES/BE/RU
 
 ## localStorage keys
 
@@ -31,7 +32,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 
 <!-- Research / UX issues -->
 - [x] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
-- [ ] [#32] Feature: card due dates — deadline badge + overdue highlighting (`dueDate?: string` on KanbanCard; date input in inline edit; badge with gray/amber/red states)
+- [x] [#32] Feature: card due dates — deadline badge + overdue highlighting (`dueDate?: string` on KanbanCard; date input in inline edit; badge with gray/amber/red states)
 - [ ] [#33] Feature: column collapse — fold/unfold columns to reduce visual noise (`collapsed?: boolean` on KanbanColumn; chevron toggle; narrow strip with card count)
 - [x] [#2] Feature: add ES and BE locales (parity with suite) — implemented
 - [x] [#3] Feature: card drag-and-drop between columns — implemented
@@ -53,6 +54,11 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-13 — feat: card due dates (#32)
+- Done: `dueDate?: string` added to `KanbanCard` in `types.ts`; `dueDateBadge()` helper in `ColumnCard.tsx` computes label + CSS classes (gray=future, amber=today bold, red=overdue bold); `CardUpdates` extended with `dueDate`; `CardItem` gains `editDueDate` state, date `<input type="date">` below colour picker in edit mode, badge with click-to-edit on card face; `dueDateLabel`/`dueTodayLabel`/`overdueLabel` props threaded through `ColumnCard`, `LaneCell`, `CardItem`; `BoardDesigner.tsx` passes `t('designer.due_date/due_today/overdue')`; `designer.due_date`/`designer.due_today`/`designer.overdue` keys in EN/ES/BE/RU; JSON round-trip free
+- Remaining: #33 (column collapse)
+- Next task: check issues for human feedback; if #33 (column collapse) approved, implement it; else research cycle
 
 ### 2026-06-09 — feat: undo/redo support (#31)
 - Done: `boardHistory: KanbanBoard[]` + `boardFuture: KanbanBoard[]` state in `App.tsx`; `applyBoard()` helper (bypasses history); `updateBoard()` now pushes current board to history (cap 50), clears future before applying change; `undo()` / `redo()` via functional state updaters; `undoRef`/`redoRef` pattern avoids stale closure in global keyboard handler; Ctrl+Z/Meta+Z = undo, Ctrl+Y/Ctrl+Shift+Z = redo; history cleared when `currentId` changes (board switch); Undo/Redo buttons in AppHeader toolbar (disabled at stack boundaries); `designer.undo`/`designer.redo` i18n keys in EN/ES/BE/RU

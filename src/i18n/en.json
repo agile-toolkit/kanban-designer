@@ -71,7 +71,10 @@
     "clear_filters": "Clear filters",
     "wip_utilisation_tooltip": "{{count}} of {{limit}} cards ({{pct}}%)",
     "undo": "Undo",
-    "redo": "Redo"
+    "redo": "Redo",
+    "due_date": "Due date",
+    "due_today": "Due today",
+    "overdue": "Overdue"
   },
   "templates": {
     "title": "Board Templates",
