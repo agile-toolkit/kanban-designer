@@ -73,7 +73,10 @@
     "clear_filters": "Ачысціць фільтры",
     "wip_utilisation_tooltip": "{{count}} з {{limit}} картак ({{pct}}%)",
     "undo": "Адмяніць",
-    "redo": "Паўтарыць"
+    "redo": "Паўтарыць",
+    "due_date": "Тэрмін",
+    "due_today": "Сёння тэрмін",
+    "overdue": "Прасрочана"
   },
   "templates": {
     "title": "Шаблоны дошак",

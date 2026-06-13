@@ -73,7 +73,10 @@
     "clear_filters": "Limpiar filtros",
     "wip_utilisation_tooltip": "{{count}} de {{limit}} tarjetas ({{pct}}%)",
     "undo": "Deshacer",
-    "redo": "Rehacer"
+    "redo": "Rehacer",
+    "due_date": "Fecha límite",
+    "due_today": "Vence hoy",
+    "overdue": "Vencida"
   },
   "templates": {
     "title": "Plantillas de tablero",

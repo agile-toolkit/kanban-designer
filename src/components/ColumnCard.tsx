@@ -5,7 +5,17 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard } from '../types'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane'>>
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate'>>
+
+function dueDateBadge(dueDate: string, todayLabel: string, overdueLabel: string) {
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const due = new Date(dueDate + 'T00:00:00')
+  const diffDays = Math.round((due.getTime() - today.getTime()) / 86400000)
+  const label = due.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  if (diffDays < 0) return { label: overdueLabel + ' · ' + label, cls: 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400 font-bold' }
+  if (diffDays === 0) return { label: todayLabel + ' · ' + label, cls: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold' }
+  return { label, cls: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' }
+}
 
 const CARD_COLORS = [
   { stem: 'red',    hex: '#f87171' },
@@ -42,6 +52,9 @@ interface CardItemProps {
   deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
+  dueDateLabel: string
+  dueTodayLabel: string
+  overdueLabel: string
   availableLanes?: string[]
   swimLanePillNone?: string
   swimLaneAssign?: string
@@ -49,11 +62,13 @@ interface CardItemProps {
 
 function CardItem({
   card, onDelete, onUpdate, deleteTitle, deleteCardConfirmLabel,
-  cardColorLabel, noColorLabel, availableLanes, swimLanePillNone, swimLaneAssign,
+  cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
+  availableLanes, swimLanePillNone, swimLaneAssign,
 }: CardItemProps) {
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
+  const [editDueDate, setEditDueDate] = useState<string>(card.dueDate ?? '')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -67,11 +82,12 @@ function CardItem({
   const openEdit = () => {
     setEditTitle(card.title)
     setEditColor(card.color)
+    setEditDueDate(card.dueDate ?? '')
     setEditing(true)
   }
 
   const saveEdit = () => {
-    onUpdate({ title: editTitle.trim() || card.title, color: editColor })
+    onUpdate({ title: editTitle.trim() || card.title, color: editColor, dueDate: editDueDate || undefined })
     setEditing(false)
   }
 
@@ -157,6 +173,22 @@ function CardItem({
               >✕</button>
             )}
           </div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs text-gray-400 dark:text-gray-500">{dueDateLabel}:</span>
+            <input
+              type="date"
+              className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
+              value={editDueDate}
+              onChange={e => setEditDueDate(e.target.value)}
+            />
+            {editDueDate && (
+              <button
+                onClick={() => setEditDueDate('')}
+                className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                title={noColorLabel}
+              >✕</button>
+            )}
+          </div>
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
@@ -192,6 +224,18 @@ function CardItem({
           >
             {card.title}
           </span>
+          {card.dueDate && (() => {
+            const badge = dueDateBadge(card.dueDate, dueTodayLabel, overdueLabel)
+            return (
+              <button
+                onPointerDown={e => e.stopPropagation()}
+                onClick={e => { e.stopPropagation(); openEdit() }}
+                className={`mt-1 text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}
+              >
+                {badge.label}
+              </button>
+            )
+          })()}
           {availableLanes && availableLanes.length > 0 && (
             <button
               onPointerDown={e => e.stopPropagation()}
@@ -311,12 +355,16 @@ export interface LaneCellProps {
   deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
+  dueDateLabel: string
+  dueTodayLabel: string
+  overdueLabel: string
 }
 
 export function LaneCell({
   column, lane, activeLanes, swimLanePillNone, swimLaneAssign,
   onAddCard, onDeleteCard, onUpdateCard,
-  addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel, cardColorLabel, noColorLabel,
+  addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
+  cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -339,6 +387,9 @@ export function LaneCell({
               deleteCardConfirmLabel={deleteCardConfirmLabel}
               cardColorLabel={cardColorLabel}
               noColorLabel={noColorLabel}
+              dueDateLabel={dueDateLabel}
+              dueTodayLabel={dueTodayLabel}
+              overdueLabel={overdueLabel}
               availableLanes={activeLanes}
               swimLanePillNone={swimLanePillNone}
               swimLaneAssign={swimLaneAssign}
@@ -398,10 +449,14 @@ interface Props {
   onAddCard: (title: string) => void
   onDeleteCard: (cardId: string) => void
   onUpdateCard: (cardId: string, updates: CardUpdates) => void
+  dueDateLabel: string
+  dueTodayLabel: string
+  overdueLabel: string
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onAddCard, onDeleteCard, onUpdateCard,
+  dueDateLabel, dueTodayLabel, overdueLabel,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -494,6 +549,9 @@ export default function ColumnCard({
               deleteCardConfirmLabel={t('designer.delete_card_confirm')}
               cardColorLabel={t('designer.card_color')}
               noColorLabel={t('designer.no_color')}
+              dueDateLabel={dueDateLabel}
+              dueTodayLabel={dueTodayLabel}
+              overdueLabel={overdueLabel}
             />
           ))}
         </SortableContext>

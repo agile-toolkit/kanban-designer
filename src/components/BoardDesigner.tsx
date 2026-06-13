@@ -407,6 +407,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       deleteCardConfirmLabel={t('designer.delete_card_confirm')}
                       cardColorLabel={t('designer.card_color')}
                       noColorLabel={t('designer.no_color')}
+                      dueDateLabel={t('designer.due_date')}
+                      dueTodayLabel={t('designer.due_today')}
+                      overdueLabel={t('designer.overdue')}
                     />
                   ))}
                 </div>
@@ -435,6 +438,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onAddCard={title => addCard(col.id, title)}
                     onDeleteCard={cardId => deleteCard(col.id, cardId)}
                     onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
+                    dueDateLabel={t('designer.due_date')}
+                    dueTodayLabel={t('designer.due_today')}
+                    overdueLabel={t('designer.overdue')}
                   />
                 ))}
               </div>
