@@ -76,7 +76,9 @@
     "redo": "Rehacer",
     "due_date": "Fecha límite",
     "due_today": "Vence hoy",
-    "overdue": "Vencida"
+    "overdue": "Vencida",
+    "collapse_column": "Colapsar columna",
+    "expand_column": "Expandir columna"
   },
   "templates": {
     "title": "Plantillas de tablero",

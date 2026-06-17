@@ -76,7 +76,9 @@
     "redo": "Повторить",
     "due_date": "Срок",
     "due_today": "Срок сегодня",
-    "overdue": "Просрочено"
+    "overdue": "Просрочено",
+    "collapse_column": "Свернуть колонку",
+    "expand_column": "Развернуть колонку"
   },
   "templates": {
     "title": "Шаблоны досок",

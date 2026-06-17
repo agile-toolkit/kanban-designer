@@ -76,7 +76,9 @@
     "redo": "Паўтарыць",
     "due_date": "Тэрмін",
     "due_today": "Сёння тэрмін",
-    "overdue": "Прасрочана"
+    "overdue": "Прасрочана",
+    "collapse_column": "Згарнуць калонку",
+    "expand_column": "Разгарнуць калонку"
   },
   "templates": {
     "title": "Шаблоны дошак",

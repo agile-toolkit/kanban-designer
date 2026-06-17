@@ -269,9 +269,10 @@ export interface ColumnHeaderStripProps {
   onRename: (name: string) => void
   onWipChange: (limit: number | null) => void
   onDelete: () => void
+  onCollapse: () => void
 }
 
-export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChange, onDelete }: ColumnHeaderStripProps) {
+export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse }: ColumnHeaderStripProps) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
   const [nameVal, setNameVal] = useState(column.name)
@@ -285,11 +286,43 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
       })
     : ''
 
+  if (column.collapsed) {
+    return (
+      <div className={`flex-shrink-0 w-12 bg-white dark:bg-gray-900 rounded-2xl border-2 flex flex-col items-center py-2 transition-colors ${
+        isOverWip ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : 'border-gray-200 dark:border-gray-700'
+      }`}>
+        <button
+          onClick={onCollapse}
+          title={t('designer.expand_column')}
+          className="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 text-xs font-bold px-1 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >»</button>
+        <div className="flex-1 flex items-center justify-center my-2 overflow-hidden">
+          <span
+            className="text-xs font-semibold text-gray-600 dark:text-gray-400 select-none"
+            style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', maxHeight: '120px', overflow: 'hidden' }}
+          >
+            {column.name}
+          </span>
+        </div>
+        <span className={`text-xs font-medium px-1 py-0.5 rounded-lg ${
+          isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+        }`}>
+          {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div className={`flex-shrink-0 w-56 bg-white dark:bg-gray-900 rounded-2xl border-2 flex flex-col transition-colors ${
       isOverWip ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : 'border-gray-200 dark:border-gray-700'
     }`}>
       <div className="p-3 flex items-center gap-2">
+        <button
+          onClick={onCollapse}
+          title={t('designer.collapse_column')}
+          className="text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 text-xs font-bold leading-none flex-shrink-0"
+        >«</button>
         {editName ? (
           <input
             autoFocus
@@ -344,6 +377,7 @@ export interface LaneCellProps {
   column: KanbanColumn
   lane: string | null  // null = "None" (unassigned cards)
   activeLanes: string[]
+  collapsed?: boolean
   swimLanePillNone: string
   swimLaneAssign: string
   onAddCard: (title: string) => void
@@ -361,7 +395,8 @@ export interface LaneCellProps {
 }
 
 export function LaneCell({
-  column, lane, activeLanes, swimLanePillNone, swimLaneAssign,
+  column, lane, activeLanes, collapsed,
+  swimLanePillNone, swimLaneAssign,
   onAddCard, onDeleteCard, onUpdateCard,
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
@@ -372,6 +407,16 @@ export function LaneCell({
   const filteredCards = lane !== null
     ? column.cards.filter(c => c.swimLane === lane)
     : column.cards.filter(c => !c.swimLane)
+
+  if (collapsed) {
+    return (
+      <div className="flex-shrink-0 w-12 bg-gray-50 dark:bg-gray-900 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center min-h-[64px]">
+        {filteredCards.length > 0 && (
+          <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">{filteredCards.length}</span>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="flex-shrink-0 w-56 bg-gray-50 dark:bg-gray-900 rounded-xl border border-dashed border-gray-200 dark:border-gray-700 flex flex-col min-h-[64px]">
@@ -446,6 +491,7 @@ interface Props {
   onRename: (name: string) => void
   onWipChange: (limit: number | null) => void
   onDelete: () => void
+  onCollapse: () => void
   onAddCard: (title: string) => void
   onDeleteCard: (cardId: string) => void
   onUpdateCard: (cardId: string, updates: CardUpdates) => void
@@ -455,7 +501,7 @@ interface Props {
 }
 
 export default function ColumnCard({
-  column, showWipWarnings, onRename, onWipChange, onDelete, onAddCard, onDeleteCard, onUpdateCard,
+  column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
   dueDateLabel, dueTodayLabel, overdueLabel,
 }: Props) {
   const { t } = useTranslation()
@@ -472,6 +518,43 @@ export default function ColumnCard({
   }
 
   const isOverWip = showWipWarnings && column.wipLimit !== null && column.cards.length > column.wipLimit
+
+  // Collapsed state — narrow vertical strip with drag-reorder still active
+  if (column.collapsed) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={`flex-shrink-0 w-12 bg-gray-50 dark:bg-gray-900 rounded-2xl border-2 flex flex-col items-center py-2 transition-colors ${
+          isOverWip ? 'border-red-300 bg-red-50 dark:bg-red-950/30' : 'border-gray-200 dark:border-gray-700'
+        }`}
+      >
+        <div {...attributes} {...listeners} className="cursor-grab text-gray-300 dark:text-gray-600 text-sm select-none mb-1">⠿</div>
+        <button
+          onPointerDown={e => e.stopPropagation()}
+          onClick={e => { e.stopPropagation(); onCollapse() }}
+          title={t('designer.expand_column')}
+          className="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 text-xs font-bold px-1 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >»</button>
+        <div className="flex-1 flex items-center justify-center my-2 overflow-hidden">
+          <span
+            className="text-xs font-semibold text-gray-600 dark:text-gray-400 select-none"
+            style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', maxHeight: '120px', overflow: 'hidden' }}
+          >
+            {column.name}
+          </span>
+        </div>
+        <span className={`text-xs font-medium px-1 py-0.5 rounded-lg ${
+          isOverWip
+            ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400'
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+        }`}>
+          {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
+        </span>
+      </div>
+    )
+  }
+
   const wipTooltip = column.wipLimit
     ? t('designer.wip_utilisation_tooltip', {
         count: column.cards.length,
@@ -491,6 +574,12 @@ export default function ColumnCard({
       {/* Header — drag handle for column reordering */}
       <div className="p-3 flex items-center gap-2" {...attributes} {...listeners}>
         <div className="cursor-grab text-gray-300 dark:text-gray-600 text-sm select-none">⠿</div>
+        <button
+          onPointerDown={e => e.stopPropagation()}
+          onClick={e => { e.stopPropagation(); onCollapse() }}
+          title={t('designer.collapse_column')}
+          className="text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 text-xs font-bold leading-none flex-shrink-0"
+        >«</button>
         {editName ? (
           <input
             autoFocus

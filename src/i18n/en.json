@@ -74,7 +74,9 @@
     "redo": "Redo",
     "due_date": "Due date",
     "due_today": "Due today",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "collapse_column": "Collapse column",
+    "expand_column": "Expand column"
   },
   "templates": {
     "title": "Board Templates",
