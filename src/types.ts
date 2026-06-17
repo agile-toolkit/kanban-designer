@@ -4,6 +4,7 @@ export interface KanbanColumn {
   wipLimit: number | null
   cards: KanbanCard[]
   subColumns?: KanbanColumn[]
+  collapsed?: boolean
 }
 
 export interface KanbanCard {

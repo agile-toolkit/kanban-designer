@@ -375,6 +375,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onRename={name => updateColumn(col.id, { name })}
                     onWipChange={wipLimit => updateColumn(col.id, { wipLimit })}
                     onDelete={() => deleteColumn(col.id)}
+                    onCollapse={() => updateColumn(col.id, { collapsed: !col.collapsed })}
                   />
                 ))}
               </div>
@@ -396,6 +397,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       column={col}
                       lane={lane}
                       activeLanes={board.swimLanes}
+                      collapsed={col.collapsed}
                       swimLanePillNone={t('designer.swim_lane_none')}
                       swimLaneAssign={t('designer.swim_lane_assign')}
                       onAddCard={title => addCard(col.id, title, lane ?? undefined)}
@@ -435,6 +437,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onRename={name => updateColumn(col.id, { name })}
                     onWipChange={wipLimit => updateColumn(col.id, { wipLimit })}
                     onDelete={() => deleteColumn(col.id)}
+                    onCollapse={() => updateColumn(col.id, { collapsed: !col.collapsed })}
                     onAddCard={title => addCard(col.id, title)}
                     onDeleteCard={cardId => deleteCard(col.id, cardId)}
                     onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
