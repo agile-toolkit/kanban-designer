@@ -31,6 +31,10 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 
 ## Backlog
 
+- [ ] [#37] Feature: card tags — multi-label text categorization (`tags?: string[]` on KanbanCard; tag chip input in edit mode; tag pills on card face; tag filter in filter bar; board-scoped suggestions; no new deps)
+- [ ] [#38] Integration: Team Identity member assignment on cards (`assignee?: string` on KanbanCard; reads `team-identity:charter` localStorage; member dropdown in card edit; initials badge on card face; assignee filter in filter bar)
+- [ ] [#39] Feature: board statistics panel — column throughput and WIP overview (StatsPanel.tsx; per-column CSS bar chart; board summary row: total/at-capacity/empty; oldest card per column; no new deps)
+
 <!-- Research / UX issues -->
 - [x] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
 - [x] [#32] Feature: card due dates — deadline badge + overdue highlighting (`dueDate?: string` on KanbanCard; date input in inline edit; badge with gray/amber/red states)
@@ -55,6 +59,14 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-21 — research: card tags, team assignment, stats panel (#37, #38, #39)
+- Done: all backlog items confirmed implemented; no pending human feedback requiring action
+- Done: created issue #37 (card tags — `tags?: string[]` on KanbanCard, tag chip input in card edit, pill display on card face, tag filter in filter bar, board-scoped suggestions, no new deps)
+- Done: created issue #38 (Team Identity member assignment — `assignee?: string` on KanbanCard, reads `team-identity:charter` localStorage, member dropdown in edit mode, initials badge on card face, assignee filter)
+- Done: created issue #39 (board statistics panel — StatsPanel.tsx, CSS-only bar chart per column, board summary with capacity/empty counts, oldest card per column, no new deps)
+- Remaining: none; awaiting human review on #37, #38, #39
+- Next task: check issues for human feedback; if any of #37/#38/#39 approved, implement first one
 
 ### 2026-06-17 — feat: column collapse (#33)
 - Done: `collapsed?: boolean` added to `KanbanColumn` in `types.ts`; `ColumnCard` default export renders narrow `w-12` vertical strip when `column.collapsed` (rotated name, card count badge, `»` expand button, drag handle still active for column reorder); `«` collapse button added to expanded column header; `ColumnHeaderStrip` gets same collapsed/expanded treatment for swim lane layout; `LaneCell` gets `collapsed?: boolean` prop — shows narrow strip with lane-card count, no cards, no add button; `BoardDesigner.tsx` passes `onCollapse` to `ColumnCard`/`ColumnHeaderStrip` and `collapsed` to `LaneCell`; `designer.collapse_column`/`designer.expand_column` keys added to EN/ES/BE/RU; auto-approved issue #33 (BRIEF feature, 10 days stale)
