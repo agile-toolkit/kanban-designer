@@ -34,6 +34,9 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [ ] [#37] Feature: card tags — multi-label text categorization (`tags?: string[]` on KanbanCard; tag chip input in edit mode; tag pills on card face; tag filter in filter bar; board-scoped suggestions; no new deps)
 - [ ] [#38] Integration: Team Identity member assignment on cards (`assignee?: string` on KanbanCard; reads `team-identity:charter` localStorage; member dropdown in card edit; initials badge on card face; assignee filter in filter bar)
 - [ ] [#39] Feature: board statistics panel — column throughput and WIP overview (StatsPanel.tsx; per-column CSS bar chart; board summary row: total/at-capacity/empty; oldest card per column; no new deps)
+- [ ] [#40] Feature: card aging — `enteredColumnAt?: string` ISO timestamp set on card create + column move; age chip on card face (gray 1–3d, amber 4–7d, red >7d); `designer.age_days`/`designer.age_weeks` i18n keys; no new deps
+- [ ] [#41] Feature: save board as custom template — "Save as template" toolbar button; saves to `kanban-designer:customTemplates` localStorage; strips card content, keeps structure (column names, WIP limits, swim lanes); "My Templates" section in TemplatesView; `templates.my_templates`/`designer.save_as_template` i18n keys
+- [ ] [#42] Feature: card checklists — `checklist?: {id, text, done}[]` on KanbanCard; checklist section in card edit (checkbox + text + delete, "Add item" input); progress chip on card face (`✓ 2/5`, green when all done); `designer.checklist`/`designer.checklist_add`/`designer.checklist_progress` i18n keys; no new deps
 
 <!-- Research / UX issues -->
 - [x] [#31] Feature: undo/redo support — Ctrl+Z/Ctrl+Y board history (50-entry in-memory stack; toolbar buttons; no new deps)
@@ -59,6 +62,14 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-06-24 — research: card aging, custom templates, card checklists (#40, #41, #42)
+- Done: no human feedback on pending issues #37/#38/#39 (3 days old, < 7-day threshold); all approved issues already implemented
+- Done: created issue #40 (card aging — `enteredColumnAt` timestamp on KanbanCard; age chip gray/amber/red by duration since last column move; complements stats panel)
+- Done: created issue #41 (custom templates — save current board structure to `kanban-designer:customTemplates` localStorage; "My Templates" section in TemplatesView)
+- Done: created issue #42 (card checklists — flat `checklist[]` array on KanbanCard; checkbox list in card edit mode; progress chip on card face)
+- Remaining: awaiting human review on #37–#42
+- Next task: check issues for human feedback; if any of #37 (card tags), #38 (Team Identity member assignment), #39 (stats panel), #40 (card aging), #41 (custom templates), #42 (card checklists) approved, implement first approved one; else research cycle
 
 ### 2026-06-21 — research: card tags, team assignment, stats panel (#37, #38, #39)
 - Done: all backlog items confirmed implemented; no pending human feedback requiring action
