@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard } from '../types'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate'>>
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags'>>
 
 function dueDateBadge(dueDate: string, todayLabel: string, overdueLabel: string) {
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -55,6 +55,8 @@ interface CardItemProps {
   dueDateLabel: string
   dueTodayLabel: string
   overdueLabel: string
+  addTagLabel: string
+  tagPlaceholderLabel: string
   availableLanes?: string[]
   swimLanePillNone?: string
   swimLaneAssign?: string
@@ -63,12 +65,15 @@ interface CardItemProps {
 function CardItem({
   card, onDelete, onUpdate, deleteTitle, deleteCardConfirmLabel,
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
+  addTagLabel, tagPlaceholderLabel,
   availableLanes, swimLanePillNone, swimLaneAssign,
 }: CardItemProps) {
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
   const [editDueDate, setEditDueDate] = useState<string>(card.dueDate ?? '')
+  const [editTags, setEditTags] = useState<string[]>(card.tags ?? [])
+  const [tagInput, setTagInput] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -83,11 +88,18 @@ function CardItem({
     setEditTitle(card.title)
     setEditColor(card.color)
     setEditDueDate(card.dueDate ?? '')
+    setEditTags(card.tags ?? [])
+    setTagInput('')
     setEditing(true)
   }
 
   const saveEdit = () => {
-    onUpdate({ title: editTitle.trim() || card.title, color: editColor, dueDate: editDueDate || undefined })
+    onUpdate({
+      title: editTitle.trim() || card.title,
+      color: editColor,
+      dueDate: editDueDate || undefined,
+      tags: editTags.length > 0 ? editTags : undefined,
+    })
     setEditing(false)
   }
 
@@ -189,6 +201,35 @@ function CardItem({
               >✕</button>
             )}
           </div>
+          <div className="mb-2">
+            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{addTagLabel}:</div>
+            <div className="flex flex-wrap gap-1">
+              {editTags.map(tag => (
+                <span key={tag} className="inline-flex items-center gap-0.5 text-xs bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700 rounded px-1.5 py-0.5">
+                  {tag}
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={() => setEditTags(editTags.filter(t => t !== tag))}
+                    className="text-brand-400 hover:text-brand-600 dark:hover:text-brand-200 leading-none ml-0.5"
+                  >✕</button>
+                </span>
+              ))}
+              <input
+                className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400 w-24"
+                placeholder={tagPlaceholderLabel}
+                value={tagInput}
+                onChange={e => setTagInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const t = tagInput.trim()
+                    if (t && !editTags.includes(t)) setEditTags([...editTags, t])
+                    setTagInput('')
+                  }
+                }}
+              />
+            </div>
+          </div>
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
@@ -245,6 +286,15 @@ function CardItem({
             >
               {card.swimLane ?? swimLanePillNone ?? '—'}
             </button>
+          )}
+          {card.tags && card.tags.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {card.tags.map(tag => (
+                <span key={tag} className="text-xs bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800 rounded px-1.5 py-0.5 select-none">
+                  {tag}
+                </span>
+              ))}
+            </div>
           )}
         </div>
         <button
@@ -392,6 +442,8 @@ export interface LaneCellProps {
   dueDateLabel: string
   dueTodayLabel: string
   overdueLabel: string
+  addTagLabel: string
+  tagPlaceholderLabel: string
 }
 
 export function LaneCell({
@@ -400,6 +452,7 @@ export function LaneCell({
   onAddCard, onDeleteCard, onUpdateCard,
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
+  addTagLabel, tagPlaceholderLabel,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -435,6 +488,8 @@ export function LaneCell({
               dueDateLabel={dueDateLabel}
               dueTodayLabel={dueTodayLabel}
               overdueLabel={overdueLabel}
+              addTagLabel={addTagLabel}
+              tagPlaceholderLabel={tagPlaceholderLabel}
               availableLanes={activeLanes}
               swimLanePillNone={swimLanePillNone}
               swimLaneAssign={swimLaneAssign}
@@ -498,11 +553,13 @@ interface Props {
   dueDateLabel: string
   dueTodayLabel: string
   overdueLabel: string
+  addTagLabel: string
+  tagPlaceholderLabel: string
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
-  dueDateLabel, dueTodayLabel, overdueLabel,
+  dueDateLabel, dueTodayLabel, overdueLabel, addTagLabel, tagPlaceholderLabel,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -641,6 +698,8 @@ export default function ColumnCard({
               dueDateLabel={dueDateLabel}
               dueTodayLabel={dueTodayLabel}
               overdueLabel={overdueLabel}
+              addTagLabel={addTagLabel}
+              tagPlaceholderLabel={tagPlaceholderLabel}
             />
           ))}
         </SortableContext>

@@ -34,6 +34,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const [filterText, setFilterText] = useState('')
   const [filterColor, setFilterColor] = useState('')
   const [filterLane, setFilterLane] = useState('')
+  const [filterTag, setFilterTag] = useState('')
   const boardCanvasRef = useRef<HTMLDivElement>(null)
 
   const exportImage = async () => {
@@ -174,7 +175,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
-  const isFiltered = Boolean(filterText || filterColor || filterLane)
+  const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag)
 
   const matchesFilter = (card: KanbanCard): boolean => {
     if (filterText && !card.title.toLowerCase().includes(filterText.toLowerCase())) return false
@@ -183,6 +184,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       if (filterLane === '__none__') { if (card.swimLane) return false }
       else { if (card.swimLane !== filterLane) return false }
     }
+    if (filterTag && !(card.tags ?? []).includes(filterTag)) return false
     return true
   }
 
@@ -190,7 +192,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     ? board.columns.map(col => ({ ...col, cards: col.cards.filter(matchesFilter) }))
     : board.columns
 
-  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane('') }
+  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane(''); setFilterTag('') }
+
+  const boardTags = [...new Set(board.columns.flatMap(col => col.cards.flatMap(c => c.tags ?? [])))]
 
   const totalCards = board.columns.reduce((s, c) => s + c.cards.length, 0)
   const hasSwimlanes = board.swimLanes.length > 0
@@ -328,6 +332,21 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             </select>
           </>
         )}
+        {boardTags.length > 0 && (
+          <>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_tag')}:</span>
+            <select
+              className="text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-0.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
+              value={filterTag}
+              onChange={e => setFilterTag(e.target.value)}
+            >
+              <option value="">—</option>
+              {boardTags.map(tag => (
+                <option key={tag} value={tag}>{tag}</option>
+              ))}
+            </select>
+          </>
+        )}
         {isFiltered && (
           <button
             onClick={clearFilters}
@@ -412,6 +431,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       dueDateLabel={t('designer.due_date')}
                       dueTodayLabel={t('designer.due_today')}
                       overdueLabel={t('designer.overdue')}
+                      addTagLabel={t('designer.add_tag')}
+                      tagPlaceholderLabel={t('designer.tag_placeholder')}
                     />
                   ))}
                 </div>
@@ -444,6 +465,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     dueDateLabel={t('designer.due_date')}
                     dueTodayLabel={t('designer.due_today')}
                     overdueLabel={t('designer.overdue')}
+                    addTagLabel={t('designer.add_tag')}
+                    tagPlaceholderLabel={t('designer.tag_placeholder')}
                   />
                 ))}
               </div>

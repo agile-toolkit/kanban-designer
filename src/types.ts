@@ -14,6 +14,7 @@ export interface KanbanCard {
   swimLane?: string
   color?: string
   dueDate?: string
+  tags?: string[]
 }
 
 export interface KanbanBoard {
