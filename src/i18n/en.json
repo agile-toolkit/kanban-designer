@@ -76,7 +76,10 @@
     "due_today": "Due today",
     "overdue": "Overdue",
     "collapse_column": "Collapse column",
-    "expand_column": "Expand column"
+    "expand_column": "Expand column",
+    "add_tag": "Tags",
+    "tag_placeholder": "Add tag…",
+    "filter_tag": "Tag"
   },
   "templates": {
     "title": "Board Templates",

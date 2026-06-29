@@ -78,7 +78,10 @@
     "due_today": "Сёння тэрмін",
     "overdue": "Прасрочана",
     "collapse_column": "Згарнуць калонку",
-    "expand_column": "Разгарнуць калонку"
+    "expand_column": "Разгарнуць калонку",
+    "add_tag": "Тэгі",
+    "tag_placeholder": "Дадаць тэг…",
+    "filter_tag": "Тэг"
   },
   "templates": {
     "title": "Шаблоны дошак",
