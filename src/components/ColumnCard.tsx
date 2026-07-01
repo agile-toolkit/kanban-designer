@@ -5,7 +5,11 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard } from '../types'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags'>>
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags' | 'assignee'>>
+
+function getInitials(name: string): string {
+  return name.trim().split(/\s+/).map(p => p[0]).join('').toUpperCase().slice(0, 2)
+}
 
 function dueDateBadge(dueDate: string, todayLabel: string, overdueLabel: string) {
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -60,6 +64,9 @@ interface CardItemProps {
   availableLanes?: string[]
   swimLanePillNone?: string
   swimLaneAssign?: string
+  assigneeLabel: string
+  unassignedLabel: string
+  teamMembers: string[]
 }
 
 function CardItem({
@@ -67,12 +74,14 @@ function CardItem({
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
   addTagLabel, tagPlaceholderLabel,
   availableLanes, swimLanePillNone, swimLaneAssign,
+  assigneeLabel, unassignedLabel, teamMembers,
 }: CardItemProps) {
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
   const [editDueDate, setEditDueDate] = useState<string>(card.dueDate ?? '')
   const [editTags, setEditTags] = useState<string[]>(card.tags ?? [])
+  const [editAssignee, setEditAssignee] = useState<string>(card.assignee ?? '')
   const [tagInput, setTagInput] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -89,6 +98,7 @@ function CardItem({
     setEditColor(card.color)
     setEditDueDate(card.dueDate ?? '')
     setEditTags(card.tags ?? [])
+    setEditAssignee(card.assignee ?? '')
     setTagInput('')
     setEditing(true)
   }
@@ -99,6 +109,7 @@ function CardItem({
       color: editColor,
       dueDate: editDueDate || undefined,
       tags: editTags.length > 0 ? editTags : undefined,
+      assignee: editAssignee || undefined,
     })
     setEditing(false)
   }
@@ -230,6 +241,21 @@ function CardItem({
               />
             </div>
           </div>
+          {teamMembers.length > 0 && (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs text-gray-400 dark:text-gray-500">{assigneeLabel}:</span>
+              <select
+                className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
+                value={editAssignee}
+                onChange={e => setEditAssignee(e.target.value)}
+              >
+                <option value="">{unassignedLabel}</option>
+                {teamMembers.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
@@ -297,14 +323,24 @@ function CardItem({
             </div>
           )}
         </div>
-        <button
-          onPointerDown={e => e.stopPropagation()}
-          onClick={onDelete}
-          title={deleteTitle}
-          className="flex-shrink-0 text-gray-200 dark:text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          ✕
-        </button>
+        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+          {card.assignee && (
+            <span
+              title={card.assignee}
+              className="w-6 h-6 rounded-full bg-brand-600 dark:bg-brand-700 text-white text-[9px] font-bold flex items-center justify-center select-none flex-shrink-0"
+            >
+              {getInitials(card.assignee)}
+            </span>
+          )}
+          <button
+            onPointerDown={e => e.stopPropagation()}
+            onClick={onDelete}
+            title={deleteTitle}
+            className="text-gray-200 dark:text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            ✕
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -444,6 +480,9 @@ export interface LaneCellProps {
   overdueLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
+  assigneeLabel: string
+  unassignedLabel: string
+  teamMembers: string[]
 }
 
 export function LaneCell({
@@ -453,6 +492,7 @@ export function LaneCell({
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
   addTagLabel, tagPlaceholderLabel,
+  assigneeLabel, unassignedLabel, teamMembers,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -493,6 +533,9 @@ export function LaneCell({
               availableLanes={activeLanes}
               swimLanePillNone={swimLanePillNone}
               swimLaneAssign={swimLaneAssign}
+              assigneeLabel={assigneeLabel}
+              unassignedLabel={unassignedLabel}
+              teamMembers={teamMembers}
             />
           ))}
         </SortableContext>
@@ -555,11 +598,15 @@ interface Props {
   overdueLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
+  assigneeLabel: string
+  unassignedLabel: string
+  teamMembers: string[]
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
   dueDateLabel, dueTodayLabel, overdueLabel, addTagLabel, tagPlaceholderLabel,
+  assigneeLabel, unassignedLabel, teamMembers,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -700,6 +747,9 @@ export default function ColumnCard({
               overdueLabel={overdueLabel}
               addTagLabel={addTagLabel}
               tagPlaceholderLabel={tagPlaceholderLabel}
+              assigneeLabel={assigneeLabel}
+              unassignedLabel={unassignedLabel}
+              teamMembers={teamMembers}
             />
           ))}
         </SortableContext>

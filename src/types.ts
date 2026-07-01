@@ -15,6 +15,7 @@ export interface KanbanCard {
   color?: string
   dueDate?: string
   tags?: string[]
+  assignee?: string
 }
 
 export interface KanbanBoard {
