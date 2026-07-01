@@ -26,6 +26,17 @@ const CARD_COLORS = [
   { stem: 'purple', hex: '#a78bfa' },
 ]
 
+function loadTeamMembers(): string[] {
+  try {
+    const raw = localStorage.getItem('team-identity-charter')
+    if (!raw) return []
+    const charter = JSON.parse(raw)
+    return Array.isArray(charter?.members) ? charter.members.filter(Boolean) : []
+  } catch {
+    return []
+  }
+}
+
 export default function BoardDesigner({ board, onUpdate }: Props) {
   const { t } = useTranslation()
   const [newLane, setNewLane] = useState('')
@@ -35,6 +46,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const [filterColor, setFilterColor] = useState('')
   const [filterLane, setFilterLane] = useState('')
   const [filterTag, setFilterTag] = useState('')
+  const [filterAssignee, setFilterAssignee] = useState('')
+  const [teamMembers] = useState<string[]>(loadTeamMembers)
   const boardCanvasRef = useRef<HTMLDivElement>(null)
 
   const exportImage = async () => {
@@ -175,7 +188,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
-  const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag)
+  const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag || filterAssignee)
 
   const matchesFilter = (card: KanbanCard): boolean => {
     if (filterText && !card.title.toLowerCase().includes(filterText.toLowerCase())) return false
@@ -185,6 +198,10 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       else { if (card.swimLane !== filterLane) return false }
     }
     if (filterTag && !(card.tags ?? []).includes(filterTag)) return false
+    if (filterAssignee) {
+      if (filterAssignee === '__unassigned__') { if (card.assignee) return false }
+      else { if (card.assignee !== filterAssignee) return false }
+    }
     return true
   }
 
@@ -192,7 +209,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     ? board.columns.map(col => ({ ...col, cards: col.cards.filter(matchesFilter) }))
     : board.columns
 
-  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane(''); setFilterTag('') }
+  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane(''); setFilterTag(''); setFilterAssignee('') }
 
   const boardTags = [...new Set(board.columns.flatMap(col => col.cards.flatMap(c => c.tags ?? [])))]
 
@@ -347,6 +364,22 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             </select>
           </>
         )}
+        {teamMembers.length > 0 && (
+          <>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_assignee')}:</span>
+            <select
+              className="text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-0.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
+              value={filterAssignee}
+              onChange={e => setFilterAssignee(e.target.value)}
+            >
+              <option value="">—</option>
+              {teamMembers.map(m => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+              <option value="__unassigned__">{t('designer.unassigned')}</option>
+            </select>
+          </>
+        )}
         {isFiltered && (
           <button
             onClick={clearFilters}
@@ -433,6 +466,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       overdueLabel={t('designer.overdue')}
                       addTagLabel={t('designer.add_tag')}
                       tagPlaceholderLabel={t('designer.tag_placeholder')}
+                      assigneeLabel={t('designer.assignee')}
+                      unassignedLabel={t('designer.unassigned')}
+                      teamMembers={teamMembers}
                     />
                   ))}
                 </div>
@@ -467,6 +503,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     overdueLabel={t('designer.overdue')}
                     addTagLabel={t('designer.add_tag')}
                     tagPlaceholderLabel={t('designer.tag_placeholder')}
+                    assigneeLabel={t('designer.assignee')}
+                    unassignedLabel={t('designer.unassigned')}
+                    teamMembers={teamMembers}
                   />
                 ))}
               </div>

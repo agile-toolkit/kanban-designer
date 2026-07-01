@@ -81,7 +81,10 @@
     "expand_column": "Разгарнуць калонку",
     "add_tag": "Тэгі",
     "tag_placeholder": "Дадаць тэг…",
-    "filter_tag": "Тэг"
+    "filter_tag": "Тэг",
+    "assignee": "Выканаўца",
+    "unassigned": "Не прызначаны",
+    "filter_assignee": "Выканаўца"
   },
   "templates": {
     "title": "Шаблоны дошак",

@@ -79,7 +79,10 @@
     "expand_column": "Expand column",
     "add_tag": "Tags",
     "tag_placeholder": "Add tag…",
-    "filter_tag": "Tag"
+    "filter_tag": "Tag",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "filter_assignee": "Assignee"
   },
   "templates": {
     "title": "Board Templates",

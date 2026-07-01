@@ -81,7 +81,10 @@
     "expand_column": "Expandir columna",
     "add_tag": "Etiquetas",
     "tag_placeholder": "Añadir etiqueta…",
-    "filter_tag": "Etiqueta"
+    "filter_tag": "Etiqueta",
+    "assignee": "Asignado",
+    "unassigned": "Sin asignar",
+    "filter_assignee": "Asignado"
   },
   "templates": {
     "title": "Plantillas de tablero",

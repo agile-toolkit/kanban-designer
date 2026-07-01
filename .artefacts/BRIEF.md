@@ -27,6 +27,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - [x] Light/dark theme (#17) — `tailwind.config.js` `darkMode: ['selector','[data-theme="dark"]']`; anti-flash inline script in `index.html`; `ThemeToggle.tsx` in `src/components/`; `<ThemeToggle />` in AppHeader children slot; `dark:` variants applied to all Tailwind colour classes across `App.tsx`, `AppHeader.tsx`, `BoardDesigner.tsx`, `ColumnCard.tsx`, `HomeScreen.tsx`, `TemplatesView.tsx`, `LearnView.tsx`, `index.css`
 - [x] Undo/redo (#31) — `boardHistory: KanbanBoard[]` + `boardFuture: KanbanBoard[]` state in `App.tsx`; `updateBoard()` pushes snapshot to history (cap 50), clears future; `applyBoard()` bypasses history for undo/redo; Ctrl+Z/Meta+Z = undo, Ctrl+Y/Ctrl+Shift+Z = redo via `keydown` on `document`; Undo/Redo buttons in AppHeader toolbar (disabled at stack boundaries); history cleared on board switch; `designer.undo` / `designer.redo` i18n keys in EN/ES/BE/RU
 - [x] Card tags (#37) — `tags?: string[]` on `KanbanCard` in `types.ts`; `CardUpdates` includes `tags`; `editTags` state + `tagInput` state in `CardItem`; in edit mode: tag chip list with ✕ remove buttons + text input (Enter adds, deduplicates); tag pills on card face (brand-50/brand-400 styling) below due date badge; `filterTag` state in `BoardDesigner`; `boardTags` computed as unique tags across all cards; tag filter `<select>` in filter bar when `boardTags.length > 0`; `matchesFilter` checks `card.tags?.includes(filterTag)`; `clearFilters` resets `filterTag`; `designer.add_tag` / `designer.tag_placeholder` / `designer.filter_tag` i18n keys in EN/ES/BE/RU; round-trips through JSON export and `kanban-designer:currentBoard`
+- [x] Team Identity member assignment (#38) — `assignee?: string` on `KanbanCard` in `types.ts`; `CardUpdates` includes `assignee`; `BoardDesigner` reads `team-identity-charter` localStorage on mount (`loadTeamMembers()` → `charter.members: string[]`); in card edit mode: member `<select>` dropdown (shown only when `teamMembers.length > 0`) with `Unassigned` as default; initials badge (2-char, brand-600 circle) on card face top-right; `filterAssignee` state in `BoardDesigner`; assignee `<select>` in filter bar (shown when team members loaded, includes `Unassigned` option); `matchesFilter` checks `__unassigned__` or exact member name; `clearFilters` resets `filterAssignee`; `designer.assignee` / `designer.unassigned` / `designer.filter_assignee` i18n keys in EN/ES/BE/RU
 
 ## localStorage keys
 
@@ -38,7 +39,7 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 ## Backlog
 
 - [x] [#37] Feature: card tags — multi-label text categorization (`tags?: string[]` on KanbanCard; tag chip input in edit mode; tag pills on card face; tag filter in filter bar; board-scoped suggestions; no new deps)
-- [ ] [#38] Integration: Team Identity member assignment on cards (`assignee?: string` on KanbanCard; reads `team-identity:charter` localStorage; member dropdown in card edit; initials badge on card face; assignee filter in filter bar)
+- [x] [#38] Integration: Team Identity member assignment on cards (`assignee?: string` on KanbanCard; reads `team-identity-charter` localStorage; member dropdown in card edit; initials badge on card face; assignee filter in filter bar)
 - [ ] [#39] Feature: board statistics panel — column throughput and WIP overview (StatsPanel.tsx; per-column CSS bar chart; board summary row: total/at-capacity/empty; oldest card per column; no new deps)
 - [ ] [#40] Feature: card aging — `enteredColumnAt?: string` ISO timestamp set on card create + column move; age chip on card face (gray 1–3d, amber 4–7d, red >7d); `designer.age_days`/`designer.age_weeks` i18n keys; no new deps
 - [ ] [#41] Feature: save board as custom template — "Save as template" toolbar button; saves to `kanban-designer:customTemplates` localStorage; strips card content, keeps structure (column names, WIP limits, swim lanes); "My Templates" section in TemplatesView; `templates.my_templates`/`designer.save_as_template` i18n keys
@@ -71,6 +72,17 @@ Interactive Kanban designer: columns, WIP limits, swim lanes, template gallery w
 - Literal-key scans false-positive on `` t(`templates.context.${key}`) `` — do not delete those keys blindly.
 
 ## Agent Log
+
+### 2026-07-01 — feat: Team Identity member assignment (#38)
+- Done: `assignee?: string` added to `KanbanCard` in `types.ts`; `CardUpdates` includes `assignee`
+- Done: `loadTeamMembers()` in `BoardDesigner.tsx` reads `team-identity-charter` localStorage; `charter.members` array; `[teamMembers]` state initialized on mount
+- Done: `CardItem` receives `assigneeLabel`, `unassignedLabel`, `teamMembers` props; edit mode shows `<select>` dropdown (hidden when `teamMembers.length === 0`); `editAssignee` state synced on `openEdit()`/`saveEdit()`
+- Done: initials badge (2-char, `getInitials()`, brand-600 circle w-6 h-6) on card face top-right; shown next to delete button
+- Done: `filterAssignee` state in `BoardDesigner`; assignee `<select>` in filter row (shown when `teamMembers.length > 0`); `__unassigned__` option filters cards with no assignee; `matchesFilter` handles both exact name and unassigned; `clearFilters` resets `filterAssignee`
+- Done: `designer.assignee` / `designer.unassigned` / `designer.filter_assignee` i18n keys in EN/ES/BE/RU
+- Done: props threaded through `ColumnCard` and `LaneCell`
+- Remaining: #39 (stats panel), #40–#45 awaiting review
+- Next task: check issues for human feedback; implement #39 (stats panel — StatsPanel.tsx with CSS bar chart per column, board summary row with total/at-capacity/empty counts, oldest card per column; nav.stats i18n key) — auto-approved 2026-06-29
 
 ### 2026-06-29 — feat: card tags (#37)
 - Done: auto-approved #37 (8 days stale, BRIEF feature), #38 and #39 (8 days stale, research features) with comments; `approved` label added to #37

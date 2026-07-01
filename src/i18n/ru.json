@@ -81,7 +81,10 @@
     "expand_column": "Развернуть колонку",
     "add_tag": "Теги",
     "tag_placeholder": "Добавить тег…",
-    "filter_tag": "Тег"
+    "filter_tag": "Тег",
+    "assignee": "Исполнитель",
+    "unassigned": "Не назначен",
+    "filter_assignee": "Исполнитель"
   },
   "templates": {
     "title": "Шаблоны досок",
