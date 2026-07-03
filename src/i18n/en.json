@@ -82,7 +82,8 @@
     "filter_tag": "Tag",
     "assignee": "Assignee",
     "unassigned": "Unassigned",
-    "filter_assignee": "Assignee"
+    "filter_assignee": "Assignee",
+    "stats": "Stats"
   },
   "templates": {
     "title": "Board Templates",
@@ -113,5 +114,13 @@
     "p3": "Manage flow — measure and optimize cycle time.",
     "p4": "Make process policies explicit — clear rules reduce conflict.",
     "p5": "Improve collaboratively — use models to guide change."
+  },
+  "stats": {
+    "title": "Board Stats",
+    "total_cards": "Total cards",
+    "at_capacity": "At capacity",
+    "empty_columns": "Empty columns",
+    "completion_rate": "Completion rate",
+    "oldest_card": "Oldest card"
   }
 }

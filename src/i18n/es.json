@@ -84,7 +84,8 @@
     "filter_tag": "Etiqueta",
     "assignee": "Asignado",
     "unassigned": "Sin asignar",
-    "filter_assignee": "Asignado"
+    "filter_assignee": "Asignado",
+    "stats": "Estadísticas"
   },
   "templates": {
     "title": "Plantillas de tablero",
@@ -115,5 +116,13 @@
     "p3": "Gestionar el flujo — medir y optimizar el tiempo de ciclo.",
     "p4": "Hacer explícitas las políticas del proceso — reglas claras reducen conflictos.",
     "p5": "Mejorar colaborativamente — usar modelos para guiar el cambio."
+  },
+  "stats": {
+    "title": "Estadísticas del tablero",
+    "total_cards": "Total de tarjetas",
+    "at_capacity": "En capacidad máxima",
+    "empty_columns": "Columnas vacías",
+    "completion_rate": "Tasa de finalización",
+    "oldest_card": "Tarjeta más antigua"
   }
 }

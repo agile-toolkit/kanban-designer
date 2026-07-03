@@ -11,6 +11,7 @@ import {
 import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
+import StatsPanel from './StatsPanel'
 
 interface Props {
   board: KanbanBoard
@@ -48,6 +49,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const [filterTag, setFilterTag] = useState('')
   const [filterAssignee, setFilterAssignee] = useState('')
   const [teamMembers] = useState<string[]>(loadTeamMembers)
+  const [showStats, setShowStats] = useState(false)
   const boardCanvasRef = useRef<HTMLDivElement>(null)
 
   const exportImage = async () => {
@@ -277,6 +279,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </label>
 
         <div className="ml-auto flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
+          <button
+            onClick={() => setShowStats(true)}
+            className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            {t('designer.stats')}
+          </button>
           <button
             onClick={exportImage}
             disabled={exporting}
@@ -514,6 +522,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           </DndContext>
         )}
       </div>
+
+      {showStats && <StatsPanel board={board} onClose={() => setShowStats(false)} />}
     </div>
   )
 }
