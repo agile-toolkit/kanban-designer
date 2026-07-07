@@ -85,7 +85,9 @@
     "assignee": "Исполнитель",
     "unassigned": "Не назначен",
     "filter_assignee": "Исполнитель",
-    "stats": "Статистика"
+    "stats": "Статистика",
+    "age_days": "{{n}}д",
+    "age_weeks": "{{n}}нед"
   },
   "templates": {
     "title": "Шаблоны досок",

@@ -85,7 +85,9 @@
     "assignee": "Выканаўца",
     "unassigned": "Не прызначаны",
     "filter_assignee": "Выканаўца",
-    "stats": "Статыстыка"
+    "stats": "Статыстыка",
+    "age_days": "{{n}}дн",
+    "age_weeks": "{{n}}тыдн"
   },
   "templates": {
     "title": "Шаблоны дошак",

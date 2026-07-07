@@ -85,7 +85,9 @@
     "assignee": "Asignado",
     "unassigned": "Sin asignar",
     "filter_assignee": "Asignado",
-    "stats": "Estadísticas"
+    "stats": "Estadísticas",
+    "age_days": "{{n}}d",
+    "age_weeks": "{{n}}sem"
   },
   "templates": {
     "title": "Plantillas de tablero",

@@ -21,6 +21,17 @@ function dueDateBadge(dueDate: string, todayLabel: string, overdueLabel: string)
   return { label, cls: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' }
 }
 
+function ageBadge(enteredColumnAt: string, t: (key: string, opts?: Record<string, unknown>) => string) {
+  const ageDays = Math.floor((Date.now() - new Date(enteredColumnAt).getTime()) / 86400000)
+  if (ageDays < 1) return null
+  const label = ageDays >= 14
+    ? t('designer.age_weeks', { n: Math.floor(ageDays / 7) })
+    : t('designer.age_days', { n: ageDays })
+  if (ageDays <= 3) return { label, cls: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' }
+  if (ageDays <= 7) return { label, cls: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold' }
+  return { label, cls: 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400 font-bold' }
+}
+
 const CARD_COLORS = [
   { stem: 'red',    hex: '#f87171' },
   { stem: 'orange', hex: '#fb923c' },
@@ -76,6 +87,7 @@ function CardItem({
   availableLanes, swimLanePillNone, swimLaneAssign,
   assigneeLabel, unassignedLabel, teamMembers,
 }: CardItemProps) {
+  const { t } = useTranslation()
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
@@ -291,18 +303,31 @@ function CardItem({
           >
             {card.title}
           </span>
-          {card.dueDate && (() => {
-            const badge = dueDateBadge(card.dueDate, dueTodayLabel, overdueLabel)
-            return (
-              <button
-                onPointerDown={e => e.stopPropagation()}
-                onClick={e => { e.stopPropagation(); openEdit() }}
-                className={`mt-1 text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}
-              >
-                {badge.label}
-              </button>
-            )
-          })()}
+          {(card.dueDate || card.enteredColumnAt) && (
+            <div className="mt-1 flex items-center gap-1 flex-wrap">
+              {card.dueDate && (() => {
+                const badge = dueDateBadge(card.dueDate, dueTodayLabel, overdueLabel)
+                return (
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={e => { e.stopPropagation(); openEdit() }}
+                    className={`text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}
+                  >
+                    {badge.label}
+                  </button>
+                )
+              })()}
+              {card.enteredColumnAt && (() => {
+                const badge = ageBadge(card.enteredColumnAt, t)
+                if (!badge) return null
+                return (
+                  <span className={`text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}>
+                    {badge.label}
+                  </span>
+                )
+              })()}
+            </div>
+          )}
           {availableLanes && availableLanes.length > 0 && (
             <button
               onPointerDown={e => e.stopPropagation()}

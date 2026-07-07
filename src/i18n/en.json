@@ -83,7 +83,9 @@
     "assignee": "Assignee",
     "unassigned": "Unassigned",
     "filter_assignee": "Assignee",
-    "stats": "Stats"
+    "stats": "Stats",
+    "age_days": "{{n}}d",
+    "age_weeks": "{{n}}w"
   },
   "templates": {
     "title": "Board Templates",
