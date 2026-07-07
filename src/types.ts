@@ -16,6 +16,7 @@ export interface KanbanCard {
   dueDate?: string
   tags?: string[]
   assignee?: string
+  enteredColumnAt?: string
 }
 
 export interface KanbanBoard {

@@ -139,7 +139,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       const col = board.columns.find(c => c.id === srcColId)!
       patch({ columns: board.columns.map(c => c.id === srcColId ? { ...c, cards: arrayMove(col.cards, srcCardIdx, dstCardIdx) } : c) })
     } else {
-      const srcCard = board.columns.find(c => c.id === srcColId)!.cards[srcCardIdx]
+      const srcCard = { ...board.columns.find(c => c.id === srcColId)!.cards[srcCardIdx], enteredColumnAt: new Date().toISOString() }
       patch({
         columns: board.columns.map(col => {
           if (col.id === srcColId) return { ...col, cards: col.cards.filter(c => c.id !== srcCard.id) }
@@ -166,7 +166,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     patch({
       columns: board.columns.map(c =>
         c.id === colId
-          ? { ...c, cards: [...c.cards, { id: crypto.randomUUID(), title, swimLane }] }
+          ? { ...c, cards: [...c.cards, { id: crypto.randomUUID(), title, swimLane, enteredColumnAt: new Date().toISOString() }] }
           : c
       ),
     })
