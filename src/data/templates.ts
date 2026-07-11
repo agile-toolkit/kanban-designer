@@ -1,4 +1,4 @@
-import type { KanbanBoard } from '../types'
+import type { CustomTemplate, KanbanBoard } from '../types'
 
 export const TEMPLATES: Array<KanbanBoard & { contextKey: string }> = [
   {
@@ -147,6 +147,63 @@ export function cloneTemplate(t: typeof TEMPLATES[0]): KanbanBoard {
     columns: t.columns.map(c => ({ ...c, id: crypto.randomUUID(), cards: [] })),
     swimLanes: [...t.swimLanes],
     showWipWarnings: t.showWipWarnings,
+    updatedAt: Date.now(),
+  }
+}
+
+const CUSTOM_TEMPLATES_KEY = 'kanban-designer:customTemplates'
+
+export function loadCustomTemplates(): CustomTemplate[] {
+  try {
+    const raw = localStorage.getItem(CUSTOM_TEMPLATES_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed?.templates) ? parsed.templates : []
+  } catch {
+    return []
+  }
+}
+
+function saveCustomTemplates(templates: CustomTemplate[]) {
+  localStorage.setItem(CUSTOM_TEMPLATES_KEY, JSON.stringify({ templates }))
+}
+
+export function createCustomTemplate(board: KanbanBoard, name: string): CustomTemplate {
+  const stripped: KanbanBoard = {
+    id: crypto.randomUUID(),
+    name,
+    columns: board.columns.map(c => ({
+      id: crypto.randomUUID(),
+      name: c.name,
+      wipLimit: c.wipLimit,
+      cards: [],
+    })),
+    swimLanes: [...board.swimLanes],
+    showWipWarnings: board.showWipWarnings,
+  }
+  const template: CustomTemplate = {
+    id: crypto.randomUUID(),
+    name,
+    createdAt: new Date().toISOString(),
+    board: stripped,
+  }
+  saveCustomTemplates([...loadCustomTemplates(), template])
+  return template
+}
+
+export function deleteCustomTemplate(id: string): CustomTemplate[] {
+  const next = loadCustomTemplates().filter(t => t.id !== id)
+  saveCustomTemplates(next)
+  return next
+}
+
+export function cloneCustomTemplate(template: CustomTemplate): KanbanBoard {
+  return {
+    id: crypto.randomUUID(),
+    name: template.board.name,
+    columns: template.board.columns.map(c => ({ ...c, id: crypto.randomUUID(), cards: [] })),
+    swimLanes: [...template.board.swimLanes],
+    showWipWarnings: template.board.showWipWarnings,
     updatedAt: Date.now(),
   }
 }

@@ -1,5 +1,7 @@
 {
-  "app": { "title": "Kanban Designer" },
+  "app": {
+    "title": "Kanban Designer"
+  },
   "nav": {
     "home": "Home",
     "boards": "Boards",
@@ -85,7 +87,9 @@
     "filter_assignee": "Assignee",
     "stats": "Stats",
     "age_days": "{{n}}d",
-    "age_weeks": "{{n}}w"
+    "age_weeks": "{{n}}w",
+    "save_as_template": "Save as Template",
+    "template_name_placeholder": "Template name"
   },
   "templates": {
     "title": "Board Templates",
@@ -102,7 +106,10 @@
       "hiring": "Talent acquisition pipeline. Swim lanes per role/department to track parallel pipelines.",
       "product": "Product discovery flow from opportunity to shipped. Double-diamond inspired.",
       "crisis": "Incident management with priority lanes. Clear escalation path from detected to post-mortem."
-    }
+    },
+    "my_templates": "My Templates",
+    "saved": "Saved!",
+    "delete_custom": "Delete template"
   },
   "learn": {
     "title": "Kanban Principles",

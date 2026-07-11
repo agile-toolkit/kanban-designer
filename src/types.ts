@@ -30,3 +30,10 @@ export interface KanbanBoard {
 }
 
 export type Screen = 'home' | 'designer' | 'templates' | 'learn'
+
+export interface CustomTemplate {
+  id: string
+  name: string
+  createdAt: string
+  board: KanbanBoard
+}

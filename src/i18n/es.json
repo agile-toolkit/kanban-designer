@@ -87,7 +87,9 @@
     "filter_assignee": "Asignado",
     "stats": "Estadísticas",
     "age_days": "{{n}}d",
-    "age_weeks": "{{n}}sem"
+    "age_weeks": "{{n}}sem",
+    "save_as_template": "Guardar como plantilla",
+    "template_name_placeholder": "Nombre de la plantilla"
   },
   "templates": {
     "title": "Plantillas de tablero",
@@ -104,7 +106,10 @@
       "hiring": "Canal de adquisición de talento. Carriles por rol/departamento para pipelines paralelos.",
       "product": "Flujo de descubrimiento de producto, desde oportunidad hasta lanzamiento. Inspirado en el doble diamante.",
       "crisis": "Gestión de incidentes con carriles de prioridad. Ruta de escalación clara desde detección hasta post-mortem."
-    }
+    },
+    "my_templates": "Mis plantillas",
+    "saved": "¡Guardado!",
+    "delete_custom": "Eliminar plantilla"
   },
   "learn": {
     "title": "Principios Kanban",

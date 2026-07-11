@@ -87,7 +87,9 @@
     "filter_assignee": "Выканаўца",
     "stats": "Статыстыка",
     "age_days": "{{n}}дн",
-    "age_weeks": "{{n}}тыдн"
+    "age_weeks": "{{n}}тыдн",
+    "save_as_template": "Захаваць як шаблон",
+    "template_name_placeholder": "Назва шаблону"
   },
   "templates": {
     "title": "Шаблоны дошак",
@@ -104,7 +106,10 @@
       "hiring": "Варонка найму з даріжкамі па ролі/аддзелу.",
       "product": "Паток Product Discovery — ад магчымасці да рэлізу.",
       "crisis": "Кіраванне інцыдэнтамі з прыярытэтнымі даріжкамі."
-    }
+    },
+    "my_templates": "Мае шаблоны",
+    "saved": "Захавана!",
+    "delete_custom": "Выдаліць шаблон"
   },
   "learn": {
     "title": "Прынцыпы Канбан",

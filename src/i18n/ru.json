@@ -87,7 +87,9 @@
     "filter_assignee": "Исполнитель",
     "stats": "Статистика",
     "age_days": "{{n}}д",
-    "age_weeks": "{{n}}нед"
+    "age_weeks": "{{n}}нед",
+    "save_as_template": "Сохранить как шаблон",
+    "template_name_placeholder": "Название шаблона"
   },
   "templates": {
     "title": "Шаблоны досок",
@@ -104,7 +106,10 @@
       "hiring": "Воронка найма с дорожками по роли/отделу.",
       "product": "Поток Product Discovery — от возможности до релиза.",
       "crisis": "Управление инцидентами с приоритетными дорожками."
-    }
+    },
+    "my_templates": "Мои шаблоны",
+    "saved": "Сохранено!",
+    "delete_custom": "Удалить шаблон"
   },
   "learn": {
     "title": "Принципы Kanban",
