@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TEMPLATES, cloneTemplate } from '../data/templates'
+import { TEMPLATES, cloneTemplate, cloneCustomTemplate, deleteCustomTemplate, loadCustomTemplates } from '../data/templates'
 import type { KanbanBoard } from '../types'
 
 interface Props {
@@ -8,11 +9,65 @@ interface Props {
 
 export default function TemplatesView({ onLoad }: Props) {
   const { t } = useTranslation()
+  const [customTemplates, setCustomTemplates] = useState(loadCustomTemplates)
+
+  const handleDeleteCustom = (id: string) => {
+    setCustomTemplates(deleteCustomTemplate(id))
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t('templates.title')}</h1>
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{t('templates.subtitle')}</p>
+
+      {customTemplates.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">{t('templates.my_templates')}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {customTemplates.map(template => (
+              <div key={template.id} className="card hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</h3>
+                  <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                    <button
+                      onClick={() => onLoad(cloneCustomTemplate(template))}
+                      className="btn-primary text-xs py-1 px-3"
+                    >
+                      {t('templates.load')}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCustom(template.id)}
+                      title={t('templates.delete_custom')}
+                      className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 text-xs px-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-1 flex-wrap">
+                  {template.board.columns.map(col => (
+                    <div key={col.id} className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded px-1.5 py-0.5">
+                      <span className="text-xs text-gray-600 dark:text-gray-300">{col.name}</span>
+                      {col.wipLimit !== null && (
+                        <span className="text-xs text-brand-600 font-medium">({col.wipLimit})</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {template.board.swimLanes.length > 0 && (
+                  <div className="flex gap-1 mt-1.5">
+                    {template.board.swimLanes.map(lane => (
+                      <span key={lane} className="text-xs bg-orange-100 text-orange-700 rounded px-1.5 py-0.5">{lane}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {TEMPLATES.map(template => (

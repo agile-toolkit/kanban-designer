@@ -12,6 +12,7 @@ import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
 import StatsPanel from './StatsPanel'
+import { createCustomTemplate } from '../data/templates'
 
 interface Props {
   board: KanbanBoard
@@ -50,7 +51,20 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const [filterAssignee, setFilterAssignee] = useState('')
   const [teamMembers] = useState<string[]>(loadTeamMembers)
   const [showStats, setShowStats] = useState(false)
+  const [savingTemplate, setSavingTemplate] = useState(false)
+  const [templateName, setTemplateName] = useState('')
+  const [templateSaved, setTemplateSaved] = useState(false)
   const boardCanvasRef = useRef<HTMLDivElement>(null)
+
+  const saveAsTemplate = () => {
+    const name = templateName.trim()
+    if (!name) return
+    createCustomTemplate(board, name)
+    setSavingTemplate(false)
+    setTemplateName('')
+    setTemplateSaved(true)
+    setTimeout(() => setTemplateSaved(false), 2000)
+  }
 
   const exportImage = async () => {
     if (!boardCanvasRef.current || exporting) return
@@ -285,6 +299,41 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           >
             {t('designer.stats')}
           </button>
+          {savingTemplate ? (
+            <div className="flex items-center gap-1">
+              <input
+                autoFocus
+                className="input text-xs py-1 w-32"
+                placeholder={t('designer.template_name_placeholder')}
+                value={templateName}
+                onChange={e => setTemplateName(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') saveAsTemplate()
+                  if (e.key === 'Escape') { setSavingTemplate(false); setTemplateName('') }
+                }}
+              />
+              <button onClick={saveAsTemplate} className="btn-primary text-xs py-1 px-2">
+                {t('designer.save_as_template')}
+              </button>
+              <button
+                onClick={() => { setSavingTemplate(false); setTemplateName('') }}
+                className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-1"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setSavingTemplate(true)}
+              className={`text-xs font-medium border rounded px-2 py-1 transition-colors ${
+                templateSaved
+                  ? 'text-green-600 border-green-200 bg-green-50'
+                  : 'text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+              }`}
+            >
+              {templateSaved ? t('templates.saved') : t('designer.save_as_template')}
+            </button>
+          )}
           <button
             onClick={exportImage}
             disabled={exporting}
