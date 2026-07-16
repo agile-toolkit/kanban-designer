@@ -7,6 +7,12 @@ export interface KanbanColumn {
   collapsed?: boolean
 }
 
+export interface ChecklistItem {
+  id: string
+  text: string
+  done: boolean
+}
+
 export interface KanbanCard {
   id: string
   title: string
@@ -17,6 +23,7 @@ export interface KanbanCard {
   tags?: string[]
   assignee?: string
   enteredColumnAt?: string
+  checklist?: ChecklistItem[]
 }
 
 export interface KanbanBoard {
