@@ -89,7 +89,10 @@
     "age_days": "{{n}}d",
     "age_weeks": "{{n}}w",
     "save_as_template": "Save as Template",
-    "template_name_placeholder": "Template name"
+    "template_name_placeholder": "Template name",
+    "checklist": "Checklist",
+    "checklist_add": "Add item…",
+    "checklist_progress": "✓ {{done}}/{{total}}"
   },
   "templates": {
     "title": "Board Templates",

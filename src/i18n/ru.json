@@ -89,7 +89,10 @@
     "age_days": "{{n}}д",
     "age_weeks": "{{n}}нед",
     "save_as_template": "Сохранить как шаблон",
-    "template_name_placeholder": "Название шаблона"
+    "template_name_placeholder": "Название шаблона",
+    "checklist": "Список задач",
+    "checklist_add": "Добавить элемент…",
+    "checklist_progress": "✓ {{done}}/{{total}}"
   },
   "templates": {
     "title": "Шаблоны досок",

@@ -3,9 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useSortable } from '@dnd-kit/sortable'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { KanbanColumn, KanbanCard } from '../types'
+import type { KanbanColumn, KanbanCard, ChecklistItem } from '../types'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags' | 'assignee'>>
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags' | 'assignee' | 'checklist'>>
+
+function makeChecklistItem(text: string): ChecklistItem {
+  return { id: Math.random().toString(36).slice(2), text, done: false }
+}
 
 function getInitials(name: string): string {
   return name.trim().split(/\s+/).map(p => p[0]).join('').toUpperCase().slice(0, 2)
@@ -94,6 +98,8 @@ function CardItem({
   const [editDueDate, setEditDueDate] = useState<string>(card.dueDate ?? '')
   const [editTags, setEditTags] = useState<string[]>(card.tags ?? [])
   const [editAssignee, setEditAssignee] = useState<string>(card.assignee ?? '')
+  const [editChecklist, setEditChecklist] = useState<ChecklistItem[]>(card.checklist ?? [])
+  const [checklistInput, setChecklistInput] = useState('')
   const [tagInput, setTagInput] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -111,6 +117,8 @@ function CardItem({
     setEditDueDate(card.dueDate ?? '')
     setEditTags(card.tags ?? [])
     setEditAssignee(card.assignee ?? '')
+    setEditChecklist(card.checklist ?? [])
+    setChecklistInput('')
     setTagInput('')
     setEditing(true)
   }
@@ -122,6 +130,7 @@ function CardItem({
       dueDate: editDueDate || undefined,
       tags: editTags.length > 0 ? editTags : undefined,
       assignee: editAssignee || undefined,
+      checklist: editChecklist.length > 0 ? editChecklist : undefined,
     })
     setEditing(false)
   }
@@ -268,6 +277,41 @@ function CardItem({
               </select>
             </div>
           )}
+          <div className="mb-2">
+            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{t('designer.checklist')}:</div>
+            <div className="space-y-0.5">
+              {editChecklist.map(item => (
+                <div key={item.id} className="flex items-center gap-1.5">
+                  <input
+                    type="checkbox"
+                    checked={item.done}
+                    onChange={() => setEditChecklist(editChecklist.map(i => i.id === item.id ? { ...i, done: !i.done } : i))}
+                    className="w-3 h-3 rounded accent-brand-600 flex-shrink-0"
+                  />
+                  <span className={`flex-1 text-xs ${item.done ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{item.text}</span>
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
+                    className="text-gray-300 dark:text-gray-600 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
+                  >✕</button>
+                </div>
+              ))}
+              <input
+                className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400 mt-0.5"
+                placeholder={t('designer.checklist_add')}
+                value={checklistInput}
+                onChange={e => setChecklistInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const text = checklistInput.trim()
+                    if (text) setEditChecklist([...editChecklist, makeChecklistItem(text)])
+                    setChecklistInput('')
+                  }
+                }}
+              />
+            </div>
+          </div>
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
@@ -347,6 +391,24 @@ function CardItem({
               ))}
             </div>
           )}
+          {card.checklist && card.checklist.length > 0 && (() => {
+            const total = card.checklist.length
+            const done = card.checklist.filter(i => i.done).length
+            const allDone = done === total
+            return (
+              <div className="mt-1">
+                <span
+                  className={`text-xs rounded px-1.5 py-0.5 ${
+                    allDone
+                      ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 font-medium'
+                      : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+                  }`}
+                >
+                  {t('designer.checklist_progress', { done, total })}
+                </span>
+              </div>
+            )
+          })()}
         </div>
         <div className="flex flex-col items-end gap-1 flex-shrink-0">
           {card.assignee && (

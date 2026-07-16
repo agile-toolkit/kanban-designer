@@ -89,7 +89,10 @@
     "age_days": "{{n}}d",
     "age_weeks": "{{n}}sem",
     "save_as_template": "Guardar como plantilla",
-    "template_name_placeholder": "Nombre de la plantilla"
+    "template_name_placeholder": "Nombre de la plantilla",
+    "checklist": "Lista de tareas",
+    "checklist_add": "Añadir elemento…",
+    "checklist_progress": "✓ {{done}}/{{total}}"
   },
   "templates": {
     "title": "Plantillas de tablero",
