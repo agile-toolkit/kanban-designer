@@ -1,20 +1,45 @@
 # Kanban Designer
 
-An interactive Kanban board designer and configurator — define columns, set WIP limits, add swim lanes, and explore 10 board archetypes with educational context.
+An interactive Kanban board designer and configurator — define columns, set WIP limits, add swim lanes, and explore 10 board archetypes with educational context. Boards are editable client-side only: no backend, no accounts — state lives in `localStorage` and the URL.
 
 Part of the [Agile Tools](https://github.com/bthos) suite built on Management 3.0 and ICAgile source materials.
 
-## Stack
-React 18 · TypeScript · Vite · Tailwind CSS · @dnd-kit · react-i18next (EN/RU)
+See `.artefacts/GOAL.md` for why this app exists and `.artefacts/ROADMAP.md` for what's shipped and what's next.
 
-## Development
+## Stack
+React 18 · TypeScript · Vite · Tailwind CSS · @dnd-kit · react-i18next (EN/ES/BE/RU)
+
+## Dev commands
 ```bash
-npm install
-npm run dev
+npm install     # install dependencies
+npm run dev     # start Vite dev server
+npm run build   # tsc typecheck + production build
+npm run preview # preview the production build locally
 ```
 
 ## Deploy
 GitHub Pages via GitHub Actions on push to `main`.
 
+## localStorage keys
+
+| Key | Shape | Purpose |
+|-----|-------|---------|
+| `kanban-designer-boards` | `KanbanBoard[]` | All boards the user has created, persisted locally. |
+| `kanban-designer-current-id` | `string` | Id of the board currently open in the designer. |
+| `kanban-designer-board` | `KanbanBoard` (legacy) | Pre-multi-board single-board save; migrated into `kanban-designer-boards` on load, then removed. |
+| `kanban-designer:lastSession` | `{ boardName, columnCount, cardCount, boardCount, updatedAt }` | Summary written on every save, read by the suite Dashboard's "last session" card. |
+| `kanban-designer:currentBoard` | `{ boardName, columns: [{ name, cards: [{ title, description }] }], updatedAt }` | Written on every save; read by Planning Poker's "Send to Planning Poker" deep-link import. |
+| `kanban-designer:customTemplates` | `{ templates: [{ id, name, createdAt, board }] }` | User-saved board structures (columns/WIP/lanes only, no card content) shown in the Templates gallery. |
+| `theme` | `"light" \| "dark"` | Shared, suite-wide theme preference (unprefixed key by convention — read/written the same way by sibling apps under the same origin). |
+
+## Tech notes
+
+- **State management** — plain React state (`useState`/`useMemo`/`useRef`) in `App.tsx` and `BoardDesigner.tsx`; no external store. `App.tsx` owns the board list and undo/redo history (`boardHistory`/`boardFuture`, capped at 50 entries, Ctrl+Z/Ctrl+Y).
+- **i18n** — `react-i18next` with `i18next-browser-languagedetector`; four locale JSON files under `src/i18n/` (`en`, `es`, `be`, `ru`) with full key parity. A literal-key scan (`` t(\`templates.context.${key}\`) ``) is used for template context strings — grep-based dead-key checks will false-positive on it.
+- **Theme** — `tailwind.config.js` `darkMode: ['selector', '[data-theme="dark"]']`; an anti-flash inline `<script>` in `index.html` applies the stored theme before first paint; `ThemeToggle.tsx` flips `data-theme` on `<html>` and persists to the shared `theme` key.
+- **Shareable URL** — board state is base64-encoded into `window.location.hash` (`#board=<base64>`) via `history.replaceState` on every change; a board opened from a shared link is decoded on load and added to the local boards list.
+- **Cross-app integrations (same-origin `localStorage`)** — reads `team-identity-charter` (written by Team Identity) to populate the card assignee dropdown; writes `kanban-designer:lastSession` and `kanban-designer:currentBoard` for the Dashboard and Planning Poker respectively; "Send to Sprint Metrics" deep-links with board data base64-encoded in the query string rather than localStorage.
+- **Drag-and-drop** — `@dnd-kit` multi-container sortable (`closestCorners` collision detection); one vertical `SortableContext` per column, plus a `DragOverlay` ghost that mirrors card colour/lane.
+
 ## Source materials
-See `.artefacts/BRIEF.md` for full context and source file references.
+See `.artefacts/BRIEF.md` for the full run-by-run implementation history and source file references.
