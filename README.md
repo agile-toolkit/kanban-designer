@@ -4,7 +4,7 @@ An interactive Kanban board designer and configurator — define columns, set WI
 
 Part of the [Agile Tools](https://github.com/bthos) suite built on Management 3.0 and ICAgile source materials.
 
-See `.artefacts/GOAL.md` for why this app exists and `.artefacts/ROADMAP.md` for what's shipped and what's next.
+See `GOAL.md` for why this app exists and `ROADMAP.md` for what's shipped and what's next.
 
 ## Stack
 React 18 · TypeScript · Vite · Tailwind CSS · @dnd-kit · react-i18next (EN/ES/BE/RU)
