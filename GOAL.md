@@ -24,3 +24,11 @@ material that carries the tool with it.
 - Not tied to one Kanban school or certification body.
 
 *Repo: `agile-toolkit/kanban-designer`*
+
+---
+
+## Latitude
+
+Every goal above names an outcome, not a mechanism. Any roadmap that moves a
+signal without crossing a boundary is fair game — including approaches nobody
+in this category has tried. Invention is expected, not merely permitted.
