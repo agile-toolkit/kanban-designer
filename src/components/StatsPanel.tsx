@@ -27,7 +27,8 @@ export default function StatsPanel({ board, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
+            aria-label={t('stats.close')}
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
           >
             ✕
           </button>

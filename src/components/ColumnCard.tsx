@@ -214,6 +214,7 @@ function CardItem({
                 onClick={() => setEditColor(undefined)}
                 className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                 title={noColorLabel}
+                aria-label={noColorLabel}
               >✕</button>
             )}
           </div>
@@ -229,7 +230,8 @@ function CardItem({
               <button
                 onClick={() => setEditDueDate('')}
                 className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                title={noColorLabel}
+                title={t('designer.clear_due_date')}
+                aria-label={t('designer.clear_due_date')}
               >✕</button>
             )}
           </div>
@@ -241,8 +243,9 @@ function CardItem({
                   {tag}
                   <button
                     onPointerDown={e => e.stopPropagation()}
-                    onClick={() => setEditTags(editTags.filter(t => t !== tag))}
+                    onClick={() => setEditTags(editTags.filter(existing => existing !== tag))}
                     className="text-brand-400 hover:text-brand-600 dark:hover:text-brand-200 leading-none ml-0.5"
+                    aria-label={t('designer.remove_tag')}
                   >✕</button>
                 </span>
               ))}
@@ -292,7 +295,8 @@ function CardItem({
                   <button
                     onPointerDown={e => e.stopPropagation()}
                     onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
-                    className="text-gray-300 dark:text-gray-600 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
+                    className="text-gray-400 dark:text-gray-500 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
+                    aria-label={t('designer.checklist_remove_item')}
                   >✕</button>
                 </div>
               ))}
@@ -518,7 +522,7 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
         <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 dark:text-gray-600 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1">✕</button>
       </div>
 
       {isOverWip && (
@@ -793,7 +797,7 @@ export default function ColumnCard({
         <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} className="text-gray-200 dark:text-gray-600 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1">✕</button>
       </div>
 
       {isOverWip && (

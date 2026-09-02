@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Fix icon-button accessibility gaps** (2026-09-02) — see `## Shipped`. A suite-wide UX audit flagged several icon-only "✕" buttons with no `aria-label` and low-contrast `text-gray-200`/`gray-300` styling, plus a copy-paste bug (the due-date-clear button's tooltip read "No color"). Fixed across `ColumnCard.tsx`, `BoardDesigner.tsx`, and `StatsPanel.tsx`.
+
 **Fix: invisible brand-color borders/backgrounds + data-layer tests** (2026-09-02) — see `## Shipped`. The `border-brand-200` gap flagged in this file's own Polish backlog turned out to be broader once checked against every usage: `brand-800`/`brand-900` were also undefined and used in 9 more places (HomeScreen's WIP explainer, ColumnCard tags, AppHeader's active-nav pill) — 11 invisible-color occurrences across 5 files total, not just the 2 toolbar buttons originally noted. Completed the `brand` scale with Tailwind's own `orange` values (the source the existing 6 shades were already drawn from) rather than patching each call site individually.
 
 **E3: Export board as CSV** (2026-09-02) — see `## Shipped`. Also flattens `column.subColumns` (not anticipated in the original issue) and includes cards from collapsed columns, since a data export shouldn't silently drop rows. [#45](https://github.com/agile-toolkit/kanban-designer/issues/45)
@@ -54,3 +56,11 @@ No small un-filed items queued.
   used in 11 places across 5 files) — invisible borders/backgrounds/text
   in both light and dark mode~~
 - ~~Added `vitest` + `jsdom`; `src/data/templates.test.ts`~~
+
+**v0.2.2 — Fix icon-button accessibility gaps** (2026-09-02):
+- ~~Added `aria-label` to icon-only ✕ buttons missing one (tag/checklist
+  remove, column delete ×2, swim-lane delete, stats-panel close)~~
+- ~~Fixed the due-date-clear button's tooltip, a copy-paste leftover
+  reading "No color"~~
+- ~~Bumped low-contrast delete-icon colors from `gray-200`/`gray-300` to
+  `gray-400`/`gray-500`~~

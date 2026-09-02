@@ -4,6 +4,23 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.2.2 — Fix icon-button accessibility gaps (2026-09-02)
+
+- **fix**: several icon-only "✕" delete/remove buttons in `ColumnCard.tsx`
+  (tag remove, checklist-item remove, column delete ×2) and
+  `BoardDesigner.tsx` (swim-lane delete) had only a `title` attribute, or
+  none at all — screen readers announce just "✕" with no `aria-label`.
+  Added `aria-label` to all of them, plus `StatsPanel.tsx`'s close
+  button.
+- **fix**: the due-date-clear button in `ColumnCard.tsx`'s card editor
+  reused the "No color" label as its `title`/tooltip — copy-paste leftover
+  from the color-clear button above it. Added a dedicated
+  `designer.clear_due_date` key.
+- **fix**: several of the same delete buttons used `text-gray-200`/
+  `gray-300`, below WCAG AA contrast and nearly invisible until hover.
+  Bumped to `gray-400`/`gray-500`.
+- Found via a suite-wide UX/scope audit.
+
 ## 0.2.1 — Fix invisible brand-color borders/backgrounds + data-layer tests (2026-09-02)
 
 - **fix**: `brand-200`/`brand-800`/`brand-900` were referenced in 11 places
