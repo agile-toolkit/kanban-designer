@@ -6,12 +6,17 @@ Derived from GOAL.md. Rebuilt when GOAL changes or an epic ships.
 None — idle. See `## Next epics` below.
 
 ## Next epics
-1. **E1: Card description field** — serves #2. Multi-line notes per card: `<textarea>` in card edit mode, 1-line truncated preview on the card face, round-trips through JSON export and `kanban-designer:currentBoard`. [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
-2. **E2: Keyboard shortcuts help overlay** — serves #5. `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
-3. **E3: Export board as CSV** — serves #3. Spreadsheet-ready card list (Column, Swim Lane, Title, Description, Colour, Due Date, Overdue), Blob-download `<board-name>-kanban.csv`. [Issue #45](https://github.com/agile-toolkit/kanban-designer/issues/45) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
+1. **E1: Card description field** — serves signal #2. Multi-line notes per card: `<textarea>` in card edit mode, 1-line truncated preview on the card face, round-trips through JSON export and `kanban-designer:currentBoard`. [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
+2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
+
+## Recently shipped
+**E3: Export board as CSV** (2026-09-02) — see `## Shipped`. Also flattens `column.subColumns` (not anticipated in the original issue) and includes cards from collapsed columns, since a data export shouldn't silently drop rows. [#45](https://github.com/agile-toolkit/kanban-designer/issues/45)
+
+## Repo cleanup (2026-09-02)
+Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were already implemented — confirmed against this file's `## Shipped` list and, for the cross-app integrations, directly against source before closing. Only #43/#44 (E1/E2 above) remain genuinely open.
 
 ## Polish backlog
-- None currently filed — all open non-epic issues are either already implemented (awaiting human close, see Shipped below) or covered by E1–E3 above.
+- `border-brand-200` on the "Send to Sprint Metrics" / "Send to Planning Poker" toolbar buttons (`BoardDesigner.tsx`) renders invisible — `brand.200` isn't defined in `tailwind.config.js` (only 50/100/400/500/600/700 exist). Found while adding the CSV export button nearby; not fixed here since it's a pre-existing, unrelated cosmetic gap. Swap for `border-brand-100` or add the missing shade.
 
 ## Shipped
 - ~~Board editor — columns, cards, WIP limits, import/export JSON~~
@@ -37,3 +42,7 @@ None — idle. See `## Next epics` below.
 - ~~Save board as custom template~~
 - ~~Card checklists with progress badge~~
 - ~~Integrations: Dashboard `lastSession` key, Sprint Metrics deep-link, Planning Poker `currentBoard` key~~
+
+**v0.2.0 — [E3: Export board as CSV](https://github.com/agile-toolkit/kanban-designer/issues/45)** (2026-09-02):
+- ~~"Export CSV" toolbar button — one row per card (Column, Swim Lane,
+  Title, Description, Colour, Due Date, Overdue), Blob-download~~

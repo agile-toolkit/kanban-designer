@@ -92,7 +92,8 @@
     "template_name_placeholder": "Template name",
     "checklist": "Checklist",
     "checklist_add": "Add item…",
-    "checklist_progress": "✓ {{done}}/{{total}}"
+    "checklist_progress": "✓ {{done}}/{{total}}",
+    "export_csv": "Export CSV"
   },
   "templates": {
     "title": "Board Templates",

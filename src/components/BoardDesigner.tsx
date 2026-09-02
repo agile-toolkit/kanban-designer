@@ -9,7 +9,7 @@ import {
   SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove,
 } from '@dnd-kit/sortable'
 import html2canvas from 'html2canvas'
-import type { KanbanBoard, KanbanCard } from '../types'
+import type { KanbanBoard, KanbanCard, KanbanColumn } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
 import StatsPanel from './StatsPanel'
 import { createCustomTemplate } from '../data/templates'
@@ -83,6 +83,45 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     } finally {
       setExporting(false)
     }
+  }
+
+  const exportCsv = () => {
+    const csvField = (value: string) =>
+      /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value
+
+    // subColumns aren't in the original spec's example — flatten them
+    // depth-first so nested-column cards aren't silently dropped from the
+    // export, labeling the column as "Parent > Child" for clarity.
+    const rows: string[][] = []
+    const today = new Date().toISOString().slice(0, 10)
+    const collect = (columns: KanbanColumn[], prefix: string) => {
+      for (const col of columns) {
+        const label = prefix ? `${prefix} > ${col.name}` : col.name
+        for (const card of col.cards) {
+          rows.push([
+            label,
+            card.swimLane ?? '',
+            card.title,
+            card.description ?? '',
+            card.color ?? '',
+            card.dueDate ?? '',
+            card.dueDate ? String(card.dueDate < today) : 'false',
+          ])
+        }
+        if (col.subColumns?.length) collect(col.subColumns, label)
+      }
+    }
+    collect(board.columns, '')
+
+    const header = ['Column', 'Swim Lane', 'Title', 'Description', 'Colour', 'Due Date', 'Overdue']
+    const csv = [header, ...rows].map(row => row.map(csvField).join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${board.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-kanban.csv`
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   const sensors = useSensors(
@@ -340,6 +379,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
             {exporting ? '…' : t('designer.export_image')}
+          </button>
+          <button
+            onClick={exportCsv}
+            className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            {t('designer.export_csv')}
           </button>
           <button
             onClick={() => {

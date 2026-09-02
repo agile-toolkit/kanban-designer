@@ -40,6 +40,7 @@ GitHub Pages via GitHub Actions on push to `main`.
 - **Shareable URL** — board state is base64-encoded into `window.location.hash` (`#board=<base64>`) via `history.replaceState` on every change; a board opened from a shared link is decoded on load and added to the local boards list.
 - **Cross-app integrations (same-origin `localStorage`)** — reads `team-identity-charter` (written by Team Identity) to populate the card assignee dropdown; writes `kanban-designer:lastSession` and `kanban-designer:currentBoard` for the Dashboard and Planning Poker respectively; "Send to Sprint Metrics" deep-links with board data base64-encoded in the query string rather than localStorage.
 - **Drag-and-drop** — `@dnd-kit` multi-container sortable (`closestCorners` collision detection); one vertical `SortableContext` per column, plus a `DragOverlay` ghost that mirrors card colour/lane.
+- **CSV export** (`exportCsv` in `BoardDesigner.tsx`) — one row per card (Column, Swim Lane, Title, Description, Colour, Due Date, Overdue), Blob-download, no new dependency. Recurses into `column.subColumns` (labeling nested columns `"Parent > Child"`) since the original spec's example predated that field. Overdue is computed at export time against today's date; cards in collapsed columns are still included, since a data export shouldn't silently drop rows a spreadsheet user would expect to see.
 
 ## Source materials
 See `.artefacts/BRIEF.md` for the full run-by-run implementation history and source file references.
