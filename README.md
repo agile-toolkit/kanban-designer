@@ -2,7 +2,7 @@
 
 An interactive Kanban board designer and configurator — define columns, set WIP limits, add swim lanes, and explore 10 board archetypes with educational context. Boards are editable client-side only: no backend, no accounts — state lives in `localStorage` and the URL.
 
-Part of the [Agile Tools](https://github.com/bthos) suite built on Management 3.0 and ICAgile source materials.
+Part of the [Agile Tools](https://github.com/bthos) suite built on ICAgile and Lean/Kanban source materials.
 
 See `GOAL.md` for why this app exists and `ROADMAP.md` for what's shipped and what's next.
 
