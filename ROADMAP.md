@@ -10,13 +10,15 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Fix: invisible brand-color borders/backgrounds + data-layer tests** (2026-09-02) — see `## Shipped`. The `border-brand-200` gap flagged in this file's own Polish backlog turned out to be broader once checked against every usage: `brand-800`/`brand-900` were also undefined and used in 9 more places (HomeScreen's WIP explainer, ColumnCard tags, AppHeader's active-nav pill) — 11 invisible-color occurrences across 5 files total, not just the 2 toolbar buttons originally noted. Completed the `brand` scale with Tailwind's own `orange` values (the source the existing 6 shades were already drawn from) rather than patching each call site individually.
+
 **E3: Export board as CSV** (2026-09-02) — see `## Shipped`. Also flattens `column.subColumns` (not anticipated in the original issue) and includes cards from collapsed columns, since a data export shouldn't silently drop rows. [#45](https://github.com/agile-toolkit/kanban-designer/issues/45)
 
 ## Repo cleanup (2026-09-02)
 Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were already implemented — confirmed against this file's `## Shipped` list and, for the cross-app integrations, directly against source before closing. Only #43/#44 (E1/E2 above) remain genuinely open.
 
 ## Polish backlog
-- `border-brand-200` on the "Send to Sprint Metrics" / "Send to Planning Poker" toolbar buttons (`BoardDesigner.tsx`) renders invisible — `brand.200` isn't defined in `tailwind.config.js` (only 50/100/400/500/600/700 exist). Found while adding the CSV export button nearby; not fixed here since it's a pre-existing, unrelated cosmetic gap. Swap for `border-brand-100` or add the missing shade.
+No small un-filed items queued.
 
 ## Shipped
 - ~~Board editor — columns, cards, WIP limits, import/export JSON~~
@@ -46,3 +48,9 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 **v0.2.0 — [E3: Export board as CSV](https://github.com/agile-toolkit/kanban-designer/issues/45)** (2026-09-02):
 - ~~"Export CSV" toolbar button — one row per card (Column, Swim Lane,
   Title, Description, Colour, Due Date, Overdue), Blob-download~~
+
+**v0.2.1 — Fix invisible brand-color borders/backgrounds + data-layer tests** (2026-09-02):
+- ~~Completed the `brand` Tailwind color scale (200/800/900 were missing,
+  used in 11 places across 5 files) — invisible borders/backgrounds/text
+  in both light and dark mode~~
+- ~~Added `vitest` + `jsdom`; `src/data/templates.test.ts`~~

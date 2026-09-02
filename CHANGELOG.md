@@ -4,6 +4,26 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.2.1 — Fix invisible brand-color borders/backgrounds + data-layer tests (2026-09-02)
+
+- **fix**: `brand-200`/`brand-800`/`brand-900` were referenced in 11 places
+  across 5 components (toolbar button borders, the WIP-limit explainer
+  card, column tags, the active-nav header pill) but never defined in
+  `tailwind.config.js` — Tailwind silently emits no class for an
+  undefined shade, so these rendered as invisible borders/backgrounds/text
+  in both light and dark mode. A previous run had flagged 2 of the 11 as
+  a known gap (`border-brand-200` on two toolbar buttons); a suite-wide
+  audit found the other 9. Completed the `brand` scale with Tailwind's
+  own `orange` values — the 6 existing shades were already drawn
+  verbatim from that palette, so 200/800/900 slot in exactly.
+- **test**: added `vitest` + `jsdom` (this repo's first automated test
+  coverage). `src/data/templates.test.ts` covers the 10 built-in
+  templates' data-shape invariants (unique ids, non-empty columns) and
+  the custom-template CRUD functions (`createCustomTemplate`,
+  `deleteCustomTemplate`, `cloneTemplate`, `cloneCustomTemplate`,
+  including corrupted-storage recovery). `npm test` now passes cleanly:
+  1 file, 11 tests.
+
 ## 0.2.0 — E3: Export board as CSV (2026-09-02)
 
 - **feat**: "Export CSV" toolbar button (next to Export Image) downloads a

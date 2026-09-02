@@ -15,6 +15,7 @@ npm install     # install dependencies
 npm run dev     # start Vite dev server
 npm run build   # tsc typecheck + production build
 npm run preview # preview the production build locally
+npm test        # vitest run — src/data/templates.ts
 ```
 
 ## Deploy
@@ -41,6 +42,7 @@ GitHub Pages via GitHub Actions on push to `main`.
 - **Cross-app integrations (same-origin `localStorage`)** — reads `team-identity-charter` (written by Team Identity) to populate the card assignee dropdown; writes `kanban-designer:lastSession` and `kanban-designer:currentBoard` for the Dashboard and Planning Poker respectively; "Send to Sprint Metrics" deep-links with board data base64-encoded in the query string rather than localStorage.
 - **Drag-and-drop** — `@dnd-kit` multi-container sortable (`closestCorners` collision detection); one vertical `SortableContext` per column, plus a `DragOverlay` ghost that mirrors card colour/lane.
 - **CSV export** (`exportCsv` in `BoardDesigner.tsx`) — one row per card (Column, Swim Lane, Title, Description, Colour, Due Date, Overdue), Blob-download, no new dependency. Recurses into `column.subColumns` (labeling nested columns `"Parent > Child"`) since the original spec's example predated that field. Overdue is computed at export time against today's date; cards in collapsed columns are still included, since a data export shouldn't silently drop rows a spreadsheet user would expect to see.
+- **`brand` color scale** (`tailwind.config.js`) — Tailwind's stock `orange` palette. Only keep shades that are actually referenced in `className`s (currently 50/100/200/400/500/600/700/800/900) — an unreferenced shade silently renders as no class at all (invisible border/background/text, not an error), which is what happened to `brand-200`/`800`/`900` before a suite-wide audit caught it.
 
 ## Source materials
 See `.artefacts/BRIEF.md` for the full run-by-run implementation history and source file references.
