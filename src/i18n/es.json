@@ -144,5 +144,9 @@
     "empty_columns": "Columnas vacías",
     "completion_rate": "Tasa de finalización",
     "oldest_card": "Tarjeta más antigua"
+  },
+  "facilitator": {
+    "toggle_on": "Modo Facilitador",
+    "toggle_off": "Salir del Modo Facilitador"
   }
 }

@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Facilitator Mode** (2026-09-03) — see `## Shipped`. A user asked for the presentation/projector mode already built for Team Identity to be adopted suite-wide; this is repo 4 of an 11-repo rollout, adopting the pattern now shared in `design-system/`.
+
 **Split Design mode from Track mode** (2026-09-03) — see `## Shipped`. `GOAL.md` draws a hard boundary ("not a board execution tool") that due dates, assignee, checklists, card aging, and a stats panel had, in aggregate, quietly crossed — each shipped separately as a reasonable-looking addition, but the app had become a second product the README never described. A user flagged the resulting "does it design or does it track?" confusion directly. Added a Design/Track toggle; Design (default) is structure only, Track reveals the rest. Existing boards with real due-date/assignee/checklist data auto-open in Track mode so nothing is silently hidden.
 
 **Receive Improvement Board's "Open in Kanban Designer" handoff** (2026-09-03) — see `## Shipped`. A suite-wide cross-app link audit found Improvement Board has sent a full board via `?prefill=` since it shipped, but nothing here ever read it. Now consumed as a fallback to the existing `#board=` hash import.
@@ -29,6 +31,7 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Facilitator Mode — bigger UI + hidden nav/language picker for in-room presentation, adopted from the shared design-system pattern~~
 - ~~Design/Track mode split — due dates, assignee, checklist, card aging, and stats gated behind an explicit, off-by-default Track mode, restoring the "designs boards, does not run work" boundary~~
 - ~~Receive Improvement Board's `?prefill=` board handoff (fallback to the existing `#board=` hash import)~~
 - ~~Board editor — columns, cards, WIP limits, import/export JSON~~

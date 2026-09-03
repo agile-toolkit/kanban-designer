@@ -144,5 +144,9 @@
     "empty_columns": "Empty columns",
     "completion_rate": "Completion rate",
     "oldest_card": "Oldest card"
+  },
+  "facilitator": {
+    "toggle_on": "Facilitator Mode",
+    "toggle_off": "Exit Facilitator Mode"
   }
 }

@@ -10,6 +10,8 @@ import TemplatesView from './components/TemplatesView'
 import HomeScreen from './components/HomeScreen'
 import LearnView from './components/LearnView'
 import ThemeToggle from './components/ThemeToggle'
+import FacilitatorToggle from './components/FacilitatorToggle'
+import { useFacilitatorMode } from './components/useFacilitatorMode'
 
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
@@ -100,6 +102,7 @@ function exportJSON(board: KanbanBoard) {
 
 export default function App() {
   const { t } = useTranslation()
+  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('kanban-designer:facilitatorMode')
   const [screen, setScreen] = useState<Screen>(() => (_urlBoard ? 'designer' : 'home'))
   const [boards, setBoards] = useState<KanbanBoard[]>(() => {
     const saved = loadBoards()
@@ -280,13 +283,20 @@ export default function App() {
       <AppHeader
         title={t('app.title')}
         onTitleClick={() => setScreen('home')}
-        navItems={[
+        hideLanguagePicker={facilitatorMode}
+        navItems={facilitatorMode ? [] : [
           { key: 'home', label: t('nav.boards'), active: screen === 'home', onClick: () => setScreen('home') },
           { key: 'templates', label: t('nav.templates'), active: screen === 'templates', onClick: () => setScreen('templates') },
           { key: 'learn', label: t('nav.learn'), active: screen === 'learn', onClick: () => setScreen('learn') },
         ]}
       >
         <ThemeToggle />
+        <FacilitatorToggle
+          active={facilitatorMode}
+          onToggle={toggleFacilitatorMode}
+          labelOn={t('facilitator.toggle_on')}
+          labelOff={t('facilitator.toggle_off')}
+        />
         {board && screen === 'designer' && (
           <>
             <button

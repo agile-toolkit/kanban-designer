@@ -32,6 +32,7 @@ GitHub Pages via GitHub Actions on push to `main`.
 | `kanban-designer:currentBoard` | `{ boardName, columns: [{ name, cards: [{ title, description }] }], updatedAt }` | Written on every save; read by Planning Poker's "Send to Planning Poker" deep-link import. |
 | `kanban-designer:customTemplates` | `{ templates: [{ id, name, createdAt, board }] }` | User-saved board structures (columns/WIP/lanes only, no card content) shown in the Templates gallery. |
 | `theme` | `"light" \| "dark"` | Shared, suite-wide theme preference (unprefixed key by convention — read/written the same way by sibling apps under the same origin). |
+| `kanban-designer:facilitatorMode` (`sessionStorage`) | `'1' \| '0'` | Facilitator (projector) mode toggle — per-tab, not persisted across sessions. See `src/components/useFacilitatorMode.ts`. |
 
 ## Tech notes
 

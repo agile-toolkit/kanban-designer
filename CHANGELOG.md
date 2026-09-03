@@ -4,6 +4,18 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.3.1 — Facilitator Mode (2026-09-03)
+
+- **feat**: added Facilitator (projector) Mode — a presentation toggle for
+  in-room board reviews, bigger UI via one CSS rule (everything sized in
+  `rem` scales automatically) plus hiding the nav pills and language
+  picker while active. Toggled from a new header button next to the theme
+  toggle, session-scoped via `sessionStorage`. Adopted from the shared
+  design-system pattern (`useFacilitatorMode.ts` + `FacilitatorToggle.tsx`),
+  originally built for Team Identity. The designer toolbar (undo/redo,
+  export/import, copy link, clear) stays visible — those are primary
+  editing actions, not secondary chrome.
+
 ## 0.3.0 — Split Design mode from Track mode (2026-09-03)
 
 - **feature (product-scope fix)**: `GOAL.md` has always drawn a hard
