@@ -4,6 +4,17 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.2.4 — Receive Improvement Board's "Open in Kanban Designer" handoff (2026-09-03)
+
+- **fix (broken integration)**: Improvement Board's `buildKanbanUrl()`
+  has sent a fully-formed board as `?prefill=<JSON>&utm_source=` since
+  it shipped, but Kanban Designer never read a query param at all — the
+  link opened the app to an empty home screen. Found by a suite-wide
+  cross-app link audit. Added `src/utils/prefillBoard.ts` (`parsePrefillBoard`,
+  tested) and wired it in as a fallback to the existing `#board=` hash
+  parser; the query param is stripped after import so a page refresh
+  doesn't re-import the same board.
+
 ## 0.2.3 — Fix LanguagePicker dark mode (2026-09-02)
 
 - **fix**: `LanguagePicker.tsx` had zero `dark:` classes — the

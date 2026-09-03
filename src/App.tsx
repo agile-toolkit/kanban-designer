@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
+import { parsePrefillBoard } from './utils/prefillBoard'
 import AppHeader from './components/AppHeader'
 import BoardDesigner from './components/BoardDesigner'
 import TemplatesView from './components/TemplatesView'
@@ -30,7 +31,17 @@ function parseBoardFromHash(): KanbanBoard | null {
   }
 }
 
-const _urlBoard = parseBoardFromHash()
+// Own share links use the hash; a board handed off from another suite app
+// (e.g. Improvement Board's "Open in Kanban Designer") arrives as a
+// one-shot ?prefill= query param instead. Hash takes priority since it's
+// this app's own persistent link format.
+const _hashBoard = parseBoardFromHash()
+const _prefillBoard = _hashBoard ? null : parsePrefillBoard(window.location.search)
+const _urlBoard = _hashBoard ?? _prefillBoard
+if (_prefillBoard) {
+  // consumed; strip so a page refresh doesn't re-import the same board
+  window.history.replaceState(null, '', window.location.pathname + window.location.hash)
+}
 
 function loadBoards(): KanbanBoard[] {
   try {

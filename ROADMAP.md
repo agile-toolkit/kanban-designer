@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Receive Improvement Board's "Open in Kanban Designer" handoff** (2026-09-03) — see `## Shipped`. A suite-wide cross-app link audit found Improvement Board has sent a full board via `?prefill=` since it shipped, but nothing here ever read it. Now consumed as a fallback to the existing `#board=` hash import.
+
 **Fix LanguagePicker dark mode** (2026-09-02) — see `## Shipped`. The design-system's canonical `LanguagePicker.tsx` never got dark-mode classes; this app's copy inherited the gap. Synced with the now-fixed design-system source.
 
 **Fix icon-button accessibility gaps** (2026-09-02) — see `## Shipped`. A suite-wide UX audit flagged several icon-only "✕" buttons with no `aria-label` and low-contrast `text-gray-200`/`gray-300` styling, plus a copy-paste bug (the due-date-clear button's tooltip read "No color"). Fixed across `ColumnCard.tsx`, `BoardDesigner.tsx`, and `StatsPanel.tsx`.
@@ -25,6 +27,7 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Receive Improvement Board's `?prefill=` board handoff (fallback to the existing `#board=` hash import)~~
 - ~~Board editor — columns, cards, WIP limits, import/export JSON~~
 - ~~Template gallery — 10 board archetypes with educational context~~
 - ~~EN/ES/BE/RU localization with in-app language switcher~~
