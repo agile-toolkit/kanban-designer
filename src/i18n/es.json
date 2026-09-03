@@ -35,6 +35,11 @@
     ]
   },
   "designer": {
+    "mode_label": "Modo del tablero",
+    "mode_design": "Diseño",
+    "mode_track": "Seguimiento",
+    "mode_design_hint": "Solo estructura — columnas, límites WIP, carriles, contenido de tarjetas.",
+    "mode_track_hint": "Añade fechas límite, responsables, listas de tareas, antigüedad de tarjetas y estadísticas — para gestionar trabajo real en este tablero.",
     "new_board": "Nuevo tablero",
     "add_column": "Añadir columna",
     "add_card": "Añadir tarjeta",

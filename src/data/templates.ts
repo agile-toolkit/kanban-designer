@@ -147,6 +147,7 @@ export function cloneTemplate(t: typeof TEMPLATES[0]): KanbanBoard {
     columns: t.columns.map(c => ({ ...c, id: crypto.randomUUID(), cards: [] })),
     swimLanes: [...t.swimLanes],
     showWipWarnings: t.showWipWarnings,
+    mode: 'design',
     updatedAt: Date.now(),
   }
 }
@@ -204,6 +205,7 @@ export function cloneCustomTemplate(template: CustomTemplate): KanbanBoard {
     columns: template.board.columns.map(c => ({ ...c, id: crypto.randomUUID(), cards: [] })),
     swimLanes: [...template.board.swimLanes],
     showWipWarnings: template.board.showWipWarnings,
+    mode: 'design',
     updatedAt: Date.now(),
   }
 }

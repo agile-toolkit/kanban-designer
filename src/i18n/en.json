@@ -35,6 +35,11 @@
     ]
   },
   "designer": {
+    "mode_label": "Board mode",
+    "mode_design": "Design",
+    "mode_track": "Track",
+    "mode_design_hint": "Structure only — columns, WIP limits, swim lanes, card content.",
+    "mode_track_hint": "Adds due dates, assignees, checklists, card aging, and stats — for running real work on this board.",
     "new_board": "New Board",
     "add_column": "Add Column",
     "add_card": "Add Card",

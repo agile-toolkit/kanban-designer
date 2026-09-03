@@ -4,6 +4,36 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.3.0 — Split Design mode from Track mode (2026-09-03)
+
+- **feature (product-scope fix)**: `GOAL.md` has always drawn a hard
+  boundary — "Not a board execution tool; it designs boards, it does
+  not run work" — and the whole competitive rationale rests on it
+  ("Competitors run boards; almost none help design one"). Due dates
+  with overdue highlighting, assignee, checklists with progress badges,
+  card aging (`enteredColumnAt`, stamped on every drag), and a stats
+  panel (completion rate, WIP-at-capacity, oldest card) had each
+  shipped separately as small, reasonable-looking additions, and in
+  aggregate quietly turned this into a live work-tracking tool the
+  README never described — a user-reported "why does this both design
+  boards and track tasks?" confusion, confirmed on inspection to be a
+  real drift, not a wording problem.
+- Added a per-board **Design / Track** toggle (`KanbanBoard.mode`,
+  `'design'` by default) in the toolbar. Design mode is columns, WIP
+  limits, swim lanes, and card content only — the "board design" the
+  app is actually named for. Track mode reveals everything above.
+  Switching modes never deletes data: fields set in Track mode stay on
+  the card and reappear if Track mode is re-enabled.
+- Boards saved before this shipped have no `mode` field.
+  `resolveBoardMode()` (`src/boardMode.ts`, tested) infers `'track'`
+  for those only if a card already has a due date, assignee, or
+  non-empty checklist — never from `enteredColumnAt` alone, since
+  that's stamped unconditionally on every card and would make almost
+  every existing board with cards infer `'track'`. Applied on every
+  load/import/share-link path, so a board someone was already actively
+  tracking doesn't have its data silently hidden by this update.
+- CSV export drops the Due Date/Overdue columns in Design mode.
+
 ## 0.2.4 — Receive Improvement Board's "Open in Kanban Designer" handoff (2026-09-03)
 
 - **fix (broken integration)**: Improvement Board's `buildKanbanUrl()`

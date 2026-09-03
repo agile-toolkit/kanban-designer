@@ -98,22 +98,17 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       for (const col of columns) {
         const label = prefix ? `${prefix} > ${col.name}` : col.name
         for (const card of col.cards) {
-          rows.push([
-            label,
-            card.swimLane ?? '',
-            card.title,
-            card.description ?? '',
-            card.color ?? '',
-            card.dueDate ?? '',
-            card.dueDate ? String(card.dueDate < today) : 'false',
-          ])
+          const row = [label, card.swimLane ?? '', card.title, card.description ?? '', card.color ?? '']
+          if (isTrackMode) row.push(card.dueDate ?? '', card.dueDate ? String(card.dueDate < today) : 'false')
+          rows.push(row)
         }
         if (col.subColumns?.length) collect(col.subColumns, label)
       }
     }
     collect(board.columns, '')
 
-    const header = ['Column', 'Swim Lane', 'Title', 'Description', 'Colour', 'Due Date', 'Overdue']
+    const header = ['Column', 'Swim Lane', 'Title', 'Description', 'Colour']
+    if (isTrackMode) header.push('Due Date', 'Overdue')
     const csv = [header, ...rows].map(row => row.map(csvField).join(',')).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
@@ -130,6 +125,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   )
 
   const patch = (partial: Partial<KanbanBoard>) => onUpdate({ ...board, ...partial })
+
+  const isTrackMode = board.mode === 'track'
 
   const addColumn = () => {
     patch({
@@ -294,6 +291,37 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       </a>
       {/* Toolbar — row 1: actions */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-2 flex-wrap">
+        <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden text-xs font-medium flex-shrink-0" role="radiogroup" aria-label={t('designer.mode_label')}>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={!isTrackMode}
+            onClick={() => { patch({ mode: 'design' }); setFilterAssignee('') }}
+            title={t('designer.mode_design_hint')}
+            className={`px-3 py-1.5 transition-colors ${
+              !isTrackMode
+                ? 'bg-brand-600 text-white'
+                : 'bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            {t('designer.mode_design')}
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={isTrackMode}
+            onClick={() => patch({ mode: 'track' })}
+            title={t('designer.mode_track_hint')}
+            className={`px-3 py-1.5 border-l border-gray-200 dark:border-gray-700 transition-colors ${
+              isTrackMode
+                ? 'bg-brand-600 text-white'
+                : 'bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            {t('designer.mode_track')}
+          </button>
+        </div>
+
         <button onClick={addColumn} className="btn-primary text-sm py-1.5">
           + {t('designer.add_column')}
         </button>
@@ -332,12 +360,14 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </label>
 
         <div className="ml-auto flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-          <button
-            onClick={() => setShowStats(true)}
-            className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          >
-            {t('designer.stats')}
-          </button>
+          {isTrackMode && (
+            <button
+              onClick={() => setShowStats(true)}
+              className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              {t('designer.stats')}
+            </button>
+          )}
           {savingTemplate ? (
             <div className="flex items-center gap-1">
               <input
@@ -466,7 +496,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             </select>
           </>
         )}
-        {teamMembers.length > 0 && (
+        {isTrackMode && teamMembers.length > 0 && (
           <>
             <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_assignee')}:</span>
             <select
@@ -552,6 +582,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       lane={lane}
                       activeLanes={board.swimLanes}
                       collapsed={col.collapsed}
+                      trackMode={isTrackMode}
                       swimLanePillNone={t('designer.swim_lane_none')}
                       swimLaneAssign={t('designer.swim_lane_assign')}
                       onAddCard={title => addCard(col.id, title, lane ?? undefined)}
@@ -593,6 +624,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     key={col.id}
                     column={col}
                     showWipWarnings={board.showWipWarnings}
+                    trackMode={isTrackMode}
                     onRename={name => updateColumn(col.id, { name })}
                     onWipChange={wipLimit => updateColumn(col.id, { wipLimit })}
                     onDelete={() => deleteColumn(col.id)}
@@ -617,7 +649,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         )}
       </div>
 
-      {showStats && <StatsPanel board={board} onClose={() => setShowStats(false)} />}
+      {showStats && isTrackMode && <StatsPanel board={board} onClose={() => setShowStats(false)} />}
     </div>
   )
 }

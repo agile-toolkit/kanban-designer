@@ -26,12 +26,21 @@ export interface KanbanCard {
   checklist?: ChecklistItem[]
 }
 
+export type BoardMode = 'design' | 'track'
+
 export interface KanbanBoard {
   id: string
   name: string
   columns: KanbanColumn[]
   swimLanes: string[]
   showWipWarnings: boolean
+  /**
+   * 'design' (default, including when absent — older boards predate this
+   * field): structure only. 'track' reveals due dates, assignees,
+   * checklists, card aging, and the stats panel — see GOAL.md's boundary
+   * ("not a board execution tool") for why these are opt-in, not default.
+   */
+  mode?: BoardMode
   /** Last save time for “My boards” list */
   updatedAt?: number
 }

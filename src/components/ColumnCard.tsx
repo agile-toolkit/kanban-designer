@@ -82,6 +82,8 @@ interface CardItemProps {
   assigneeLabel: string
   unassignedLabel: string
   teamMembers: string[]
+  /** Design mode (default) hides due dates, assignee, checklist, and card aging — see GOAL.md's "not a board execution tool" boundary. */
+  trackMode: boolean
 }
 
 function CardItem({
@@ -89,7 +91,7 @@ function CardItem({
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
   addTagLabel, tagPlaceholderLabel,
   availableLanes, swimLanePillNone, swimLaneAssign,
-  assigneeLabel, unassignedLabel, teamMembers,
+  assigneeLabel, unassignedLabel, teamMembers, trackMode,
 }: CardItemProps) {
   const { t } = useTranslation()
   const [editing, setEditing] = useState(false)
@@ -218,23 +220,25 @@ function CardItem({
               >✕</button>
             )}
           </div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs text-gray-400 dark:text-gray-500">{dueDateLabel}:</span>
-            <input
-              type="date"
-              className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
-              value={editDueDate}
-              onChange={e => setEditDueDate(e.target.value)}
-            />
-            {editDueDate && (
-              <button
-                onClick={() => setEditDueDate('')}
-                className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                title={t('designer.clear_due_date')}
-                aria-label={t('designer.clear_due_date')}
-              >✕</button>
-            )}
-          </div>
+          {trackMode && (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs text-gray-400 dark:text-gray-500">{dueDateLabel}:</span>
+              <input
+                type="date"
+                className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
+                value={editDueDate}
+                onChange={e => setEditDueDate(e.target.value)}
+              />
+              {editDueDate && (
+                <button
+                  onClick={() => setEditDueDate('')}
+                  className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                  title={t('designer.clear_due_date')}
+                  aria-label={t('designer.clear_due_date')}
+                >✕</button>
+              )}
+            </div>
+          )}
           <div className="mb-2">
             <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{addTagLabel}:</div>
             <div className="flex flex-wrap gap-1">
@@ -265,7 +269,7 @@ function CardItem({
               />
             </div>
           </div>
-          {teamMembers.length > 0 && (
+          {trackMode && teamMembers.length > 0 && (
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs text-gray-400 dark:text-gray-500">{assigneeLabel}:</span>
               <select
@@ -280,42 +284,44 @@ function CardItem({
               </select>
             </div>
           )}
-          <div className="mb-2">
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{t('designer.checklist')}:</div>
-            <div className="space-y-0.5">
-              {editChecklist.map(item => (
-                <div key={item.id} className="flex items-center gap-1.5">
-                  <input
-                    type="checkbox"
-                    checked={item.done}
-                    onChange={() => setEditChecklist(editChecklist.map(i => i.id === item.id ? { ...i, done: !i.done } : i))}
-                    className="w-3 h-3 rounded accent-brand-600 flex-shrink-0"
-                  />
-                  <span className={`flex-1 text-xs ${item.done ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{item.text}</span>
-                  <button
-                    onPointerDown={e => e.stopPropagation()}
-                    onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
-                    className="text-gray-400 dark:text-gray-500 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
-                    aria-label={t('designer.checklist_remove_item')}
-                  >✕</button>
-                </div>
-              ))}
-              <input
-                className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400 mt-0.5"
-                placeholder={t('designer.checklist_add')}
-                value={checklistInput}
-                onChange={e => setChecklistInput(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    const text = checklistInput.trim()
-                    if (text) setEditChecklist([...editChecklist, makeChecklistItem(text)])
-                    setChecklistInput('')
-                  }
-                }}
-              />
+          {trackMode && (
+            <div className="mb-2">
+              <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{t('designer.checklist')}:</div>
+              <div className="space-y-0.5">
+                {editChecklist.map(item => (
+                  <div key={item.id} className="flex items-center gap-1.5">
+                    <input
+                      type="checkbox"
+                      checked={item.done}
+                      onChange={() => setEditChecklist(editChecklist.map(i => i.id === item.id ? { ...i, done: !i.done } : i))}
+                      className="w-3 h-3 rounded accent-brand-600 flex-shrink-0"
+                    />
+                    <span className={`flex-1 text-xs ${item.done ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{item.text}</span>
+                    <button
+                      onPointerDown={e => e.stopPropagation()}
+                      onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
+                      className="text-gray-400 dark:text-gray-500 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
+                      aria-label={t('designer.checklist_remove_item')}
+                    >✕</button>
+                  </div>
+                ))}
+                <input
+                  className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400 mt-0.5"
+                  placeholder={t('designer.checklist_add')}
+                  value={checklistInput}
+                  onChange={e => setChecklistInput(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      const text = checklistInput.trim()
+                      if (text) setEditChecklist([...editChecklist, makeChecklistItem(text)])
+                      setChecklistInput('')
+                    }
+                  }}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
@@ -351,7 +357,7 @@ function CardItem({
           >
             {card.title}
           </span>
-          {(card.dueDate || card.enteredColumnAt) && (
+          {trackMode && (card.dueDate || card.enteredColumnAt) && (
             <div className="mt-1 flex items-center gap-1 flex-wrap">
               {card.dueDate && (() => {
                 const badge = dueDateBadge(card.dueDate, dueTodayLabel, overdueLabel)
@@ -395,7 +401,7 @@ function CardItem({
               ))}
             </div>
           )}
-          {card.checklist && card.checklist.length > 0 && (() => {
+          {trackMode && card.checklist && card.checklist.length > 0 && (() => {
             const total = card.checklist.length
             const done = card.checklist.filter(i => i.done).length
             const allDone = done === total
@@ -415,7 +421,7 @@ function CardItem({
           })()}
         </div>
         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-          {card.assignee && (
+          {trackMode && card.assignee && (
             <span
               title={card.assignee}
               className="w-6 h-6 rounded-full bg-brand-600 dark:bg-brand-700 text-white text-[9px] font-bold flex items-center justify-center select-none flex-shrink-0"
@@ -574,6 +580,7 @@ export interface LaneCellProps {
   assigneeLabel: string
   unassignedLabel: string
   teamMembers: string[]
+  trackMode: boolean
 }
 
 export function LaneCell({
@@ -583,7 +590,7 @@ export function LaneCell({
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
   cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
   addTagLabel, tagPlaceholderLabel,
-  assigneeLabel, unassignedLabel, teamMembers,
+  assigneeLabel, unassignedLabel, teamMembers, trackMode,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -627,6 +634,7 @@ export function LaneCell({
               assigneeLabel={assigneeLabel}
               unassignedLabel={unassignedLabel}
               teamMembers={teamMembers}
+              trackMode={trackMode}
             />
           ))}
         </SortableContext>
@@ -692,12 +700,13 @@ interface Props {
   assigneeLabel: string
   unassignedLabel: string
   teamMembers: string[]
+  trackMode: boolean
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
   dueDateLabel, dueTodayLabel, overdueLabel, addTagLabel, tagPlaceholderLabel,
-  assigneeLabel, unassignedLabel, teamMembers,
+  assigneeLabel, unassignedLabel, teamMembers, trackMode,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -841,6 +850,7 @@ export default function ColumnCard({
               assigneeLabel={assigneeLabel}
               unassignedLabel={unassignedLabel}
               teamMembers={teamMembers}
+              trackMode={trackMode}
             />
           ))}
         </SortableContext>
