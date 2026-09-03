@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Fix LanguagePicker dark mode** (2026-09-02) — see `## Shipped`. The design-system's canonical `LanguagePicker.tsx` never got dark-mode classes; this app's copy inherited the gap. Synced with the now-fixed design-system source.
+
 **Fix icon-button accessibility gaps** (2026-09-02) — see `## Shipped`. A suite-wide UX audit flagged several icon-only "✕" buttons with no `aria-label` and low-contrast `text-gray-200`/`gray-300` styling, plus a copy-paste bug (the due-date-clear button's tooltip read "No color"). Fixed across `ColumnCard.tsx`, `BoardDesigner.tsx`, and `StatsPanel.tsx`.
 
 **Fix: invisible brand-color borders/backgrounds + data-layer tests** (2026-09-02) — see `## Shipped`. The `border-brand-200` gap flagged in this file's own Polish backlog turned out to be broader once checked against every usage: `brand-800`/`brand-900` were also undefined and used in 9 more places (HomeScreen's WIP explainer, ColumnCard tags, AppHeader's active-nav pill) — 11 invisible-color occurrences across 5 files total, not just the 2 toolbar buttons originally noted. Completed the `brand` scale with Tailwind's own `orange` values (the source the existing 6 shades were already drawn from) rather than patching each call site individually.
@@ -64,3 +66,7 @@ No small un-filed items queued.
   reading "No color"~~
 - ~~Bumped low-contrast delete-icon colors from `gray-200`/`gray-300` to
   `gray-400`/`gray-500`~~
+
+**v0.2.3 — Fix LanguagePicker dark mode** (2026-09-02):
+- ~~Synced `LanguagePicker.tsx` with the design-system's now-fixed
+  canonical copy — full `dark:` coverage~~

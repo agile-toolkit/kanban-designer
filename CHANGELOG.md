@@ -4,6 +4,13 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.2.3 — Fix LanguagePicker dark mode (2026-09-02)
+
+- **fix**: `LanguagePicker.tsx` had zero `dark:` classes — the
+  design-system's canonical copy never got dark-mode classes, and this
+  app's copy inherited the gap. Synced with the now-fixed design-system
+  source.
+
 ## 0.2.2 — Fix icon-button accessibility gaps (2026-09-02)
 
 - **fix**: several icon-only "✕" delete/remove buttons in `ColumnCard.tsx`
