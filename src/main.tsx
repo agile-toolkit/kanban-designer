@@ -3,9 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './i18n/index'
 import './index.css'
 import App from './App'
+import ErrorBoundary from './components/ErrorBoundary'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary
+      storagePrefixes={["kanban-designer-", "kanban-designer:"]}
+    >
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 )
