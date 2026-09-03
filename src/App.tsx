@@ -102,7 +102,7 @@ function exportJSON(board: KanbanBoard) {
 
 export default function App() {
   const { t } = useTranslation()
-  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('kanban-designer:facilitatorMode')
+  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('agile-toolkit:facilitatorMode')
   const [screen, setScreen] = useState<Screen>(() => (_urlBoard ? 'designer' : 'home'))
   const [boards, setBoards] = useState<KanbanBoard[]>(() => {
     const saved = loadBoards()

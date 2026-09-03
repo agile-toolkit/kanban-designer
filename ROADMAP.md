@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Facilitator Mode persists across suite apps** (2026-09-03) — see `## Shipped`. `useFacilitatorMode`'s storage key changed to the shared `agile-toolkit:facilitatorMode` so the mode survives switching to another suite app in the same tab, per direct user request.
+
 **Replace decorative ✕/✓ emoji with SVG icons** (2026-09-03) — see `## Shipped`. First app in a suite-wide emoji→SVG sweep the user asked for; this app had the highest raw count (15 occurrences across 4 files).
 
 **Facilitator Mode** (2026-09-03) — see `## Shipped`. A user asked for the presentation/projector mode already built for Team Identity to be adopted suite-wide; this is repo 4 of an 11-repo rollout, adopting the pattern now shared in `design-system/`.
@@ -33,6 +35,7 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Unify Facilitator Mode's storage key to the shared `agile-toolkit:facilitatorMode` so it persists across suite apps~~
 - ~~Replace decorative ✕/✓ text-glyph buttons with shared SVG icons~~
 - ~~Facilitator Mode — bigger UI + hidden nav/language picker for in-room presentation, adopted from the shared design-system pattern~~
 - ~~Design/Track mode split — due dates, assignee, checklist, card aging, and stats gated behind an explicit, off-by-default Track mode, restoring the "designs boards, does not run work" boundary~~
