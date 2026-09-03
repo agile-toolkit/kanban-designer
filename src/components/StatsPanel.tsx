@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { KanbanBoard } from '../types'
+import { CloseIcon } from './icons'
 
 interface Props {
   board: KanbanBoard
@@ -30,7 +31,7 @@ export default function StatsPanel({ board, onClose }: Props) {
             aria-label={t('stats.close')}
             className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 text-sm"
           >
-            ✕
+            <CloseIcon className="w-3.5 h-3.5" />
           </button>
         </div>
 

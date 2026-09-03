@@ -4,6 +4,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard, ChecklistItem } from '../types'
+import { CloseIcon, CheckIcon } from './icons'
 
 export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags' | 'assignee' | 'checklist'>>
 
@@ -217,7 +218,7 @@ function CardItem({
                 className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                 title={noColorLabel}
                 aria-label={noColorLabel}
-              >✕</button>
+              ><CloseIcon className="w-3 h-3" /></button>
             )}
           </div>
           {trackMode && (
@@ -235,7 +236,7 @@ function CardItem({
                   className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                   title={t('designer.clear_due_date')}
                   aria-label={t('designer.clear_due_date')}
-                >✕</button>
+                ><CloseIcon className="w-3 h-3" /></button>
               )}
             </div>
           )}
@@ -250,7 +251,7 @@ function CardItem({
                     onClick={() => setEditTags(editTags.filter(existing => existing !== tag))}
                     className="text-brand-400 hover:text-brand-600 dark:hover:text-brand-200 leading-none ml-0.5"
                     aria-label={t('designer.remove_tag')}
-                  >✕</button>
+                  ><CloseIcon className="w-2.5 h-2.5" /></button>
                 </span>
               ))}
               <input
@@ -302,7 +303,7 @@ function CardItem({
                       onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
                       className="text-gray-400 dark:text-gray-500 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
                       aria-label={t('designer.checklist_remove_item')}
-                    >✕</button>
+                    ><CloseIcon className="w-2.5 h-2.5" /></button>
                   </div>
                 ))}
                 <input
@@ -323,8 +324,8 @@ function CardItem({
             </div>
           )}
           <div className="flex gap-1">
-            <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded">✓</button>
-            <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5">✕</button>
+            <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded"><CheckIcon className="w-3 h-3" /></button>
+            <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5"><CloseIcon className="w-3 h-3" /></button>
           </div>
         </div>
       </div>
@@ -435,7 +436,7 @@ function CardItem({
             title={deleteTitle}
             className="text-gray-200 dark:text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
           >
-            ✕
+            <CloseIcon className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
@@ -528,7 +529,7 @@ export function ColumnHeaderStrip({ column, showWipWarnings, onRename, onWipChan
         <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1"><CloseIcon className="w-3 h-3" /></button>
       </div>
 
       {isOverWip && (
@@ -663,7 +664,7 @@ export function LaneCell({
                 onClick={() => { if (cardTitle.trim()) { onAddCard(cardTitle.trim()); setCardTitle('') }; setAddingCard(false) }}
                 className="text-xs bg-brand-600 text-white px-2 py-1 rounded-lg"
               >Add</button>
-              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1">✕</button>
+              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1"><CloseIcon className="w-3 h-3" /></button>
             </div>
           </div>
         ) : (
@@ -806,7 +807,7 @@ export default function ColumnCard({
         <span className={`text-xs font-medium px-1.5 py-0.5 rounded-lg ${isOverWip ? 'bg-red-100 text-red-600 dark:bg-red-950/30 dark:text-red-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
           {column.cards.length}{column.wipLimit !== null ? `/${column.wipLimit}` : ''}
         </span>
-        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1">✕</button>
+        <button onClick={onDelete} title={t('designer.delete_column')} aria-label={t('designer.delete_column')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs ml-1"><CloseIcon className="w-3 h-3" /></button>
       </div>
 
       {isOverWip && (
@@ -880,7 +881,7 @@ export default function ColumnCard({
                 onClick={() => { if (cardTitle.trim()) { onAddCard(cardTitle.trim()); setCardTitle('') }; setAddingCard(false) }}
                 className="text-xs bg-brand-600 text-white px-2 py-1 rounded-lg"
               >Add</button>
-              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1">✕</button>
+              <button onClick={() => { setAddingCard(false); setCardTitle('') }} className="text-xs text-gray-400 dark:text-gray-500 px-2 py-1"><CloseIcon className="w-3 h-3" /></button>
             </div>
           </div>
         ) : (

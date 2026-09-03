@@ -4,6 +4,19 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.3.2 — Replace decorative ✕/✓ emoji with SVG icons (2026-09-03)
+
+- **feat**: replaced all 15 decorative `✕`/`✓` text-glyph buttons (column
+  delete, card delete, checklist-item remove, tag remove, due-date clear,
+  color clear, swim-lane delete, template delete, save-edit confirm, stats
+  panel close, template-rename cancel, filter clear) with `CloseIcon`/
+  `CheckIcon` from the new shared `icons.tsx`. They render via
+  `currentColor`, so each button keeps exactly the color it already had
+  (delete buttons stay red-on-hover, etc.) — purely a glyph swap, no
+  behavior change. First app in a suite-wide emoji→SVG sweep the user
+  asked for; the checklist-progress i18n string's embedded "✓" character
+  was left as-is (plain translated text, not a UI icon).
+
 ## 0.3.1 — Facilitator Mode (2026-09-03)
 
 - **feat**: added Facilitator (projector) Mode — a presentation toggle for

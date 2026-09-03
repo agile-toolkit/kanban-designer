@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TEMPLATES, cloneTemplate, cloneCustomTemplate, deleteCustomTemplate, loadCustomTemplates } from '../data/templates'
 import type { KanbanBoard } from '../types'
+import { CloseIcon } from './icons'
 
 interface Props {
   onLoad: (board: KanbanBoard) => void
@@ -40,7 +41,7 @@ export default function TemplatesView({ onLoad }: Props) {
                       title={t('templates.delete_custom')}
                       className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 text-xs px-1"
                     >
-                      ✕
+                      <CloseIcon className="w-3 h-3" />
                     </button>
                   </div>
                 </div>

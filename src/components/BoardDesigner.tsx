@@ -13,6 +13,7 @@ import type { KanbanBoard, KanbanCard, KanbanColumn } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
 import StatsPanel from './StatsPanel'
 import { createCustomTemplate } from '../data/templates'
+import { CloseIcon } from './icons'
 
 interface Props {
   board: KanbanBoard
@@ -388,7 +389,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                 onClick={() => { setSavingTemplate(false); setTemplateName('') }}
                 className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-1"
               >
-                ✕
+                <CloseIcon className="w-3.5 h-3.5" />
               </button>
             </div>
           ) : (
@@ -517,7 +518,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             onClick={clearFilters}
             className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-600 rounded px-2 py-0.5 hover:bg-white dark:hover:bg-gray-700 transition-colors"
           >
-            ✕ {t('designer.clear_filters')}
+            <CloseIcon className="w-3 h-3 inline -mt-0.5 mr-1" /> {t('designer.clear_filters')}
           </button>
         )}
       </div>
@@ -528,7 +529,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           {board.swimLanes.map(lane => (
             <div key={lane} className="flex items-center gap-1">
               <span className="text-xs bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2 py-0.5 text-gray-600 dark:text-gray-300">{lane}</span>
-              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} title={t('designer.delete_lane')} aria-label={t('designer.delete_lane')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs">✕</button>
+              <button onClick={() => patch({ swimLanes: board.swimLanes.filter(l => l !== lane) })} title={t('designer.delete_lane')} aria-label={t('designer.delete_lane')} className="text-gray-400 dark:text-gray-500 hover:text-red-400 text-xs"><CloseIcon className="w-3 h-3" /></button>
             </div>
           ))}
         </div>
