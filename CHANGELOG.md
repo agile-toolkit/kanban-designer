@@ -3,6 +3,18 @@
 All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
+
+## 0.4.2 — Add glass effect to the header (2026-09-04)
+
+- **fix**: `AppHeader.tsx`'s background changed from opaque
+  `bg-white`/`dark:bg-gray-900` to `bg-[var(--glass)] backdrop-blur-sm` —
+  the Dashboard's own nav has always had this translucent blur effect,
+  but the shared header every app copies did not. User-reported
+  inconsistency. This app's header already carried a local
+  `dark:bg-brand-900/30` active-pill variation from the canonical
+  source — left untouched, only the background line changed. Verified
+  in both themes.
+
 - **feat**: synced the shared `icons.tsx` (48 → 64 icons) and replaced the
   remaining decorative emoji: the designer's empty-state hero (`🗂`) and the
   home screen's hero (`📋`) both become `KanbanIcon` at hero size, muted

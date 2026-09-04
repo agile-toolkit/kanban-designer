@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Add glass effect to the header** (2026-09-04) — see `## Shipped`. `AppHeader.tsx`'s background changed to a translucent blur, matching the Dashboard's own nav — user-reported inconsistency.
+
 **Facilitator Mode persists across suite apps** (2026-09-03) — see `## Shipped`. `useFacilitatorMode`'s storage key changed to the shared `agile-toolkit:facilitatorMode` so the mode survives switching to another suite app in the same tab, per direct user request.
 
 **Replace decorative ✕/✓ emoji with SVG icons** (2026-09-03) — see `## Shipped`. First app in a suite-wide emoji→SVG sweep the user asked for; this app had the highest raw count (15 occurrences across 4 files).
@@ -35,6 +37,7 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Add glass/backdrop-blur effect to the header, matching the Dashboard's own nav~~
 - ~~Unify Facilitator Mode's storage key to the shared `agile-toolkit:facilitatorMode` so it persists across suite apps~~
 - ~~Replace decorative ✕/✓ text-glyph buttons with shared SVG icons~~
 - ~~Facilitator Mode — bigger UI + hidden nav/language picker for in-room presentation, adopted from the shared design-system pattern~~
