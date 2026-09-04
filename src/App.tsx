@@ -12,6 +12,7 @@ import LearnView from './components/LearnView'
 import ThemeToggle from './components/ThemeToggle'
 import FacilitatorToggle from './components/FacilitatorToggle'
 import { useFacilitatorMode } from './components/useFacilitatorMode'
+import { KanbanIcon } from './components/icons'
 
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
@@ -360,7 +361,7 @@ export default function App() {
           {!board ? (
             <div className="flex-1 flex items-center justify-center p-8">
               <div className="text-center max-w-md">
-                <div className="text-6xl mb-4">🗂</div>
+                <KanbanIcon className="w-14 h-14 mb-4 mx-auto text-slate-300 dark:text-gray-600" />
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50 mb-3">{t('app.title')}</h1>
                 <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">{t('home.pick_or_create')}</p>
                 <div className="flex gap-3 justify-center flex-wrap">

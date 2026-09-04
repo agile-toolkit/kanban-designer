@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { KanbanBoard } from '../types'
 import { TEMPLATES, cloneTemplate } from '../data/templates'
+import { KanbanIcon } from './icons'
 
 interface Props {
   boards: KanbanBoard[]
@@ -43,7 +44,7 @@ export default function HomeScreen({ boards, onNew, onOpen, onDelete }: Props) {
   return (
     <div className="space-y-8">
       <div className="text-center py-6">
-        <div className="text-5xl mb-3">📋</div>
+        <KanbanIcon className="w-12 h-12 mb-3 mx-auto text-slate-300 dark:text-gray-600" />
         <h1 className="text-3xl font-bold text-slate-900 dark:text-gray-50 mb-2">{t('home.headline')}</h1>
         <p className="text-slate-600 dark:text-gray-400 max-w-2xl mx-auto">{t('home.intro')}</p>
         <div className="mt-5 flex justify-center gap-3">

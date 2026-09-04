@@ -3,6 +3,19 @@
 All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
+- **feat**: synced the shared `icons.tsx` (48 → 64 icons) and replaced the
+  remaining decorative emoji: the designer's empty-state hero (`🗂`) and the
+  home screen's hero (`📋`) both become `KanbanIcon` at hero size, muted
+  (`text-slate-300`/`dark:text-gray-600`) so they read as art, not controls;
+  the Learn view's WIP and flow section icons (`🚦`/`🌊`) become
+  `TrafficLightIcon`/`FlowIcon` — the `icon` field on those two topic entries
+  is now a component reference instead of a raw emoji string. The
+  checklist-progress badge's embedded `✓` — left as plain text in 0.3.2
+  because it was baked into the translated string — is now a `CheckIcon`
+  rendered next to the count in `ColumnCard`, with the glyph stripped from
+  all four locale strings (`en`/`es`/`be`/`ru`); the `{{done}}/{{total}}`
+  interpolation is unchanged. `HandshakeIcon` was dropped from the shared set
+  upstream (superseded by `TeamIcon`); nothing in this app imported it.
 - **ci**: CI Node bumped 20 → 22 and `engines` declared. `jsdom@30` requires
   Node `^22.22.2 || ^24.15.0 || >=26`, so the test step could never have passed
   on the pinned Node 20 — invisible until this release started running the

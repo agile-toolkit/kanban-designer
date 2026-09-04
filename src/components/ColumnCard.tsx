@@ -409,12 +409,13 @@ function CardItem({
             return (
               <div className="mt-1">
                 <span
-                  className={`text-xs rounded px-1.5 py-0.5 ${
+                  className={`inline-flex items-center gap-1 text-xs rounded px-1.5 py-0.5 ${
                     allDone
                       ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 font-medium'
                       : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
                   }`}
                 >
+                  <CheckIcon className="w-3 h-3" />
                   {t('designer.checklist_progress', { done, total })}
                 </span>
               </div>
