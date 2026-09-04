@@ -4,6 +4,24 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.4.3 — Canonical board export/import schema (2026-09-04)
+
+- **feat**: full-fidelity board transports (JSON file export/import, the
+  `#board=` share link) now wrap/unwrap a versioned
+  `{ schema: 'agile-toolkit.kanban-board', version: 1, board }` envelope
+  (`src/utils/boardExport.ts`), documented as `BOARD_SCHEMA.md` in the
+  `agile-toolkit/.github` meta-repo. This is the format the suite's other
+  apps should target to seed from a board designed here — starting with the
+  new, separate `kanban-tracker` app for lightweight execution, and
+  eventually domain-specific trackers (Change Planner, Scrum Facilitator's
+  retro board) that map board columns/cards onto their own model. Backward
+  compatible: every import path (`#board=`, `?prefill=`, file import) still
+  accepts a bare `KanbanBoard` object, so Improvement Board's existing
+  `?prefill=` sender (`kanbanLink.ts`) needed no change.
+- **context**: resolves the "does Kanban Designer need to split?" question —
+  it doesn't. Track mode stays here; the new capability other apps need is a
+  stable interchange format, not a smaller Kanban Designer.
+
 ## 0.4.2 — Add glass effect to the header (2026-09-04)
 
 - **fix**: `AppHeader.tsx`'s background changed from opaque
