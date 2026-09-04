@@ -10,6 +10,8 @@ None — idle. See `## Next epics` below.
 2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Canonical board export/import schema** (2026-09-04) — see `## Shipped`. Serves the suite thesis's "platform depth" signal (GOAL.md): a shared team object model needs a shared board model too. Full JSON export/import and the `#board=` share link now wrap/unwrap a versioned `{ schema, version, board }` envelope (`src/utils/boardExport.ts`), documented in `BOARD_SCHEMA.md` (meta-repo) as the format any suite app should use to seed from a board designed here. Backward compatible: import paths still accept a bare board object, so Improvement Board's existing `?prefill=` sender needs no change. Direct follow-up to the user's clarified direction on the earlier "split Kanban Designer" discussion — Track mode stays in this app; the new `kanban-tracker` app (and any domain-specific tracker) consumes designed boards through this schema instead.
+
 **Add glass effect to the header** (2026-09-04) — see `## Shipped`. `AppHeader.tsx`'s background changed to a translucent blur, matching the Dashboard's own nav — user-reported inconsistency.
 
 **Facilitator Mode persists across suite apps** (2026-09-03) — see `## Shipped`. `useFacilitatorMode`'s storage key changed to the shared `agile-toolkit:facilitatorMode` so the mode survives switching to another suite app in the same tab, per direct user request.
@@ -37,6 +39,7 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Canonical `{ schema, version, board }` export/import envelope for full-fidelity JSON export/import and the `#board=` share link, documented as `BOARD_SCHEMA.md` in the meta-repo~~
 - ~~Add glass/backdrop-blur effect to the header, matching the Dashboard's own nav~~
 - ~~Unify Facilitator Mode's storage key to the shared `agile-toolkit:facilitatorMode` so it persists across suite apps~~
 - ~~Replace decorative ✕/✓ text-glyph buttons with shared SVG icons~~

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
 import { parsePrefillBoard } from './utils/prefillBoard'
+import { wrapBoardExport, unwrapBoardExport } from './utils/boardExport'
 import { resolveBoardMode } from './boardMode'
 import AppHeader from './components/AppHeader'
 import BoardDesigner from './components/BoardDesigner'
@@ -22,14 +23,15 @@ const CURRENT_BOARD_KEY = 'kanban-designer:currentBoard'
 const HASH_PREFIX = 'board='
 
 function encodeBoard(board: KanbanBoard): string {
-  return btoa(encodeURIComponent(JSON.stringify(board)))
+  return btoa(encodeURIComponent(JSON.stringify(wrapBoardExport(board))))
 }
 
 function parseBoardFromHash(): KanbanBoard | null {
   try {
     const hash = window.location.hash.slice(1)
     if (!hash.startsWith(HASH_PREFIX)) return null
-    return JSON.parse(decodeURIComponent(atob(hash.slice(HASH_PREFIX.length)))) as KanbanBoard
+    const parsed = JSON.parse(decodeURIComponent(atob(hash.slice(HASH_PREFIX.length))))
+    return unwrapBoardExport(parsed)
   } catch {
     return null
   }
@@ -92,7 +94,7 @@ function writeCurrentBoard(board: KanbanBoard) {
 }
 
 function exportJSON(board: KanbanBoard) {
-  const blob = new Blob([JSON.stringify(board, null, 2)], { type: 'application/json' })
+  const blob = new Blob([JSON.stringify(wrapBoardExport(board), null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -243,7 +245,9 @@ export default function App() {
     const reader = new FileReader()
     reader.onload = ev => {
       try {
-        const imported = resolveBoardMode(JSON.parse(ev.target?.result as string) as KanbanBoard)
+        const parsed = unwrapBoardExport(JSON.parse(ev.target?.result as string))
+        if (!parsed) throw new Error('not board-shaped')
+        const imported = resolveBoardMode(parsed)
         const id = imported.id ?? crypto.randomUUID()
         updateBoard({ ...imported, id, updatedAt: Date.now() })
         persistCurrent(id)
