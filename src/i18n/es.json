@@ -100,7 +100,7 @@
     "checklist": "Lista de tareas",
     "checklist_remove_item": "Eliminar elemento de la lista",
     "checklist_add": "Añadir elemento…",
-    "checklist_progress": "✓ {{done}}/{{total}}",
+    "checklist_progress": "{{done}}/{{total}}",
     "export_csv": "Exportar CSV"
   },
   "templates": {

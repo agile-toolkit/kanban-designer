@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { TrafficLightIcon, FlowIcon } from './icons'
 
 const PRINCIPLES = ['p1', 'p2', 'p3', 'p4', 'p5'] as const
 
@@ -9,12 +10,12 @@ export default function LearnView() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{t('learn.title')}</h1>
       {[
-        { key: 'wip', icon: '🚦' },
-        { key: 'flow', icon: '🌊' },
+        { key: 'wip', Icon: TrafficLightIcon },
+        { key: 'flow', Icon: FlowIcon },
       ].map(s => (
         <div key={s.key} className="card">
           <div className="flex gap-3">
-            <span className="text-2xl">{s.icon}</span>
+            <s.Icon className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-400 dark:text-gray-500" />
             <div>
               <h2 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">{t(`learn.${s.key}_title`)}</h2>
               <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{t(`learn.${s.key}_body`)}</p>
