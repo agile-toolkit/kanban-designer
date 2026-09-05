@@ -82,7 +82,26 @@
     "filter_tag": "Etiqueta",
     "save_as_template": "Guardar como plantilla",
     "template_name_placeholder": "Nombre de la plantilla",
-    "export_csv": "Exportar CSV"
+    "export_csv": "Exportar CSV",
+    "description": "Descripción",
+    "shortcuts_hint": "Atajos de teclado"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "close": "Cerrar",
+    "navigation": "Navegación",
+    "card_actions": "Acciones de tarjeta",
+    "board_actions": "Acciones de tablero",
+    "mouse": "Ratón y táctil",
+    "move_focus": "Mover el foco entre tarjetas",
+    "edit_card": "Editar la tarjeta enfocada",
+    "delete_card": "Eliminar la tarjeta enfocada (pulsa dos veces para confirmar)",
+    "cancel_delete": "Cancelar la confirmación de borrado",
+    "undo": "Deshacer",
+    "redo": "Rehacer",
+    "toggle_help": "Mostrar o cerrar esta ayuda",
+    "double_click_edit": "Haz doble clic en una tarjeta para editarla",
+    "drag_move": "Arrastra una tarjeta para reordenarla o moverla a otra columna"
   },
   "templates": {
     "title": "Plantillas de tablero",

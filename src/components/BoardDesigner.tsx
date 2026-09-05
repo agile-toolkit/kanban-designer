@@ -223,7 +223,12 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag)
 
   const matchesFilter = (card: KanbanCard): boolean => {
-    if (filterText && !card.title.toLowerCase().includes(filterText.toLowerCase())) return false
+    if (filterText) {
+      const needle = filterText.toLowerCase()
+      const titleMatch = card.title.toLowerCase().includes(needle)
+      const descriptionMatch = (card.description ?? '').toLowerCase().includes(needle)
+      if (!titleMatch && !descriptionMatch) return false
+    }
     if (filterColor && card.color !== filterColor) return false
     if (filterLane) {
       if (filterLane === '__none__') { if (card.swimLane) return false }
@@ -516,6 +521,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       noColorLabel={t('designer.no_color')}
                       addTagLabel={t('designer.add_tag')}
                       tagPlaceholderLabel={t('designer.tag_placeholder')}
+                      descriptionLabel={t('designer.description')}
                     />
                   ))}
                 </div>
@@ -547,6 +553,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
                     addTagLabel={t('designer.add_tag')}
                     tagPlaceholderLabel={t('designer.tag_placeholder')}
+                    descriptionLabel={t('designer.description')}
                   />
                 ))}
               </div>

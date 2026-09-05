@@ -4,6 +4,38 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.5.2 — Keyboard shortcuts help overlay (2026-09-05)
+
+- **added**: a centered modal (`ShortcutsModal.tsx`) listing all keyboard
+  shortcuts, grouped into Navigation, Card actions, Board actions, and a
+  Mouse & touch section (double-click to edit, drag to move/reorder) so
+  it isn't keyboard-only. Every shortcut listed was already implemented
+  (`ColumnCard.tsx`'s Arrow/Enter/F2/Delete/Backspace/Escape handling,
+  `App.tsx`'s Ctrl+Z/Ctrl+Y) — this ships the missing documentation
+  surface, not new behaviour.
+- **added**: opens via a `?` toolbar button (next to the theme/facilitator
+  toggles, `QuestionIcon`) or the `?` key; the key is ignored while an
+  `<input>`/`<textarea>` has focus so typing a literal `?` in the card
+  search box doesn't pop the modal. Closes on Escape, a backdrop click,
+  or the header close button.
+- **context**: closes [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44).
+  Chose a centered modal over a Figma-style side panel since the app has
+  no persistent side-panel chrome to anchor one to.
+
+## 0.5.1 — Card description field (2026-09-05)
+
+- **added**: cards now support a multi-line description, editable via a
+  `<textarea>` in the card's inline edit mode (`ColumnCard.tsx`). A
+  1-line truncated preview shows on the card face when a description is
+  set.
+- **added**: the card search box now also matches against description
+  text, not just the title (`BoardDesigner.tsx`).
+- **context**: closes [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43),
+  the first of the two epics left in `ROADMAP.md` after the Track-mode
+  removal. `KanbanCard.description` already existed as an optional field
+  on the type and round-tripped through JSON export/import — this ships
+  the UI to actually read and write it.
+
 ## 0.5.0 — Remove Track mode entirely (2026-09-05)
 
 - **removed**: the Design/Track mode toggle, `KanbanBoard.mode` and
