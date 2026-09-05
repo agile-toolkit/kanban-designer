@@ -83,7 +83,25 @@
     "save_as_template": "Save as Template",
     "template_name_placeholder": "Template name",
     "export_csv": "Export CSV",
-    "description": "Description"
+    "description": "Description",
+    "shortcuts_hint": "Keyboard shortcuts"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "close": "Close",
+    "navigation": "Navigation",
+    "card_actions": "Card actions",
+    "board_actions": "Board actions",
+    "mouse": "Mouse & touch",
+    "move_focus": "Move focus between cards",
+    "edit_card": "Edit the focused card",
+    "delete_card": "Delete the focused card (press twice to confirm)",
+    "cancel_delete": "Cancel delete confirmation",
+    "undo": "Undo",
+    "redo": "Redo",
+    "toggle_help": "Show or close this help",
+    "double_click_edit": "Double-click a card to edit it",
+    "drag_move": "Drag a card to reorder it or move it to another column"
   },
   "templates": {
     "title": "Board Templates",

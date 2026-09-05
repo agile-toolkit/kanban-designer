@@ -12,7 +12,8 @@ import LearnView from './components/LearnView'
 import ThemeToggle from './components/ThemeToggle'
 import FacilitatorToggle from './components/FacilitatorToggle'
 import { useFacilitatorMode } from './components/useFacilitatorMode'
-import { KanbanIcon } from './components/icons'
+import ShortcutsModal from './components/ShortcutsModal'
+import { KanbanIcon, QuestionIcon } from './components/icons'
 
 const LEGACY_KEY = 'kanban-designer-board'
 const BOARDS_KEY = 'kanban-designer-boards'
@@ -106,6 +107,7 @@ export default function App() {
   const { t } = useTranslation()
   const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('agile-toolkit:facilitatorMode')
   const [screen, setScreen] = useState<Screen>(() => (_urlBoard ? 'designer' : 'home'))
+  const [showShortcuts, setShowShortcuts] = useState(false)
   const [boards, setBoards] = useState<KanbanBoard[]>(() => {
     const saved = loadBoards()
     if (!_urlBoard) return saved
@@ -238,6 +240,18 @@ export default function App() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== '?') return
+      const target = e.target as HTMLElement | null
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return
+      e.preventDefault()
+      setShowShortcuts(s => !s)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -300,6 +314,17 @@ export default function App() {
           labelOn={t('facilitator.toggle_on')}
           labelOff={t('facilitator.toggle_off')}
         />
+        {!facilitatorMode && (
+          <button
+            type="button"
+            onClick={() => setShowShortcuts(true)}
+            title={t('designer.shortcuts_hint')}
+            aria-label={t('designer.shortcuts_hint')}
+            className="btn-ghost"
+          >
+            <QuestionIcon className="w-4 h-4" />
+          </button>
+        )}
         {board && screen === 'designer' && (
           <>
             <button
@@ -408,6 +433,35 @@ export default function App() {
         <div className="flex-1 overflow-y-auto">
           <LearnView />
         </div>
+      )}
+
+      {showShortcuts && (
+        <ShortcutsModal
+          onClose={() => setShowShortcuts(false)}
+          title={t('shortcuts.title')}
+          closeLabel={t('shortcuts.close')}
+          navigationLabel={t('shortcuts.navigation')}
+          cardActionsLabel={t('shortcuts.card_actions')}
+          boardActionsLabel={t('shortcuts.board_actions')}
+          mouseLabel={t('shortcuts.mouse')}
+          navigationRows={[
+            { keys: 'ArrowUp/ArrowDown', label: t('shortcuts.move_focus') },
+          ]}
+          cardActionsRows={[
+            { keys: 'Enter/F2', label: t('shortcuts.edit_card') },
+            { keys: 'Delete/Backspace', label: t('shortcuts.delete_card') },
+            { keys: 'Escape', label: t('shortcuts.cancel_delete') },
+          ]}
+          boardActionsRows={[
+            { keys: 'Ctrl+Z', label: t('shortcuts.undo') },
+            { keys: 'Ctrl+Y', label: t('shortcuts.redo') },
+            { keys: '?', label: t('shortcuts.toggle_help') },
+          ]}
+          mouseRows={[
+            { keys: '2×click', label: t('shortcuts.double_click_edit') },
+            { keys: 'drag', label: t('shortcuts.drag_move') },
+          ]}
+        />
       )}
     </div>
   )
