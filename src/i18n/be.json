@@ -82,7 +82,8 @@
     "filter_tag": "Тэг",
     "save_as_template": "Захаваць як шаблон",
     "template_name_placeholder": "Назва шаблону",
-    "export_csv": "Экспарт CSV"
+    "export_csv": "Экспарт CSV",
+    "description": "Апісанне"
   },
   "templates": {
     "title": "Шаблоны дошак",

@@ -82,7 +82,8 @@
     "filter_tag": "Тег",
     "save_as_template": "Сохранить как шаблон",
     "template_name_placeholder": "Название шаблона",
-    "export_csv": "Экспорт CSV"
+    "export_csv": "Экспорт CSV",
+    "description": "Описание"
   },
   "templates": {
     "title": "Шаблоны досок",

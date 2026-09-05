@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities'
 import type { KanbanColumn, KanbanCard } from '../types'
 import { CloseIcon, CheckIcon } from './icons'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'tags'>>
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'tags' | 'description'>>
 
 const CARD_COLORS = [
   { stem: 'red',    hex: '#f87171' },
@@ -45,6 +45,7 @@ interface CardItemProps {
   noColorLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
+  descriptionLabel: string
   availableLanes?: string[]
   swimLanePillNone?: string
   swimLaneAssign?: string
@@ -52,7 +53,7 @@ interface CardItemProps {
 
 function CardItem({
   card, onDelete, onUpdate, deleteTitle, deleteCardConfirmLabel,
-  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel,
+  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel, descriptionLabel,
   availableLanes, swimLanePillNone, swimLaneAssign,
 }: CardItemProps) {
   const { t } = useTranslation()
@@ -60,6 +61,7 @@ function CardItem({
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
   const [editTags, setEditTags] = useState<string[]>(card.tags ?? [])
+  const [editDescription, setEditDescription] = useState(card.description ?? '')
   const [tagInput, setTagInput] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -75,6 +77,7 @@ function CardItem({
     setEditTitle(card.title)
     setEditColor(card.color)
     setEditTags(card.tags ?? [])
+    setEditDescription(card.description ?? '')
     setTagInput('')
     setEditing(true)
   }
@@ -84,6 +87,7 @@ function CardItem({
       title: editTitle.trim() || card.title,
       color: editColor,
       tags: editTags.length > 0 ? editTags : undefined,
+      description: editDescription.trim() || undefined,
     })
     setEditing(false)
   }
@@ -201,6 +205,17 @@ function CardItem({
               />
             </div>
           </div>
+          <div className="mb-2">
+            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{descriptionLabel}:</div>
+            <textarea
+              value={editDescription}
+              onChange={e => setEditDescription(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Escape') setEditing(false) }}
+              rows={2}
+              placeholder={descriptionLabel}
+              className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-2 py-1 outline-none focus:border-brand-400 resize-y min-h-[3rem] max-h-32"
+            />
+          </div>
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded"><CheckIcon className="w-3 h-3" /></button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5"><CloseIcon className="w-3 h-3" /></button>
@@ -236,6 +251,9 @@ function CardItem({
           >
             {card.title}
           </span>
+          {card.description && (
+            <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">{card.description}</p>
+          )}
           {availableLanes && availableLanes.length > 0 && (
             <button
               onPointerDown={e => e.stopPropagation()}
@@ -402,6 +420,7 @@ export interface LaneCellProps {
   noColorLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
+  descriptionLabel: string
 }
 
 export function LaneCell({
@@ -409,7 +428,7 @@ export function LaneCell({
   swimLanePillNone, swimLaneAssign,
   onAddCard, onDeleteCard, onUpdateCard,
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
-  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel,
+  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel, descriptionLabel,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -444,6 +463,7 @@ export function LaneCell({
               noColorLabel={noColorLabel}
               addTagLabel={addTagLabel}
               tagPlaceholderLabel={tagPlaceholderLabel}
+              descriptionLabel={descriptionLabel}
               availableLanes={activeLanes}
               swimLanePillNone={swimLanePillNone}
               swimLaneAssign={swimLaneAssign}
@@ -506,11 +526,12 @@ interface Props {
   onUpdateCard: (cardId: string, updates: CardUpdates) => void
   addTagLabel: string
   tagPlaceholderLabel: string
+  descriptionLabel: string
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
-  addTagLabel, tagPlaceholderLabel,
+  addTagLabel, tagPlaceholderLabel, descriptionLabel,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -648,6 +669,7 @@ export default function ColumnCard({
               noColorLabel={t('designer.no_color')}
               addTagLabel={addTagLabel}
               tagPlaceholderLabel={tagPlaceholderLabel}
+              descriptionLabel={descriptionLabel}
             />
           ))}
         </SortableContext>

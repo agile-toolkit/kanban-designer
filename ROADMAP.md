@@ -6,10 +6,10 @@ Derived from GOAL.md. Rebuilt when GOAL changes or an epic ships.
 None — idle. See `## Next epics` below.
 
 ## Next epics
-1. **E1: Card description field** — serves signal #2. Multi-line notes per card: `<textarea>` in card edit mode, 1-line truncated preview on the card face, round-trips through JSON export and `kanban-designer:currentBoard`. [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
-2. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
+1. **E2: Keyboard shortcuts help overlay** — serves signal #1 (usability for training/workshop contexts). `?` key / toolbar button opens a modal listing all keyboard shortcuts (Navigation / Card actions / Board actions). [Issue #44](https://github.com/agile-toolkit/kanban-designer/issues/44) — `needs-review`, open since 2026-06-27, past the 7-day auto-approve threshold.
 
 ## Recently shipped
+**Card description field** (2026-09-05) — see `## Shipped`. Multi-line notes per card: `<textarea>` in card edit mode, 1-line truncated preview on the card face, round-trips through JSON export/import since `KanbanCard.description` already existed on the type. Closes [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43).
 **Remove Track mode entirely** (2026-09-05) — see `## Shipped`. Reverses
 the 2026-09-03 Design/Track split below: rather than gating execution
 fields behind a toggle, they're removed from this app altogether. Kanban
@@ -58,6 +58,9 @@ Closed 22 stale `approved`/`needs-review` issues (#2–#39, #41–#42) that were
 No small un-filed items queued.
 
 ## Shipped
+- ~~Card description field — multi-line notes per card, editable via a
+  textarea in card edit mode, truncated preview on the card face~~
+  (2026-09-05)
 - ~~Remove Track mode entirely — due dates, assignee, checklist, card
   aging, and the stats panel, superseded by Kanban Tracker's own full
   execution capability~~ (2026-09-05)

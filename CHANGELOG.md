@@ -4,6 +4,20 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.5.1 — Card description field (2026-09-05)
+
+- **added**: cards now support a multi-line description, editable via a
+  `<textarea>` in the card's inline edit mode (`ColumnCard.tsx`). A
+  1-line truncated preview shows on the card face when a description is
+  set.
+- **added**: the card search box now also matches against description
+  text, not just the title (`BoardDesigner.tsx`).
+- **context**: closes [Issue #43](https://github.com/agile-toolkit/kanban-designer/issues/43),
+  the first of the two epics left in `ROADMAP.md` after the Track-mode
+  removal. `KanbanCard.description` already existed as an optional field
+  on the type and round-tripped through JSON export/import — this ships
+  the UI to actually read and write it.
+
 ## 0.5.0 — Remove Track mode entirely (2026-09-05)
 
 - **removed**: the Design/Track mode toggle, `KanbanBoard.mode` and

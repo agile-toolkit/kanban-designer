@@ -82,7 +82,8 @@
     "filter_tag": "Tag",
     "save_as_template": "Save as Template",
     "template_name_placeholder": "Template name",
-    "export_csv": "Export CSV"
+    "export_csv": "Export CSV",
+    "description": "Description"
   },
   "templates": {
     "title": "Board Templates",
