@@ -11,7 +11,6 @@ import {
 import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard, KanbanColumn } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
-import StatsPanel from './StatsPanel'
 import { createCustomTemplate } from '../data/templates'
 import { CloseIcon } from './icons'
 
@@ -29,17 +28,6 @@ const CARD_COLORS = [
   { stem: 'purple', hex: '#a78bfa' },
 ]
 
-function loadTeamMembers(): string[] {
-  try {
-    const raw = localStorage.getItem('team-identity-charter')
-    if (!raw) return []
-    const charter = JSON.parse(raw)
-    return Array.isArray(charter?.members) ? charter.members.filter(Boolean) : []
-  } catch {
-    return []
-  }
-}
-
 export default function BoardDesigner({ board, onUpdate }: Props) {
   const { t } = useTranslation()
   const [newLane, setNewLane] = useState('')
@@ -49,9 +37,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   const [filterColor, setFilterColor] = useState('')
   const [filterLane, setFilterLane] = useState('')
   const [filterTag, setFilterTag] = useState('')
-  const [filterAssignee, setFilterAssignee] = useState('')
-  const [teamMembers] = useState<string[]>(loadTeamMembers)
-  const [showStats, setShowStats] = useState(false)
   const [savingTemplate, setSavingTemplate] = useState(false)
   const [templateName, setTemplateName] = useState('')
   const [templateSaved, setTemplateSaved] = useState(false)
@@ -94,14 +79,11 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     // depth-first so nested-column cards aren't silently dropped from the
     // export, labeling the column as "Parent > Child" for clarity.
     const rows: string[][] = []
-    const today = new Date().toISOString().slice(0, 10)
     const collect = (columns: KanbanColumn[], prefix: string) => {
       for (const col of columns) {
         const label = prefix ? `${prefix} > ${col.name}` : col.name
         for (const card of col.cards) {
-          const row = [label, card.swimLane ?? '', card.title, card.description ?? '', card.color ?? '']
-          if (isTrackMode) row.push(card.dueDate ?? '', card.dueDate ? String(card.dueDate < today) : 'false')
-          rows.push(row)
+          rows.push([label, card.swimLane ?? '', card.title, card.description ?? '', card.color ?? ''])
         }
         if (col.subColumns?.length) collect(col.subColumns, label)
       }
@@ -109,7 +91,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     collect(board.columns, '')
 
     const header = ['Column', 'Swim Lane', 'Title', 'Description', 'Colour']
-    if (isTrackMode) header.push('Due Date', 'Overdue')
     const csv = [header, ...rows].map(row => row.map(csvField).join(',')).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
@@ -126,8 +107,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
   )
 
   const patch = (partial: Partial<KanbanBoard>) => onUpdate({ ...board, ...partial })
-
-  const isTrackMode = board.mode === 'track'
 
   const addColumn = () => {
     patch({
@@ -241,7 +220,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     })
   }
 
-  const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag || filterAssignee)
+  const isFiltered = Boolean(filterText || filterColor || filterLane || filterTag)
 
   const matchesFilter = (card: KanbanCard): boolean => {
     if (filterText && !card.title.toLowerCase().includes(filterText.toLowerCase())) return false
@@ -251,10 +230,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       else { if (card.swimLane !== filterLane) return false }
     }
     if (filterTag && !(card.tags ?? []).includes(filterTag)) return false
-    if (filterAssignee) {
-      if (filterAssignee === '__unassigned__') { if (card.assignee) return false }
-      else { if (card.assignee !== filterAssignee) return false }
-    }
     return true
   }
 
@@ -262,7 +237,7 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     ? board.columns.map(col => ({ ...col, cards: col.cards.filter(matchesFilter) }))
     : board.columns
 
-  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane(''); setFilterTag(''); setFilterAssignee('') }
+  const clearFilters = () => { setFilterText(''); setFilterColor(''); setFilterLane(''); setFilterTag('') }
 
   const boardTags = [...new Set(board.columns.flatMap(col => col.cards.flatMap(c => c.tags ?? [])))]
 
@@ -292,37 +267,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
       </a>
       {/* Toolbar — row 1: actions */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-2 flex-wrap">
-        <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden text-xs font-medium flex-shrink-0" role="radiogroup" aria-label={t('designer.mode_label')}>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={!isTrackMode}
-            onClick={() => { patch({ mode: 'design' }); setFilterAssignee('') }}
-            title={t('designer.mode_design_hint')}
-            className={`px-3 py-1.5 transition-colors ${
-              !isTrackMode
-                ? 'bg-brand-600 text-white'
-                : 'bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-            }`}
-          >
-            {t('designer.mode_design')}
-          </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={isTrackMode}
-            onClick={() => patch({ mode: 'track' })}
-            title={t('designer.mode_track_hint')}
-            className={`px-3 py-1.5 border-l border-gray-200 dark:border-gray-700 transition-colors ${
-              isTrackMode
-                ? 'bg-brand-600 text-white'
-                : 'bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-            }`}
-          >
-            {t('designer.mode_track')}
-          </button>
-        </div>
-
         <button onClick={addColumn} className="btn-primary text-sm py-1.5">
           + {t('designer.add_column')}
         </button>
@@ -361,14 +305,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
         </label>
 
         <div className="ml-auto flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-          {isTrackMode && (
-            <button
-              onClick={() => setShowStats(true)}
-              className="text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 font-medium border border-gray-200 dark:border-gray-700 rounded px-2 py-1 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              {t('designer.stats')}
-            </button>
-          )}
           {savingTemplate ? (
             <div className="flex items-center gap-1">
               <input
@@ -497,22 +433,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
             </select>
           </>
         )}
-        {isTrackMode && teamMembers.length > 0 && (
-          <>
-            <span className="text-xs text-gray-400 dark:text-gray-500">{t('designer.filter_assignee')}:</span>
-            <select
-              className="text-xs border border-gray-200 dark:border-gray-600 rounded px-1.5 py-0.5 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 outline-none focus:border-brand-400"
-              value={filterAssignee}
-              onChange={e => setFilterAssignee(e.target.value)}
-            >
-              <option value="">—</option>
-              {teamMembers.map(m => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-              <option value="__unassigned__">{t('designer.unassigned')}</option>
-            </select>
-          </>
-        )}
         {isFiltered && (
           <button
             onClick={clearFilters}
@@ -583,7 +503,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       lane={lane}
                       activeLanes={board.swimLanes}
                       collapsed={col.collapsed}
-                      trackMode={isTrackMode}
                       swimLanePillNone={t('designer.swim_lane_none')}
                       swimLaneAssign={t('designer.swim_lane_assign')}
                       onAddCard={title => addCard(col.id, title, lane ?? undefined)}
@@ -595,14 +514,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                       deleteCardConfirmLabel={t('designer.delete_card_confirm')}
                       cardColorLabel={t('designer.card_color')}
                       noColorLabel={t('designer.no_color')}
-                      dueDateLabel={t('designer.due_date')}
-                      dueTodayLabel={t('designer.due_today')}
-                      overdueLabel={t('designer.overdue')}
                       addTagLabel={t('designer.add_tag')}
                       tagPlaceholderLabel={t('designer.tag_placeholder')}
-                      assigneeLabel={t('designer.assignee')}
-                      unassignedLabel={t('designer.unassigned')}
-                      teamMembers={teamMembers}
                     />
                   ))}
                 </div>
@@ -625,7 +538,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     key={col.id}
                     column={col}
                     showWipWarnings={board.showWipWarnings}
-                    trackMode={isTrackMode}
                     onRename={name => updateColumn(col.id, { name })}
                     onWipChange={wipLimit => updateColumn(col.id, { wipLimit })}
                     onDelete={() => deleteColumn(col.id)}
@@ -633,14 +545,8 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
                     onAddCard={title => addCard(col.id, title)}
                     onDeleteCard={cardId => deleteCard(col.id, cardId)}
                     onUpdateCard={(cardId, updates) => updateCard(col.id, cardId, updates)}
-                    dueDateLabel={t('designer.due_date')}
-                    dueTodayLabel={t('designer.due_today')}
-                    overdueLabel={t('designer.overdue')}
                     addTagLabel={t('designer.add_tag')}
                     tagPlaceholderLabel={t('designer.tag_placeholder')}
-                    assigneeLabel={t('designer.assignee')}
-                    unassignedLabel={t('designer.unassigned')}
-                    teamMembers={teamMembers}
                   />
                 ))}
               </div>
@@ -649,8 +555,6 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
           </DndContext>
         )}
       </div>
-
-      {showStats && isTrackMode && <StatsPanel board={board} onClose={() => setShowStats(false)} />}
     </div>
   )
 }

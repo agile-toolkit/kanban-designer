@@ -33,7 +33,6 @@ export default function HomeScreen({ boards, onNew, onOpen, onDelete }: Props) {
       ],
       swimLanes: [],
       showWipWarnings: true,
-      mode: 'design',
       updatedAt: Date.now(),
     }
     onNew(board)

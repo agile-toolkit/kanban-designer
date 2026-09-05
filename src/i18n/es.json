@@ -35,11 +35,6 @@
     ]
   },
   "designer": {
-    "mode_label": "Modo del tablero",
-    "mode_design": "Diseño",
-    "mode_track": "Seguimiento",
-    "mode_design_hint": "Solo estructura — columnas, límites WIP, carriles, contenido de tarjetas.",
-    "mode_track_hint": "Añade fechas límite, responsables, listas de tareas, antigüedad de tarjetas y estadísticas — para gestionar trabajo real en este tablero.",
     "new_board": "Nuevo tablero",
     "add_column": "Añadir columna",
     "add_card": "Añadir tarjeta",
@@ -79,28 +74,14 @@
     "wip_utilisation_tooltip": "{{count}} de {{limit}} tarjetas ({{pct}}%)",
     "undo": "Deshacer",
     "redo": "Rehacer",
-    "due_date": "Fecha límite",
-    "clear_due_date": "Borrar fecha límite",
-    "due_today": "Vence hoy",
-    "overdue": "Vencida",
     "collapse_column": "Colapsar columna",
     "expand_column": "Expandir columna",
     "add_tag": "Etiquetas",
     "remove_tag": "Eliminar etiqueta",
     "tag_placeholder": "Añadir etiqueta…",
     "filter_tag": "Etiqueta",
-    "assignee": "Asignado",
-    "unassigned": "Sin asignar",
-    "filter_assignee": "Asignado",
-    "stats": "Estadísticas",
-    "age_days": "{{n}}d",
-    "age_weeks": "{{n}}sem",
     "save_as_template": "Guardar como plantilla",
     "template_name_placeholder": "Nombre de la plantilla",
-    "checklist": "Lista de tareas",
-    "checklist_remove_item": "Eliminar elemento de la lista",
-    "checklist_add": "Añadir elemento…",
-    "checklist_progress": "{{done}}/{{total}}",
     "export_csv": "Exportar CSV"
   },
   "templates": {
@@ -135,15 +116,6 @@
     "p3": "Gestionar el flujo — medir y optimizar el tiempo de ciclo.",
     "p4": "Hacer explícitas las políticas del proceso — reglas claras reducen conflictos.",
     "p5": "Mejorar colaborativamente — usar modelos para guiar el cambio."
-  },
-  "stats": {
-    "title": "Estadísticas del tablero",
-    "close": "Cerrar",
-    "total_cards": "Total de tarjetas",
-    "at_capacity": "En capacidad máxima",
-    "empty_columns": "Columnas vacías",
-    "completion_rate": "Tasa de finalización",
-    "oldest_card": "Tarjeta más antigua"
   },
   "facilitator": {
     "toggle_on": "Modo Facilitador",
