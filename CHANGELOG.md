@@ -4,6 +4,25 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.5.0 — Remove Track mode entirely (2026-09-05)
+
+- **removed**: the Design/Track mode toggle, `KanbanBoard.mode` and
+  `resolveBoardMode()` (`src/boardMode.ts`, deleted), due-date/assignee/
+  checklist/card-aging display and editing on cards (`ColumnCard.tsx`),
+  the assignee filter and `team-identity-charter` lookup
+  (`BoardDesigner.tsx`), the Stats panel (`StatsPanel.tsx`, deleted), and
+  the Due Date/Overdue CSV export columns.
+- **context**: reverses the 0.3.0 Design/Track split. Kanban Tracker now
+  fully covers the same capability (card CRUD, a stats panel, and
+  drag-and-drop) against boards imported from here via the canonical
+  export schema, so a second, partial copy of execution features here no
+  longer serves a purpose and re-opens the exact "does it design or does
+  it track?" confusion the split was meant to fix. `KanbanCard`'s
+  `dueDate`/`assignee`/`checklist`/`enteredColumnAt` fields stay in
+  `types.ts` as optional, never-edited pass-through so a board
+  round-tripped through Tracker and back for a redesign doesn't lose that
+  data — Designer just never shows or touches it.
+
 ## 0.4.3 — Canonical board export/import schema (2026-09-04)
 
 - **feat**: full-fidelity board transports (JSON file export/import, the

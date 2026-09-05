@@ -4,7 +4,6 @@ import type { Screen, KanbanBoard } from './types'
 import { TEMPLATES, cloneTemplate } from './data/templates'
 import { parsePrefillBoard } from './utils/prefillBoard'
 import { wrapBoardExport, unwrapBoardExport } from './utils/boardExport'
-import { resolveBoardMode } from './boardMode'
 import AppHeader from './components/AppHeader'
 import BoardDesigner from './components/BoardDesigner'
 import TemplatesView from './components/TemplatesView'
@@ -43,7 +42,7 @@ function parseBoardFromHash(): KanbanBoard | null {
 // this app's own persistent link format.
 const _hashBoard = parseBoardFromHash()
 const _prefillBoard = _hashBoard ? null : parsePrefillBoard(window.location.search)
-const _urlBoard = _hashBoard ? resolveBoardMode(_hashBoard) : (_prefillBoard ? resolveBoardMode(_prefillBoard) : null)
+const _urlBoard = _hashBoard ?? _prefillBoard
 if (_prefillBoard) {
   // consumed; strip so a page refresh doesn't re-import the same board
   window.history.replaceState(null, '', window.location.pathname + window.location.hash)
@@ -52,11 +51,11 @@ if (_prefillBoard) {
 function loadBoards(): KanbanBoard[] {
   try {
     const raw = localStorage.getItem(BOARDS_KEY)
-    if (raw) return (JSON.parse(raw) as KanbanBoard[]).map(resolveBoardMode)
+    if (raw) return JSON.parse(raw) as KanbanBoard[]
     const legacy = localStorage.getItem(LEGACY_KEY)
     if (legacy) {
       const b = JSON.parse(legacy) as KanbanBoard
-      const list = [resolveBoardMode({ ...b, updatedAt: b.updatedAt ?? Date.now() })]
+      const list = [{ ...b, updatedAt: b.updatedAt ?? Date.now() }]
       localStorage.setItem(BOARDS_KEY, JSON.stringify(list))
       localStorage.removeItem(LEGACY_KEY)
       return list
@@ -245,9 +244,8 @@ export default function App() {
     const reader = new FileReader()
     reader.onload = ev => {
       try {
-        const parsed = unwrapBoardExport(JSON.parse(ev.target?.result as string))
-        if (!parsed) throw new Error('not board-shaped')
-        const imported = resolveBoardMode(parsed)
+        const imported = unwrapBoardExport(JSON.parse(ev.target?.result as string))
+        if (!imported) throw new Error('not board-shaped')
         const id = imported.id ?? crypto.randomUUID()
         updateBoard({ ...imported, id, updatedAt: Date.now() })
         persistCurrent(id)

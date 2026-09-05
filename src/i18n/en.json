@@ -35,11 +35,6 @@
     ]
   },
   "designer": {
-    "mode_label": "Board mode",
-    "mode_design": "Design",
-    "mode_track": "Track",
-    "mode_design_hint": "Structure only — columns, WIP limits, swim lanes, card content.",
-    "mode_track_hint": "Adds due dates, assignees, checklists, card aging, and stats — for running real work on this board.",
     "new_board": "New Board",
     "add_column": "Add Column",
     "add_card": "Add Card",
@@ -79,28 +74,14 @@
     "wip_utilisation_tooltip": "{{count}} of {{limit}} cards ({{pct}}%)",
     "undo": "Undo",
     "redo": "Redo",
-    "due_date": "Due date",
-    "clear_due_date": "Clear due date",
-    "due_today": "Due today",
-    "overdue": "Overdue",
     "collapse_column": "Collapse column",
     "expand_column": "Expand column",
     "add_tag": "Tags",
     "tag_placeholder": "Add tag…",
     "remove_tag": "Remove tag",
     "filter_tag": "Tag",
-    "assignee": "Assignee",
-    "unassigned": "Unassigned",
-    "filter_assignee": "Assignee",
-    "stats": "Stats",
-    "age_days": "{{n}}d",
-    "age_weeks": "{{n}}w",
     "save_as_template": "Save as Template",
     "template_name_placeholder": "Template name",
-    "checklist": "Checklist",
-    "checklist_add": "Add item…",
-    "checklist_remove_item": "Remove checklist item",
-    "checklist_progress": "{{done}}/{{total}}",
     "export_csv": "Export CSV"
   },
   "templates": {
@@ -135,15 +116,6 @@
     "p3": "Manage flow — measure and optimize cycle time.",
     "p4": "Make process policies explicit — clear rules reduce conflict.",
     "p5": "Improve collaboratively — use models to guide change."
-  },
-  "stats": {
-    "title": "Board Stats",
-    "close": "Close",
-    "total_cards": "Total cards",
-    "at_capacity": "At capacity",
-    "empty_columns": "Empty columns",
-    "completion_rate": "Completion rate",
-    "oldest_card": "Oldest card"
   },
   "facilitator": {
     "toggle_on": "Facilitator Mode",

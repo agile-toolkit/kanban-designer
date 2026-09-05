@@ -55,11 +55,6 @@ describe('cloneTemplate', () => {
     board.swimLanes.push('New Lane')
     expect(template.swimLanes).not.toContain('New Lane')
   })
-
-  it('defaults to design mode, not track', () => {
-    const board = cloneTemplate(TEMPLATES[0]!)
-    expect(board.mode).toBe('design')
-  })
 })
 
 describe('custom templates', () => {
@@ -99,12 +94,6 @@ describe('custom templates', () => {
     expect(board.id).not.toBe(template.board.id)
     expect(board.columns[0]!.id).not.toBe(template.board.columns[0]!.id)
     expect(board.columns[0]!.cards).toEqual([])
-  })
-
-  it('cloneCustomTemplate defaults to design mode, not track', () => {
-    const template = createCustomTemplate(sampleBoard, 'Saved Board')
-    const board = cloneCustomTemplate(template)
-    expect(board.mode).toBe('design')
   })
 
   it('loadCustomTemplates recovers gracefully from corrupted storage', () => {

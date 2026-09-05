@@ -3,39 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useSortable } from '@dnd-kit/sortable'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { KanbanColumn, KanbanCard, ChecklistItem } from '../types'
+import type { KanbanColumn, KanbanCard } from '../types'
 import { CloseIcon, CheckIcon } from './icons'
 
-export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'dueDate' | 'tags' | 'assignee' | 'checklist'>>
-
-function makeChecklistItem(text: string): ChecklistItem {
-  return { id: Math.random().toString(36).slice(2), text, done: false }
-}
-
-function getInitials(name: string): string {
-  return name.trim().split(/\s+/).map(p => p[0]).join('').toUpperCase().slice(0, 2)
-}
-
-function dueDateBadge(dueDate: string, todayLabel: string, overdueLabel: string) {
-  const today = new Date(); today.setHours(0, 0, 0, 0)
-  const due = new Date(dueDate + 'T00:00:00')
-  const diffDays = Math.round((due.getTime() - today.getTime()) / 86400000)
-  const label = due.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-  if (diffDays < 0) return { label: overdueLabel + ' · ' + label, cls: 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400 font-bold' }
-  if (diffDays === 0) return { label: todayLabel + ' · ' + label, cls: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold' }
-  return { label, cls: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' }
-}
-
-function ageBadge(enteredColumnAt: string, t: (key: string, opts?: Record<string, unknown>) => string) {
-  const ageDays = Math.floor((Date.now() - new Date(enteredColumnAt).getTime()) / 86400000)
-  if (ageDays < 1) return null
-  const label = ageDays >= 14
-    ? t('designer.age_weeks', { n: Math.floor(ageDays / 7) })
-    : t('designer.age_days', { n: ageDays })
-  if (ageDays <= 3) return { label, cls: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400' }
-  if (ageDays <= 7) return { label, cls: 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 font-bold' }
-  return { label, cls: 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400 font-bold' }
-}
+export type CardUpdates = Partial<Pick<KanbanCard, 'title' | 'color' | 'swimLane' | 'tags'>>
 
 const CARD_COLORS = [
   { stem: 'red',    hex: '#f87171' },
@@ -72,37 +43,23 @@ interface CardItemProps {
   deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
-  dueDateLabel: string
-  dueTodayLabel: string
-  overdueLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
   availableLanes?: string[]
   swimLanePillNone?: string
   swimLaneAssign?: string
-  assigneeLabel: string
-  unassignedLabel: string
-  teamMembers: string[]
-  /** Design mode (default) hides due dates, assignee, checklist, and card aging — see GOAL.md's "not a board execution tool" boundary. */
-  trackMode: boolean
 }
 
 function CardItem({
   card, onDelete, onUpdate, deleteTitle, deleteCardConfirmLabel,
-  cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
-  addTagLabel, tagPlaceholderLabel,
+  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel,
   availableLanes, swimLanePillNone, swimLaneAssign,
-  assigneeLabel, unassignedLabel, teamMembers, trackMode,
 }: CardItemProps) {
   const { t } = useTranslation()
   const [editing, setEditing] = useState(false)
   const [editTitle, setEditTitle] = useState(card.title)
   const [editColor, setEditColor] = useState<string | undefined>(card.color)
-  const [editDueDate, setEditDueDate] = useState<string>(card.dueDate ?? '')
   const [editTags, setEditTags] = useState<string[]>(card.tags ?? [])
-  const [editAssignee, setEditAssignee] = useState<string>(card.assignee ?? '')
-  const [editChecklist, setEditChecklist] = useState<ChecklistItem[]>(card.checklist ?? [])
-  const [checklistInput, setChecklistInput] = useState('')
   const [tagInput, setTagInput] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -117,11 +74,7 @@ function CardItem({
   const openEdit = () => {
     setEditTitle(card.title)
     setEditColor(card.color)
-    setEditDueDate(card.dueDate ?? '')
     setEditTags(card.tags ?? [])
-    setEditAssignee(card.assignee ?? '')
-    setEditChecklist(card.checklist ?? [])
-    setChecklistInput('')
     setTagInput('')
     setEditing(true)
   }
@@ -130,10 +83,7 @@ function CardItem({
     onUpdate({
       title: editTitle.trim() || card.title,
       color: editColor,
-      dueDate: editDueDate || undefined,
       tags: editTags.length > 0 ? editTags : undefined,
-      assignee: editAssignee || undefined,
-      checklist: editChecklist.length > 0 ? editChecklist : undefined,
     })
     setEditing(false)
   }
@@ -221,25 +171,6 @@ function CardItem({
               ><CloseIcon className="w-3 h-3" /></button>
             )}
           </div>
-          {trackMode && (
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs text-gray-400 dark:text-gray-500">{dueDateLabel}:</span>
-              <input
-                type="date"
-                className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
-                value={editDueDate}
-                onChange={e => setEditDueDate(e.target.value)}
-              />
-              {editDueDate && (
-                <button
-                  onClick={() => setEditDueDate('')}
-                  className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                  title={t('designer.clear_due_date')}
-                  aria-label={t('designer.clear_due_date')}
-                ><CloseIcon className="w-3 h-3" /></button>
-              )}
-            </div>
-          )}
           <div className="mb-2">
             <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{addTagLabel}:</div>
             <div className="flex flex-wrap gap-1">
@@ -270,59 +201,6 @@ function CardItem({
               />
             </div>
           </div>
-          {trackMode && teamMembers.length > 0 && (
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs text-gray-400 dark:text-gray-500">{assigneeLabel}:</span>
-              <select
-                className="text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400"
-                value={editAssignee}
-                onChange={e => setEditAssignee(e.target.value)}
-              >
-                <option value="">{unassignedLabel}</option>
-                {teamMembers.map(m => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          {trackMode && (
-            <div className="mb-2">
-              <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">{t('designer.checklist')}:</div>
-              <div className="space-y-0.5">
-                {editChecklist.map(item => (
-                  <div key={item.id} className="flex items-center gap-1.5">
-                    <input
-                      type="checkbox"
-                      checked={item.done}
-                      onChange={() => setEditChecklist(editChecklist.map(i => i.id === item.id ? { ...i, done: !i.done } : i))}
-                      className="w-3 h-3 rounded accent-brand-600 flex-shrink-0"
-                    />
-                    <span className={`flex-1 text-xs ${item.done ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{item.text}</span>
-                    <button
-                      onPointerDown={e => e.stopPropagation()}
-                      onClick={() => setEditChecklist(editChecklist.filter(i => i.id !== item.id))}
-                      className="text-gray-400 dark:text-gray-500 hover:text-red-400 dark:hover:text-red-400 text-xs leading-none flex-shrink-0"
-                      aria-label={t('designer.checklist_remove_item')}
-                    ><CloseIcon className="w-2.5 h-2.5" /></button>
-                  </div>
-                ))}
-                <input
-                  className="w-full text-xs border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded px-1.5 py-0.5 outline-none focus:border-brand-400 mt-0.5"
-                  placeholder={t('designer.checklist_add')}
-                  value={checklistInput}
-                  onChange={e => setChecklistInput(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      const text = checklistInput.trim()
-                      if (text) setEditChecklist([...editChecklist, makeChecklistItem(text)])
-                      setChecklistInput('')
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          )}
           <div className="flex gap-1">
             <button onClick={saveEdit} className="text-xs bg-brand-600 text-white px-2 py-0.5 rounded"><CheckIcon className="w-3 h-3" /></button>
             <button onClick={() => setEditing(false)} className="text-xs text-gray-400 px-2 py-0.5"><CloseIcon className="w-3 h-3" /></button>
@@ -358,31 +236,6 @@ function CardItem({
           >
             {card.title}
           </span>
-          {trackMode && (card.dueDate || card.enteredColumnAt) && (
-            <div className="mt-1 flex items-center gap-1 flex-wrap">
-              {card.dueDate && (() => {
-                const badge = dueDateBadge(card.dueDate, dueTodayLabel, overdueLabel)
-                return (
-                  <button
-                    onPointerDown={e => e.stopPropagation()}
-                    onClick={e => { e.stopPropagation(); openEdit() }}
-                    className={`text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}
-                  >
-                    {badge.label}
-                  </button>
-                )
-              })()}
-              {card.enteredColumnAt && (() => {
-                const badge = ageBadge(card.enteredColumnAt, t)
-                if (!badge) return null
-                return (
-                  <span className={`text-xs rounded px-1.5 py-0.5 max-w-full truncate ${badge.cls}`}>
-                    {badge.label}
-                  </span>
-                )
-              })()}
-            </div>
-          )}
           {availableLanes && availableLanes.length > 0 && (
             <button
               onPointerDown={e => e.stopPropagation()}
@@ -402,35 +255,8 @@ function CardItem({
               ))}
             </div>
           )}
-          {trackMode && card.checklist && card.checklist.length > 0 && (() => {
-            const total = card.checklist.length
-            const done = card.checklist.filter(i => i.done).length
-            const allDone = done === total
-            return (
-              <div className="mt-1">
-                <span
-                  className={`inline-flex items-center gap-1 text-xs rounded px-1.5 py-0.5 ${
-                    allDone
-                      ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 font-medium'
-                      : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
-                  }`}
-                >
-                  <CheckIcon className="w-3 h-3" />
-                  {t('designer.checklist_progress', { done, total })}
-                </span>
-              </div>
-            )
-          })()}
         </div>
         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-          {trackMode && card.assignee && (
-            <span
-              title={card.assignee}
-              className="w-6 h-6 rounded-full bg-brand-600 dark:bg-brand-700 text-white text-[9px] font-bold flex items-center justify-center select-none flex-shrink-0"
-            >
-              {getInitials(card.assignee)}
-            </span>
-          )}
           <button
             onPointerDown={e => e.stopPropagation()}
             onClick={onDelete}
@@ -574,15 +400,8 @@ export interface LaneCellProps {
   deleteCardConfirmLabel: string
   cardColorLabel: string
   noColorLabel: string
-  dueDateLabel: string
-  dueTodayLabel: string
-  overdueLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
-  assigneeLabel: string
-  unassignedLabel: string
-  teamMembers: string[]
-  trackMode: boolean
 }
 
 export function LaneCell({
@@ -590,9 +409,7 @@ export function LaneCell({
   swimLanePillNone, swimLaneAssign,
   onAddCard, onDeleteCard, onUpdateCard,
   addCardLabel, cardTitlePlaceholder, deleteCardTitle, deleteCardConfirmLabel,
-  cardColorLabel, noColorLabel, dueDateLabel, dueTodayLabel, overdueLabel,
-  addTagLabel, tagPlaceholderLabel,
-  assigneeLabel, unassignedLabel, teamMembers, trackMode,
+  cardColorLabel, noColorLabel, addTagLabel, tagPlaceholderLabel,
 }: LaneCellProps) {
   const [addingCard, setAddingCard] = useState(false)
   const [cardTitle, setCardTitle] = useState('')
@@ -625,18 +442,11 @@ export function LaneCell({
               deleteCardConfirmLabel={deleteCardConfirmLabel}
               cardColorLabel={cardColorLabel}
               noColorLabel={noColorLabel}
-              dueDateLabel={dueDateLabel}
-              dueTodayLabel={dueTodayLabel}
-              overdueLabel={overdueLabel}
               addTagLabel={addTagLabel}
               tagPlaceholderLabel={tagPlaceholderLabel}
               availableLanes={activeLanes}
               swimLanePillNone={swimLanePillNone}
               swimLaneAssign={swimLaneAssign}
-              assigneeLabel={assigneeLabel}
-              unassignedLabel={unassignedLabel}
-              teamMembers={teamMembers}
-              trackMode={trackMode}
             />
           ))}
         </SortableContext>
@@ -694,21 +504,13 @@ interface Props {
   onAddCard: (title: string) => void
   onDeleteCard: (cardId: string) => void
   onUpdateCard: (cardId: string, updates: CardUpdates) => void
-  dueDateLabel: string
-  dueTodayLabel: string
-  overdueLabel: string
   addTagLabel: string
   tagPlaceholderLabel: string
-  assigneeLabel: string
-  unassignedLabel: string
-  teamMembers: string[]
-  trackMode: boolean
 }
 
 export default function ColumnCard({
   column, showWipWarnings, onRename, onWipChange, onDelete, onCollapse, onAddCard, onDeleteCard, onUpdateCard,
-  dueDateLabel, dueTodayLabel, overdueLabel, addTagLabel, tagPlaceholderLabel,
-  assigneeLabel, unassignedLabel, teamMembers, trackMode,
+  addTagLabel, tagPlaceholderLabel,
 }: Props) {
   const { t } = useTranslation()
   const [editName, setEditName] = useState(false)
@@ -844,15 +646,8 @@ export default function ColumnCard({
               deleteCardConfirmLabel={t('designer.delete_card_confirm')}
               cardColorLabel={t('designer.card_color')}
               noColorLabel={t('designer.no_color')}
-              dueDateLabel={dueDateLabel}
-              dueTodayLabel={dueTodayLabel}
-              overdueLabel={overdueLabel}
               addTagLabel={addTagLabel}
               tagPlaceholderLabel={tagPlaceholderLabel}
-              assigneeLabel={assigneeLabel}
-              unassignedLabel={unassignedLabel}
-              teamMembers={teamMembers}
-              trackMode={trackMode}
             />
           ))}
         </SortableContext>
