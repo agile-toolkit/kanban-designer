@@ -4,6 +4,16 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+## 0.5.3 — Include assignee in the cross-app board snapshot (2026-09-05)
+
+- **fix**: `writeCurrentBoard()` (the `kanban-designer:currentBoard`
+  localStorage snapshot other suite apps read) was dropping each card's
+  `assignee` field — it only ever serialized `title`/`description`, even
+  though `KanbanCard.assignee` has existed on the data model since #38.
+  Work Profiles issue #55 (per-profile active-card count) needs this
+  field to match cards to people; it now round-trips through the
+  snapshot when set.
+
 ## 0.5.2 — Keyboard shortcuts help overlay (2026-09-05)
 
 - **added**: a centered modal (`ShortcutsModal.tsx`) listing all keyboard

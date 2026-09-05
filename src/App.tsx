@@ -87,7 +87,11 @@ function writeCurrentBoard(board: KanbanBoard) {
     boardName: board.name,
     columns: board.columns.map(col => ({
       name: col.name,
-      cards: col.cards.map(card => ({ title: card.title, description: card.description ?? '' })),
+      cards: col.cards.map(card => ({
+        title: card.title,
+        description: card.description ?? '',
+        ...(card.assignee ? { assignee: card.assignee } : {}),
+      })),
     })),
     updatedAt: new Date().toISOString(),
   }))
