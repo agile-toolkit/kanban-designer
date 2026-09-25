@@ -8,7 +8,6 @@ import {
 import {
   SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove,
 } from '@dnd-kit/sortable'
-import html2canvas from 'html2canvas'
 import type { KanbanBoard, KanbanCard, KanbanColumn } from '../types'
 import ColumnCard, { ColumnHeaderStrip, LaneCell, type CardUpdates } from './ColumnCard'
 import { createCustomTemplate } from '../data/templates'
@@ -56,6 +55,9 @@ export default function BoardDesigner({ board, onUpdate }: Props) {
     if (!boardCanvasRef.current || exporting) return
     setExporting(true)
     try {
+      // Loaded on demand: html2canvas is ~200 kB and only the export button
+      // needs it, so keep it out of the entry chunk.
+      const { default: html2canvas } = await import('html2canvas')
       const canvas = await html2canvas(boardCanvasRef.current, {
         backgroundColor: '#f9fafb',
         scale: 2,

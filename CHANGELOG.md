@@ -4,6 +4,11 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+- **perf**: `html2canvas` (~200 kB) is now loaded on demand when the image
+  export is used, instead of shipping in the entry chunk to every visitor —
+  the same treatment Planning Poker and Moving Motivators already use. Also
+  clears Vite's "chunks larger than 500 kB" build warning.
+
 - **build**: sourcemaps are now opt-in. `npm run build` (the production
   build that `deploy.yml` publishes) no longer emits `.map` files into
   `dist/`; `npm run build:debug` (`vite build --mode debug`) produces the
