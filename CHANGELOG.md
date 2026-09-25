@@ -4,6 +4,11 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+- **build**: sourcemaps are now opt-in. `npm run build` (the production
+  build that `deploy.yml` publishes) no longer emits `.map` files into
+  `dist/`; `npm run build:debug` (`vite build --mode debug`) produces the
+  same bundle with sourcemaps for local debugging.
+
 ## 0.5.3 — Include assignee in the cross-app board snapshot (2026-09-05)
 
 - **fix**: `writeCurrentBoard()` (the `kanban-designer:currentBoard`
