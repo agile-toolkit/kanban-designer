@@ -4,6 +4,11 @@ All notable changes to Kanban Designer are documented here.
 
 ## Unreleased
 
+- **chore** (security): 0 `npm audit` vulnerabilities, down from 9. `vite` ^6.4.3 (patched dev-server path traversal / `fs.deny`
+  bypass) and `vitest` ^4.1.11 (patched `@vitest/mocker` arbitrary file
+  read); transitive fixes via `npm audit fix` (postcss, nanoid,
+  browserslist, @babel/core, brace-expansion, fast-uri, …).
+
 - **perf**: `html2canvas` (~200 kB) is now loaded on demand when the image
   export is used, instead of shipping in the entry chunk to every visitor —
   the same treatment Planning Poker and Moving Motivators already use. Also
